@@ -19,6 +19,8 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     public void updateInputs() {
         loggerInputs.rawAngle = navx.getRotation2d();
         loggerInputs.angle = getAngle();
+        loggerInputs.pitch = Rotation2d.fromDegrees(navx.getPitch());
+        loggerInputs.roll = Rotation2d.fromDegrees(navx.getRoll());
     }
 
     @Override
@@ -62,5 +64,13 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
 
     public AngleUtil.Angle getAngleObject() {
         return new AngleUtil.Angle(AngleUtil.UP_COUNTER_CLOCKWISE, getAngle().getDegrees());
+    }
+
+    public Rotation2d getPitch() {
+        return loggerInputs.pitch;
+    }
+
+    public Rotation2d getRoll() {
+        return loggerInputs.roll;
     }
 }

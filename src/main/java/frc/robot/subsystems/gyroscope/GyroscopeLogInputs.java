@@ -8,6 +8,8 @@ public class GyroscopeLogInputs implements LoggableInputs {
     public Rotation2d angle = Rotation2d.fromDegrees(0);
     public Rotation2d rawAngle = Rotation2d.fromDegrees(0);
     public Rotation2d zeroAngle = Rotation2d.fromDegrees(0);
+    public Rotation2d pitch = Rotation2d.fromDegrees(0);
+    public Rotation2d roll = Rotation2d.fromDegrees(0);
 
     public GyroscopeLogInputs() {
     }
@@ -17,6 +19,8 @@ public class GyroscopeLogInputs implements LoggableInputs {
         table.put("Angle", angle.getDegrees());
         table.put("RawAngle", rawAngle.getDegrees());
         table.put("ZeroAngle", zeroAngle.getDegrees());
+        table.put("Pitch", pitch.getDegrees());
+        table.put("Roll", roll.getDegrees());
     }
 
     @Override
@@ -24,5 +28,7 @@ public class GyroscopeLogInputs implements LoggableInputs {
         angle = Rotation2d.fromDegrees(table.getDouble("Angle", angle.getDegrees()));
         rawAngle = Rotation2d.fromDegrees(table.getDouble("RawAngle", rawAngle.getDegrees()));
         zeroAngle = Rotation2d.fromDegrees(table.getDouble("ZeroAngle", zeroAngle.getDegrees()));
+        pitch = Rotation2d.fromDegrees(table.getDouble("Pitch", pitch.getDegrees()));
+        roll = Rotation2d.fromDegrees(table.getDouble("Roll", roll.getDegrees()));
     }
 }

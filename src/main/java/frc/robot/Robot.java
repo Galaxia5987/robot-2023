@@ -36,7 +36,7 @@ public class Robot extends LoggedRobot {
         robotContainer = RobotContainer.getInstance();
         autonomousCommand = robotContainer.getAutonomousCommand();
 
-        Logger.getInstance().recordMetadata("ProjectName", "Wcp-Swerve-2023"); // Set a metadata value
+        Logger.getInstance().recordMetadata("ProjectName", "Robot-2023"); // Set a metadata value
 
         if (isReal()) {
             Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick

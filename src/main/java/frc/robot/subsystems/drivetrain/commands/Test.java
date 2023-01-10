@@ -16,7 +16,7 @@ public class Test extends CommandBase {
 
     @Override
     public void initialize() {
-        Robot.gyroscope.resetAngle();
+        Robot.gyroscope.resetYaw();
         timer.start();
         timer.reset();
     }

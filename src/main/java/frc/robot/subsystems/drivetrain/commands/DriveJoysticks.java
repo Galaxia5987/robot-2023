@@ -22,7 +22,7 @@ public class DriveJoysticks extends HolonomicDrive {
         int pov = leftJoystick.getPOV();
         if (pov >= 0) {
             AngleUtil.Angle povObject = new AngleUtil.Angle(AngleUtil.UP_CLOCKWISE, pov);
-            double diff = Math.toRadians(povObject.minus(Robot.gyroscope.getAngleObject()));
+            double diff = Math.toRadians(povObject.minus(Robot.gyroscope.getYawObject()));
             swerveDrive.drive(speeds, new Translation2d(
                     Math.cos(diff) * Constants.SwerveDrive.TORNADO_SPIN_DISTANCE,
                     Math.sin(diff) * Constants.SwerveDrive.TORNADO_SPIN_DISTANCE));

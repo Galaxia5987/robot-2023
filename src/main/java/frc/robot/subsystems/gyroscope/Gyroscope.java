@@ -12,13 +12,13 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     public Gyroscope() {
         super(new GyroscopeLogInputs());
         navx = new AHRS(SPI.Port.kMXP);
-        loggerInputs.zeroAngle = new Rotation2d();
+        loggerInputs.zeroYaw = new Rotation2d();
     }
 
     @Override
     public void updateInputs() {
-        loggerInputs.rawAngle = navx.getRotation2d();
-        loggerInputs.angle = getAngle();
+        loggerInputs.rawYaw = navx.getRotation2d();
+        loggerInputs.yaw = getYaw();
         loggerInputs.pitch = Rotation2d.fromDegrees(navx.getPitch());
         loggerInputs.roll = Rotation2d.fromDegrees(navx.getRoll());
     }
@@ -29,41 +29,41 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     }
 
     /**
-     * Resets the angle of the navx to the current angle.
+     * Resets the yaw of the navx to the current yaw.
      */
-    public void resetAngle() {
-        resetAngle(new Rotation2d());
+    public void resetYaw() {
+        resetYaw(new Rotation2d());
     }
 
     /**
-     * Resets the angle of the navx to the current angle.
+     * Resets the yaw of the navx to the current yaw.
      *
-     * @param angle the angle in -180 to 180 degrees coordinate system.
+     * @param yaw the yaw in -180 to 180 degrees coordinate system.
      */
-    public void resetAngle(Rotation2d angle) {
-        loggerInputs.zeroAngle = getRawAngle().minus(angle);
+    public void resetYaw(Rotation2d yaw) {
+        loggerInputs.zeroYaw = getRawYaw().minus(yaw);
     }
 
     /**
-     * Gets the current angle of the robot in respect to the start angle.
+     * Gets the current yaw of the robot in respect to the start yaw.
      *
-     * @return the current angle of the robot in respect to the start angle.
+     * @return the current yaw of the robot in respect to the start yaw.
      */
-    public Rotation2d getAngle() {
-        return getRawAngle().minus(loggerInputs.zeroAngle);
+    public Rotation2d getYaw() {
+        return getRawYaw().minus(loggerInputs.zeroYaw);
     }
 
     /**
-     * Gets the raw angle from the navx.
+     * Gets the raw yaw from the navx.
      *
-     * @return the angle of the robot in respect to the angle of the robot initiation time.
+     * @return the yaw of the robot in respect to the yaw of the robot initiation time.
      */
-    public Rotation2d getRawAngle() {
-        return loggerInputs.rawAngle;
+    public Rotation2d getRawYaw() {
+        return loggerInputs.rawYaw;
     }
 
-    public AngleUtil.Angle getAngleObject() {
-        return new AngleUtil.Angle(AngleUtil.UP_COUNTER_CLOCKWISE, getAngle().getDegrees());
+    public AngleUtil.Angle getYawObject() {
+        return new AngleUtil.Angle(AngleUtil.UP_COUNTER_CLOCKWISE, getYaw().getDegrees());
     }
 
     public Rotation2d getPitch() {
@@ -73,4 +73,12 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     public Rotation2d getRoll() {
         return loggerInputs.roll;
     }
+
+    public YawPitchRoll getYawPitchRoll() {
+        return new YawPitchRoll(loggerInputs.yaw.getRadians(),
+                loggerInputs.pitch.getRadians(),
+                loggerInputs.roll.getRadians());
+    }
+
+    public record YawPitchRoll(double yaw, double pitch, double roll) {}
 }

@@ -96,11 +96,11 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     public void updateOdometry() {
-        mOdometry.update(Robot.gyroscope.getAngle(), swerveModulePositions);
+        mOdometry.update(Robot.gyroscope.getYaw(), swerveModulePositions);
     }
 
     public void resetOdometry(Pose2d pose) {
-        mOdometry.resetPosition(Robot.gyroscope.getAngle(), swerveModulePositions, pose);
+        mOdometry.resetPosition(Robot.gyroscope.getYaw(), swerveModulePositions, pose);
     }
 
     public Pose2d getPose() {
@@ -125,7 +125,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                         vx,
                         vy,
                         theta,
-                        Robot.gyroscope.getAngle()) : new ChassisSpeeds(vx, vy, theta),
+                        Robot.gyroscope.getYaw()) : new ChassisSpeeds(vx, vy, theta),
                 centerOfRotation);
     }
 

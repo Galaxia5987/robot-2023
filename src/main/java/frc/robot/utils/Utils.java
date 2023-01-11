@@ -61,6 +61,13 @@ public class Utils {
      * Converts the relative angles to pitch relative to the coordinate system of the field,
      * aka the absolute pitch. This value can be used to balance on the charge station.
      *
+     * The calculations were made by multiplying the rotation matrices of yaw pitch and roll
+     * in that order by the x unit vector (1, 0, 0).
+     * See {@link <a href="https://www.tu-chemnitz.de/informatik/service/ib/pdf/CSR-21-01.pdf">...</a>} at page 11,
+     * where the coordinate system of a UAV is described.
+     *
+     * The robot coordinate system is in the opposite direction in all axes. Hence, the angles were multiplied by -1.
+     *
      * @param yaw the yaw angle from the gyro. [rad]
      * @param pitch the pitch angle from the gyro. [rad]
      * @param roll the roll angle from the gyro. [rad]

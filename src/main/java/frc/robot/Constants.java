@@ -41,9 +41,6 @@ public final class Constants {
         public static final double MAX_LINEAR_ACCELERATION = MAX_VELOCITY_METERS_PER_SECOND / 2;
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 13.0;
 
-        public static final double TARGET_ADJUST_Kp = 1.0;
-        public static final double TARGET_ADJUST_Kf = 0;
-
         public static final double XY_SLEW_RATE_LIMIT = 3.0;
         public static final double ROTATION_SLEW_RATE_LIMIT = 6.0;
         public static boolean FRONT_LEFT_DRIVE_INVERTED = true;

@@ -8,6 +8,18 @@ import frc.robot.utils.math.AngleUtil;
 
 public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     private final AHRS navx;
+    private double zeroPitch;
+    private double zeroRoll;
+    private boolean zeroInitialized = false;
+
+    @Override
+    public void periodic() {
+        if (!zeroInitialized && navx.isConnected()) {
+            zeroRoll = navx.getRoll();
+            zeroPitch = navx.getPitch();
+            zeroInitialized = true;
+        }
+    }
 
     public Gyroscope() {
         super(new GyroscopeLogInputs());
@@ -19,8 +31,8 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     public void updateInputs() {
         loggerInputs.rawYaw = navx.getRotation2d();
         loggerInputs.yaw = getYaw();
-        loggerInputs.pitch = Rotation2d.fromDegrees(navx.getPitch());
-        loggerInputs.roll = Rotation2d.fromDegrees(navx.getRoll());
+        loggerInputs.pitch = Rotation2d.fromDegrees(navx.getPitch() - zeroPitch);
+        loggerInputs.roll = Rotation2d.fromDegrees(navx.getRoll() - zeroRoll);
     }
 
     @Override

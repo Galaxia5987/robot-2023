@@ -1,11 +1,16 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.LoggedSubsystem;
+
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public static Limelight INSTANCE = null;
@@ -43,13 +48,30 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return new Rotation2d(ty.getDouble(0));
     }
 
-    public double getTargetDistance() {
+    public OptionalDouble getTargetDistance() {
         double totalPitch = VisionConstants.CAMERA_PITCH + getPitch().getRadians();
-        return tx.getDouble(0) * Math.sin(totalPitch);
+        if (hasTargets()) {
+            return OptionalDouble.of(tx.getDouble(0) * Math.sin(totalPitch));
+        }
+        return OptionalDouble.empty();
     }
 
-    public Rotation2d getYaw() {
-        return new Rotation2d(ts.getDouble(0));
+    public OptionalDouble getYaw() {
+        if (hasTargets()) {
+            return OptionalDouble.of(ts.getDouble(0));
+        }
+        return OptionalDouble.empty();
+    }
+
+    public Optional<Pose2d> estimatePose(Rotation2d robotAngle) {
+        double absouluteAngle = robotAngle.getRadians() + getYaw().getAsDouble();
+        double xTargetDistance = getTargetDistance().getAsDouble() * Math.sin(absouluteAngle);
+        double yTargetDistance = getTargetDistance().getAsDouble() * Math.cos(absouluteAngle);
+        if (hasTargets()) {
+            Translation2d translation2d = new Translation2d(xTargetDistance, yTargetDistance);
+            return Optional.of(new Pose2d(translation2d, robotAngle));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -60,9 +82,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     @Override
     public void updateInputs() {
         inputs.hasTargets = hasTargets();
-        inputs.yaw = getYaw().getRadians();
+        getYaw().ifPresent((value) -> inputs.yaw = value);
         inputs.tagId = getTagId();
-        inputs.targetDistance = getTargetDistance();
+        getTargetDistance().ifPresent((value) -> inputs.targetDistance = value);
 
     }
 }

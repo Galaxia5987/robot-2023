@@ -41,6 +41,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.selectProfileSlot(1, 0);
         driveMotor.configNeutralDeadband(0.175);
+        driveMotor.setSelectedSensorPosition(0);
 
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
         angleMotor.configFeedbackNotContinuous(false, TALON_TIMEOUT);
@@ -78,6 +79,12 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         angleMotor.configClosedLoopPeakOutput(0, motionMagicConfigs[MotionMagicConfig.ClosedLoopPeakOutput.index]);
     }
 
+    /**
+     * Sets the module to the desired state.
+     *
+     * @param speed the desired speed of the module. [-1, 1]
+     * @param angle the desired angle of the module.
+     */
     public void set(double speed, Rotation2d angle) {
         loggerInputs.dSetpoint = speed * MAX_VELOCITY_METERS_PER_SECOND;
 
@@ -92,40 +99,89 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         angleMotor.set(ControlMode.MotionMagic, loggerInputs.aPosition + toFalconTicks(error));
     }
 
+    /**
+     * Converts the motor position to the angle of the module in the same coordinate system.
+     *
+     * @param ticks the position of the motor. [ticks]
+     * @return the angle of the module.
+     */
     public Rotation2d toWheelAbsoluteAngle(double ticks) {
         return new Rotation2d(((ticks / TICKS_PER_ROTATION) * 2 * Math.PI * ANGLE_GEAR_RATIO) % (2 * Math.PI));
     }
 
+    /**
+     * Converts the angle of the module to the motor position in the same coordinate system.
+     *
+     * @param angle the angle of the module.
+     * @return the position of the motor. [ticks]
+     */
     public int toFalconTicks(Rotation2d angle) {
         return (int) (((angle.getDegrees() / 360) * TICKS_PER_ROTATION) / ANGLE_GEAR_RATIO);
     }
 
+    /**
+     * Converts the absolute encoder position to the position
+     * of the falcon in the same coordinate system.
+     *
+     * @param encoder the position of the encoder. [cycles]
+     * @return the position of the falcon. [ticks]
+     */
     public int absoluteEncoderToAbsoluteFalcon(double encoder) {
         return (int) (encoder * TICKS_PER_ROTATION / ANGLE_GEAR_RATIO);
     }
 
+    /**
+     * Gets the angle of the module.
+     *
+     * @return the angle of the module.
+     */
     public Rotation2d getAngle() {
         return loggerInputs.aAngle;
     }
 
+    /**
+     * Gets the absolute encoder position.
+     *
+     * @return the absolute encoder position. [ticks]
+     */
     public int getEncoderTicks() {
         return toFalconTicks(loggerInputs.encoderAngle);
     }
 
+    /**
+     * Gets the state of the module.
+     *
+     * @return the state of the module, comprised of speed [m/s] and angle.
+     */
     public SwerveModuleState getState() {
         return new SwerveModuleState(loggerInputs.dSetpoint, getAngle());
     }
 
+    /**
+     * Stops the module entirely.
+     */
     public void stop() {
         angleMotor.neutralOutput();
         driveMotor.neutralOutput();
     }
 
+    /**
+     * Vroom vroom.
+     * Used to break out modules.
+     */
     public void vroom() {
         driveMotor.set(ControlMode.PercentOutput, 1);
         angleMotor.set(ControlMode.PercentOutput, 0.5);
     }
 
+    /**
+     * Gets the position of the module.
+     * This is the relative position measured by the falcon. It's alright
+     * to use this position because it is always differentiated.
+     *
+     * @return the position of the module.
+     *          Comprised of the distance [m], and the angle.
+     */
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(loggerInputs.moduleDistance, getAngle());
     }

@@ -5,7 +5,6 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.Constants;
 import frc.robot.subsystems.LoggedSubsystem;
 
 public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
@@ -19,37 +18,37 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final NetworkTableEntry tid = table.getEntry("tid");
     private LimelightLogInputs inputs = LimelightLogInputs.getInstance();
 
-    public Limelight getINSTANCE(){
-        if (INSTANCE==null){
-            INSTANCE = new Limelight();
-        }
-        return INSTANCE;
-    }
-
     private Limelight() {
         super(new LimelightLogInputs());
         inputs = LimelightLogInputs.getInstance();
         PortForwarder.add(5801, "limelight.local", 5801);
     }
 
-    public boolean hasTargets(){
-        return tv.getDouble(0)!=0;
+    public Limelight getINSTANCE() {
+        if (INSTANCE == null) {
+            INSTANCE = new Limelight();
+        }
+        return INSTANCE;
     }
 
-    public int getTagId(){
+    public boolean hasTargets() {
+        return tv.getDouble(0) != 0;
+    }
+
+    public int getTagId() {
         return tid.getHandle();
     }
 
-    public Rotation2d getPitch(){
+    public Rotation2d getPitch() {
         return new Rotation2d(ty.getDouble(0));
     }
 
-    public double getTargetDistance(){
-        double totalPitch = VisionConstants.CAMERA_PITCH+getPitch().getRadians();
-        return tx.getDouble(0)*Math.sin(totalPitch);
+    public double getTargetDistance() {
+        double totalPitch = VisionConstants.CAMERA_PITCH + getPitch().getRadians();
+        return tx.getDouble(0) * Math.sin(totalPitch);
     }
 
-    public Rotation2d getYaw(){
+    public Rotation2d getYaw() {
         return new Rotation2d(ts.getDouble(0));
     }
 

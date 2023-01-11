@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drivetrain.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -44,13 +45,14 @@ public class HolonomicDrive extends CommandBase {
     @Override
     public void execute() {
         ChassisSpeeds speeds = calculateVelocities();
-        swerveDrive.setFieldOriented(!robotOriented.getAsBoolean());
         if (turnToTarget.getAsBoolean()) {
             turnToTarget(speeds);
         } else if (lock.getAsBoolean()) {
             swerveDrive.lock();
         } else {
-            swerveDrive.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+            swerveDrive.drive(speeds.vxMetersPerSecond,
+                    speeds.vyMetersPerSecond,
+                    speeds.omegaRadiansPerSecond, new Translation2d(), !robotOriented.getAsBoolean());
         }
     }
 

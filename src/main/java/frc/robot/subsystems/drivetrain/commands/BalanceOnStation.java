@@ -1,6 +1,7 @@
 package frc.robot.subsystems.drivetrain.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -38,12 +39,12 @@ public class BalanceOnStation extends CommandBase {
         );
         double vx = controller.calculate(absoluteAngle, 0);
         vx += Constants.SwerveDrive.CHARGING_STATION_BALANCE_Kf * Math.signum(vx);
-        swerveDrive.drive(vx, 0, 0);
+        swerveDrive.drive(vx, 0, 0, new Translation2d(), true);
     }
 
     @Override
     public void end(boolean interrupted) {
-        swerveDrive.drive(0, 0, 0);
+        swerveDrive.drive(0, 0, 0, new Translation2d(), true);
     }
 
     @Override

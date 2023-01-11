@@ -44,8 +44,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
 
-    private boolean fieldOriented = true;
-
     public SwerveDrive() {
         super(new SwerveDriveLogInputs());
 
@@ -107,13 +105,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         return mOdometry.getPoseMeters();
     }
 
-    public void drive(ChassisSpeeds chassisSpeeds, Translation2d centerOfRotation) {
-        drive(chassisSpeeds.vxMetersPerSecond,
-                chassisSpeeds.vyMetersPerSecond,
-                chassisSpeeds.omegaRadiansPerSecond, centerOfRotation);
-    }
-
-    public void drive(double vx, double vy, double theta, Translation2d centerOfRotation) {
+    public void drive(double vx, double vy, double theta, Translation2d centerOfRotation, boolean fieldOriented) {
         if (Utils.epsilonEquals(vx, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
                 Utils.epsilonEquals(vy, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
                 Utils.epsilonEquals(theta, 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
@@ -129,16 +121,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 centerOfRotation);
     }
 
-    public void drive(double vx, double vy, double theta) {
-        drive(vx, vy, theta, new Translation2d());
-    }
-
-    public void drive(ChassisSpeeds speeds) {
-        drive(speeds, new Translation2d());
-    }
-
-    public void setFieldOriented(boolean fieldOriented) {
-        this.fieldOriented = fieldOriented;
+    public void drive(ChassisSpeeds speeds, Translation2d centerOfRotation, boolean fieldOriented) {
+        drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, centerOfRotation, fieldOriented);
     }
 
     public void setStates(SwerveModuleState[] states) {

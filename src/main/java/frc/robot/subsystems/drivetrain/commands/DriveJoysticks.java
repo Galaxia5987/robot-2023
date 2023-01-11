@@ -25,7 +25,7 @@ public class DriveJoysticks extends HolonomicDrive {
             double diff = Math.toRadians(povObject.minus(Robot.gyroscope.getYawObject()));
             swerveDrive.drive(speeds, new Translation2d(
                     Math.cos(diff) * Constants.SwerveDrive.TORNADO_SPIN_DISTANCE,
-                    Math.sin(diff) * Constants.SwerveDrive.TORNADO_SPIN_DISTANCE));
+                    Math.sin(diff) * Constants.SwerveDrive.TORNADO_SPIN_DISTANCE), true);
         } else {
             super.execute();
         }

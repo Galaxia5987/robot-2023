@@ -68,8 +68,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         double xTargetDistance = getTargetDistance().getAsDouble() * Math.sin(absouluteAngle);
         double yTargetDistance = getTargetDistance().getAsDouble() * Math.cos(absouluteAngle);
         if (hasTargets()) {
-            double xDistance = xTargetDistance-VisionConstants.UPPER_CONE_TARGET11_X_DISTANCE;
-            double yDistance = yTargetDistance-VisionConstants.UPPER_CONE_TARGET11_Y_DISTANCE;
+            double xDistance = xTargetDistance - VisionConstants.UPPER_CONE_TARGET11_X_DISTANCE;
+            double yDistance = yTargetDistance - VisionConstants.UPPER_CONE_TARGET11_Y_DISTANCE;
             Translation2d translation2d = new Translation2d(xDistance, yDistance);
             return Optional.of(new Pose2d(translation2d, robotAngle));
         }

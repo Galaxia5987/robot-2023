@@ -12,7 +12,6 @@ import java.util.Arrays;
 
 import static frc.robot.Constants.SwerveDrive.*;
 
-
 public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private final SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(
             // Front left
@@ -89,22 +88,51 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 REAR_RIGHT_MOTION_MAGIC_CONFIGS);
     }
 
+    /**
+     * Gets the kinematics of the swerve.
+     *
+     * @return the kinematics of the swerve.
+     */
     public SwerveDriveKinematics getKinematics() {
         return mKinematics;
     }
 
+    /**
+     * Updates the odometry of the robot.
+     */
     public void updateOdometry() {
         mOdometry.update(Robot.gyroscope.getYaw(), swerveModulePositions);
     }
 
+    /**
+     * Resets the odometry of the robot to a specified pose. This is usually used
+     * in the autonomous period.
+     *
+     * @param pose the pose to reset the odometry to.
+     */
     public void resetOdometry(Pose2d pose) {
         mOdometry.resetPosition(Robot.gyroscope.getYaw(), swerveModulePositions, pose);
     }
 
+    /**
+     * Gets the current pose of the robot.
+     *
+     * @return the current pose of the robot.
+     */
     public Pose2d getPose() {
         return mOdometry.getPoseMeters();
     }
 
+    /**
+     * This is the main drive function. Any command given here will be carried out in the periodic.
+     *
+     * @param vx is the forward velocity. [m/s]
+     * @param vy is the strafe velocity. [m/s]
+     * @param theta is the rotation velocity. [rad/s]
+     * @param centerOfRotation is the center of rotation to rotate around. This is mostly (0, 0),
+     *                         except when doing a tornado spin. ([m], [m])
+     * @param fieldOriented is whether the swerve should drive field oriented.
+     */
     public void drive(double vx, double vy, double theta, Translation2d centerOfRotation, boolean fieldOriented) {
         if (Utils.epsilonEquals(vx, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
                 Utils.epsilonEquals(vy, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
@@ -121,14 +149,26 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 centerOfRotation);
     }
 
+    /**
+     * Same as the above function, with the difference of the speeds being a ChassisSpeeds object.
+     * See the documentation of the function this calls for information.
+     */
     public void drive(ChassisSpeeds speeds, Translation2d centerOfRotation, boolean fieldOriented) {
         drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, centerOfRotation, fieldOriented);
     }
 
+    /**
+     * Sets the states of the modules directly.
+     *
+     * @param states are the states to set.
+     */
     public void setStates(SwerveModuleState[] states) {
         swerveModuleStates = Arrays.copyOf(states, states.length);
     }
 
+    /**
+     * Locks the swerve so that it will be difficult to move.
+     */
     public void lock() {
         mFrontLeft.set(0, Rotation2d.fromDegrees(45));
         mFrontRight.set(0, Rotation2d.fromDegrees(135));

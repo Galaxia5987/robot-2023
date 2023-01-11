@@ -40,8 +40,17 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         return loggerInputs.a;
     }
 
-    public double getPipeLine() {
+    public long getPipeLine() {
         return loggerInputs.pipeLine;
+    }
+
+    public void setPipeline(long pipeline) {
+        loggerInputs.pipeLine = pipeline;
+    }
+
+    @Override
+    public void periodic() {
+        pipeline.setInteger(getPipeLine());
     }
 
     @Override
@@ -50,7 +59,6 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.y = ty.getDouble(0);
         loggerInputs.a = ta.getDouble(0);
         loggerInputs.v = tv.getBoolean(false);
-        loggerInputs.pipeLine = pipeline.getDouble(0);
     }
 
     @Override

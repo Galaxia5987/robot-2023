@@ -8,7 +8,7 @@ public class LimelightLogInputs implements LoggableInputs {
     double y;
     double a;
     boolean v;
-    double pipeLine;
+    long pipeLine;
 
     @Override
     public void toLog(LogTable table) {

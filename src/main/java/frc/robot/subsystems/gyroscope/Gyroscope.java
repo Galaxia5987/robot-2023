@@ -66,19 +66,43 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
         return new AngleUtil.Angle(AngleUtil.UP_COUNTER_CLOCKWISE, getYaw().getDegrees());
     }
 
+    /**
+     * Gets the pitch of the robot.
+     *
+     * @return the pitch of the robot. [rad]
+     */
     public Rotation2d getPitch() {
         return loggerInputs.pitch;
     }
 
+    /**
+     * Gets the roll of the robot.
+     *
+     * @return the roll of the robot. [rad]
+     */
     public Rotation2d getRoll() {
         return loggerInputs.roll;
     }
 
+    /**
+     * Gets the yaw pitch roll object representing the angles of the gyro.
+     *
+     * @return the yaw pitch roll object representing the angles of the gyro.
+     *       The angles are in radians. See YawPitchRoll record documentation below for more information.
+     */
     public YawPitchRoll getYawPitchRoll() {
         return new YawPitchRoll(loggerInputs.yaw.getRadians(),
                 loggerInputs.pitch.getRadians(),
                 loggerInputs.roll.getRadians());
     }
 
+    /**
+     * This record represents the angle of the gyro in all three axes.
+     *
+     * Params:
+     * - yaw: the angle of the robot in the x-y plane. [rad]
+     * - pitch: the angle of the robot in the x-z plane. [rad]
+     * - roll: the angle of the robot in the y-z plane. [rad]
+     */
     public record YawPitchRoll(double yaw, double pitch, double roll) {}
 }

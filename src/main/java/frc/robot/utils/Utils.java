@@ -57,6 +57,15 @@ public class Utils {
         return states;
     }
 
+    /**
+     * Converts the relative angles to pitch relative to the coordinate system of the field,
+     * aka the absolute pitch. This value can be used to balance on the charge station.
+     *
+     * @param yaw the yaw angle from the gyro. [rad]
+     * @param pitch the pitch angle from the gyro. [rad]
+     * @param roll the roll angle from the gyro. [rad]
+     * @return the absolute pitch angle. [rad]
+     */
     public static double relativeAnglesToAbsolutePitch(double yaw, double pitch, double roll) {
         return Math.atan(
                 (Math.sin(roll) * Math.sin(yaw) + Math.cos(roll) * Math.sin(pitch) * Math.cos(yaw)) / (Math.cos(pitch) * Math.cos(yaw))

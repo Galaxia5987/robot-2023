@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.Utils;
@@ -232,7 +233,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
                 swerveModuleStates[Module.RR.number].angle);
 
-        System.out.println("{" +
+        SmartDashboard.putString("Encoder Positions", "{" +
                 mFrontLeft.getEncoderTicks() + ", " +
                 mFrontRight.getEncoderTicks() + ", " +
                 mRearLeft.getEncoderTicks() + ", " +

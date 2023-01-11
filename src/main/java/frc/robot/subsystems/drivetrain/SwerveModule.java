@@ -20,6 +20,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
     private final PIDTalon angleMotor;
     private final DutyCycleEncoder encoder;
     private final int offset;
+    private boolean initializedOffset = false;
     private final SwerveDrive.Module number;
     private final double[] motionMagicConfigs;
 
@@ -52,16 +53,6 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         angleMotor.selectProfileSlot(0, 0);
 
         encoder = new DutyCycleEncoder(encoderPort);
-
-        new Thread(() -> {
-            while (!encoder.isConnected()) {
-                System.out.println("Waiting for encoder to connect...");
-            }
-
-            double newPosition = absoluteEncoderToAbsoluteFalcon(encoder.getAbsolutePosition()) - offset;
-            angleMotor.setSelectedSensorPosition(newPosition);
-            loggerInputs.moduleDistance = (driveMotor.getSelectedSensorPosition() / TICKS_PER_ROTATION) * WHEEL_DIAMETER * Math.PI * DRIVE_REDUCTION;
-        }).start();
 
         SmartDashboard.putNumber(number.name() + "_kP", motionMagicConfigs[MotionMagicConfig.Kp.index]);
         SmartDashboard.putNumber(number.name() + "_kI", motionMagicConfigs[MotionMagicConfig.Ki.index]);
@@ -210,6 +201,11 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
 
     @Override
     public void periodic() {
+        if (!initializedOffset && encoder.isConnected()) {
+            double newPosition = absoluteEncoderToAbsoluteFalcon(encoder.getAbsolutePosition()) - offset;
+            angleMotor.setSelectedSensorPosition(newPosition);
+            initializedOffset = true;
+        }
         if (SmartDashboard.getBoolean("Swerve Tune Motion Magic", false)) {
             angleMotor.updatePIDF(0,
                     SmartDashboard.getNumber(number.name() + "_kP", motionMagicConfigs[MotionMagicConfig.Kp.index]),

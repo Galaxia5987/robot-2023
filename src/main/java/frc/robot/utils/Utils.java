@@ -59,7 +59,7 @@ public class Utils {
 
     public static double relativeAnglesToAbsolutePitch(double yaw, double pitch, double roll) {
         return Math.atan(
-                (Math.sin(pitch) * Math.cos(yaw)) / (Math.sin(roll) * Math.sin(yaw) + Math.cos(pitch) * Math.cos(yaw))
+                (Math.sin(roll) * Math.sin(yaw) + Math.cos(roll) * Math.sin(pitch) * Math.cos(yaw)) / (Math.cos(pitch) * Math.cos(yaw))
         );
     }
 }

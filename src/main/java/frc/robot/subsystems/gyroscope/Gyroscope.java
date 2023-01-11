@@ -31,8 +31,8 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     public void updateInputs() {
         loggerInputs.rawYaw = navx.getRotation2d();
         loggerInputs.yaw = getYaw();
-        loggerInputs.pitch = Rotation2d.fromDegrees(navx.getPitch() - zeroPitch);
-        loggerInputs.roll = Rotation2d.fromDegrees(navx.getRoll() - zeroRoll);
+        loggerInputs.pitch = Rotation2d.fromDegrees(Math.toDegrees(zeroPitch - navx.getPitch()));
+        loggerInputs.roll = Rotation2d.fromDegrees(Math.toDegrees(navx.getRoll() - zeroRoll));
     }
 
     @Override

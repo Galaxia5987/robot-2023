@@ -9,7 +9,11 @@ import frc.robot.Robot;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import static frc.robot.Constants.SwerveDrive.*;
 
@@ -125,37 +129,24 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     /**
-     * This is the main drive function. Any command given here will be carried out in the periodic.
+     * This is the main drive function. Any drive signal given here will be carried out in the periodic.
      *
-     * @param vx is the forward velocity. [m/s]
-     * @param vy is the strafe velocity. [m/s]
-     * @param theta is the rotation velocity. [rad/s]
-     * @param centerOfRotation is the center of rotation to rotate around. This is mostly (0, 0),
-     *                         except when doing a tornado spin. ([m], [m])
-     * @param fieldOriented is whether the swerve should drive field oriented.
+     * @param driveSignal the drive signal to process.
      */
-    public void drive(double vx, double vy, double theta, Translation2d centerOfRotation, boolean fieldOriented) {
-        if (Utils.epsilonEquals(vx, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(vy, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(theta, 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
+    public void drive(DriveSignal driveSignal) {
+        if (Utils.epsilonEquals(driveSignal.vx(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
+                Utils.epsilonEquals(driveSignal.vy(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
+                Utils.epsilonEquals(driveSignal.omega(), 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
             stop();
             return;
         }
 
-        swerveModuleStates = mKinematics.toSwerveModuleStates(fieldOriented ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                        vx,
-                        vy,
-                        theta,
-                        Robot.gyroscope.getYaw()) : new ChassisSpeeds(vx, vy, theta),
-                centerOfRotation);
-    }
-
-    /**
-     * Same as the above function, with the difference of the speeds being a ChassisSpeeds object.
-     * See the documentation of the function this calls for information.
-     */
-    public void drive(ChassisSpeeds speeds, Translation2d centerOfRotation, boolean fieldOriented) {
-        drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, centerOfRotation, fieldOriented);
+        swerveModuleStates = mKinematics.toSwerveModuleStates(driveSignal.fieldOriented() ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                        driveSignal.vx(),
+                        driveSignal.vy(),
+                        driveSignal.omega(),
+                        Robot.gyroscope.getYaw()) : driveSignal.speeds(),
+                driveSignal.centerOfRotation());
     }
 
     /**
@@ -250,6 +241,27 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
         Module(int number) {
             this.number = number;
+        }
+    }
+
+    public record Action(SwerveDrive swerve, BooleanSupplier active, Supplier<DriveSignal> signalSupplier) {
+        private static final List<Action> next = new ArrayList<>();
+
+        public void execute() {
+            if (active.getAsBoolean()) {
+                swerve.drive(signalSupplier.get());
+            } else {
+                next.forEach((action -> {
+                    if (action != null) {
+                        action.execute();
+                    }
+                }));
+            }
+        }
+
+        public Action addAction(Action action) {
+            next.add(action);
+            return this;
         }
     }
 }

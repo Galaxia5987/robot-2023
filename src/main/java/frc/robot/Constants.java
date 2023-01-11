@@ -1,8 +1,10 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.autonomous.DrivetrainFeedforwardConstants;
 
 public final class Constants {
     public static final int TALON_TIMEOUT = 10;
@@ -60,14 +62,25 @@ public final class Constants {
 
         public static double TORNADO_SPIN_DISTANCE = 0.4;
 
-        public static double AUTO_XY_Kp = 0.6;
+        public static double AUTO_XY_Kp = 50;
         public static double AUTO_XY_Ki = 0.0;
         public static double AUTO_XY_Kd = 0.0;
-        public static double AUTO_XY_Kf = 0;
-        public static double AUTO_ROTATION_Kp = 2.5;
+        public static double AUTO_ROTATION_Kp = 0;
         public static double AUTO_ROTATION_Ki = 0.0;
         public static double AUTO_ROTATION_Kd = 0.0;
-        public static double AUTO_ROTATION_Kf = 0.0;
+        public static double AUTO_XY_VELOCITY_FEEDFORWARD = 0;
+        public static double AUTO_XY_ACCELERATION_FEEDFORWARD = 0;
+        public static double AUTO_XY_STATIC_FEEDFORWARD = 0;
+
+        public static DrivetrainFeedforwardConstants translationConstants = new DrivetrainFeedforwardConstants(
+                AUTO_XY_VELOCITY_FEEDFORWARD, AUTO_XY_ACCELERATION_FEEDFORWARD, AUTO_XY_STATIC_FEEDFORWARD
+        );
+        public static PIDConstants translationPidConstants = new PIDConstants(
+                AUTO_XY_Kp, AUTO_XY_Ki, AUTO_XY_Kd
+        );
+        public static PIDConstants rotationPidConstants = new PIDConstants(
+                AUTO_ROTATION_Kp, AUTO_ROTATION_Ki, AUTO_ROTATION_Kd
+        );
 
         public static double CHARGING_STATION_BALANCE_Kp = 0.5;
         public static double CHARGING_STATION_BALANCE_Ki = 0;

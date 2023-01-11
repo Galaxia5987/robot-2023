@@ -6,10 +6,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.utils.Utils;
-import frc.robot.utils.controllers.PIDFController;
 
+import java.util.Arrays;
 import java.util.function.DoubleSupplier;
 
 public class HolonomicDrive extends CommandBase {
@@ -31,9 +32,9 @@ public class HolonomicDrive extends CommandBase {
     @Override
     public void execute() {
         ChassisSpeeds speeds = calculateVelocities();
-        swerveDrive.drive(speeds.vxMetersPerSecond,
+        swerveDrive.drive(new DriveSignal(speeds.vxMetersPerSecond,
                 speeds.vyMetersPerSecond,
-                speeds.omegaRadiansPerSecond, new Translation2d(), true);
+                speeds.omegaRadiansPerSecond, new Translation2d(), true));
     }
 
     protected ChassisSpeeds calculateVelocities() {

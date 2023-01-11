@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class Constants {
     public static final int TALON_TIMEOUT = 10;
@@ -75,6 +76,10 @@ public final class Constants {
         public static double CHARGING_STATION_BALANCE_Ki = 0;
         public static double CHARGING_STATION_BALANCE_Kd = 0;
         public static double CHARGING_STATION_BALANCE_Kf = 0;
+        public static double CHARGING_STATION_BALANCE_VELOCITY = 0.5;
+        public static double CHARGING_STATION_BALANCE_ACCELERATION = 0.25;
+        public static TrapezoidProfile.Constraints CHARGING_STATION_BALANCE_CONSTRAINTS = new TrapezoidProfile.Constraints(
+                CHARGING_STATION_BALANCE_VELOCITY, CHARGING_STATION_BALANCE_ACCELERATION);
     }
 
 }

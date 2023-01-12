@@ -1,10 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPoint;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,9 +49,10 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new FollowPath(
-                PathPlanner.loadPath("Onward", 4, 2),
-                Constants.SwerveDrive.translationPidConstants,
-                Constants.SwerveDrive.rotationPidConstants,
-                new HolonomicFeedforward(Constants.SwerveDrive.translationConstants));
+                "Onward",
+                Constants.SwerveDrive.TRANSLATION_PID_CONSTANTS,
+                Constants.SwerveDrive.ROTATION_PID_CONSTANTS,
+                new HolonomicFeedforward(Constants.SwerveDrive.TRANSLATION_FF_CONSTANTS),
+                4, 2);
     }
 }

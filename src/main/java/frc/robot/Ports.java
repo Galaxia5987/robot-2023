@@ -5,33 +5,27 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 public final class Ports {
 
     public static final class SwerveDrive {
-        // front right
-        public static final int DRIVE_MOTOR_FR = 3;
-        public static final int ANGLE_MOTOR_FR = 4;
-        public static final boolean DRIVE_INVERTED_FR = false;
-        public static final boolean ANGLE_INVERTED_FR = true;
-        public static final boolean ANGLE_SENSOR_PHASE_FR = false;
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR_ID = 7;
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR_ID = 8;
+        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR_ID = 3;
+        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR_ID = 4;
+        public static final int REAR_LEFT_MODULE_DRIVE_MOTOR_ID = 1;
+        public static final int REAR_LEFT_MODULE_STEER_MOTOR_ID = 6;
+        public static final int REAR_RIGHT_MODULE_DRIVE_MOTOR_ID = 5;
+        public static final int REAR_RIGHT_MODULE_STEER_MOTOR_ID = 2;
 
-        // front left
-        public static final int DRIVE_MOTOR_FL = 7;
-        public static final int ANGLE_MOTOR_FL = 8;
-        public static final boolean DRIVE_INVERTED_FL = false;
-        public static final boolean ANGLE_INVERTED_FL = true;
-        public static final boolean ANGLE_SENSOR_PHASE_FL = false;
-
-        // rear right
-        public static final int DRIVE_MOTOR_RR = 5;
-        public static final int ANGLE_MOTOR_RR = 2;
-        public static final boolean DRIVE_INVERTED_RR = false;
-        public static final boolean ANGLE_INVERTED_RR = true;
-        public static final boolean ANGLE_SENSOR_PHASE_RR = false;
-
-        // rear left
-        public static final int DRIVE_MOTOR_RL = 1;
-        public static final int ANGLE_MOTOR_RL = 6;
-        public static final boolean DRIVE_INVERTED_RL = false;
-        public static final boolean ANGLE_INVERTED_RL = true;
-        public static final boolean ANGLE_SENSOR_PHASE_RL = false;
+        public static boolean FRONT_LEFT_DRIVE_INVERTED = true;
+        public static boolean FRONT_LEFT_ANGLE_INVERTED = true;
+        public static boolean FRONT_LEFT_ANGLE_SENSOR_PHASE = false;
+        public static boolean FRONT_RIGHT_DRIVE_INVERTED = true;
+        public static boolean FRONT_RIGHT_ANGLE_INVERTED = true;
+        public static boolean FRONT_RIGHT_ANGLE_SENSOR_PHASE = false;
+        public static boolean REAR_LEFT_DRIVE_INVERTED = true;
+        public static boolean REAR_LEFT_ANGLE_INVERTED = true;
+        public static boolean REAR_LEFT_ANGLE_SENSOR_PHASE = false;
+        public static boolean REAR_RIGHT_DRIVE_INVERTED = true;
+        public static boolean REAR_RIGHT_ANGLE_INVERTED = true;
+        public static boolean REAR_RIGHT_ANGLE_SENSOR_PHASE = false;
     }
 
     public static class Intake {

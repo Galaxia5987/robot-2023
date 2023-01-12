@@ -9,13 +9,10 @@ import frc.robot.Robot;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
-import static frc.robot.Constants.SwerveDrive.*;
+import static frc.robot.Ports.SwerveDrive.*;
+import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
 
 public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private final SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(
@@ -134,19 +131,20 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @param driveSignal the drive signal to process.
      */
     public void drive(DriveSignal driveSignal) {
-        if (Utils.epsilonEquals(driveSignal.vx(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(driveSignal.vy(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(driveSignal.omega(), 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
-            stop();
-            return;
-        }
+//        if (Utils.epsilonEquals(driveSignal.vx(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
+//                Utils.epsilonEquals(driveSignal.vy(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
+//                Utils.epsilonEquals(driveSignal.omega(), 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
+//            stop();
+//            return;
+//        }
 
-        swerveModuleStates = mKinematics.toSwerveModuleStates(driveSignal.fieldOriented() ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                        driveSignal.vx(),
-                        driveSignal.vy(),
-                        driveSignal.omega(),
-                        Robot.gyroscope.getYaw()) : driveSignal.speeds(),
-                driveSignal.centerOfRotation());
+        var speeds = driveSignal.fieldOriented() ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                driveSignal.vx(),
+                driveSignal.vy(),
+                driveSignal.omega(),
+                Robot.gyroscope.getYaw()) : driveSignal.speeds();
+        loggerInputs.setpoint = Utils.chassisSpeedsToArray(speeds);
+        swerveModuleStates = mKinematics.toSwerveModuleStates(speeds, driveSignal.centerOfRotation());
     }
 
     /**
@@ -241,27 +239,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
         Module(int number) {
             this.number = number;
-        }
-    }
-
-    public record Action(SwerveDrive swerve, BooleanSupplier active, Supplier<DriveSignal> signalSupplier) {
-        private static final List<Action> next = new ArrayList<>();
-
-        public void execute() {
-            if (active.getAsBoolean()) {
-                swerve.drive(signalSupplier.get());
-            } else {
-                next.forEach((action -> {
-                    if (action != null) {
-                        action.execute();
-                    }
-                }));
-            }
-        }
-
-        public Action addAction(Action action) {
-            next.add(action);
-            return this;
         }
     }
 }

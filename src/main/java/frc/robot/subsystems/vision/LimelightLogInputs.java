@@ -1,8 +1,10 @@
 package frc.robot.subsystems.vision;
 
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
+@AutoLog
 public class LimelightLogInputs implements LoggableInputs {
     public static LimelightLogInputs INSTANCE = null;
     public double targetDistance;

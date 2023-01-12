@@ -4,9 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.*;
 import frc.robot.subsystems.LoggedSubsystem;
 
 import java.util.Optional;
@@ -16,6 +14,17 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public static Limelight INSTANCE = null;
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+//    private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
+//    private final DoubleSubscriber ty = table.getDoubleTopic("ty").subscribe(0.0);
+//    private final BooleanSubscriber tv = table.getBooleanTopic("tv").subscribe(false);
+//    private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
+//    private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
+
+//    private double prevTx;
+//    private double prevTy;
+//    private boolean prevTv;
+//    private double prevTs;
+//    private long prevTid;
     private final NetworkTableEntry tx = table.getEntry("tx");
     private final NetworkTableEntry ty = table.getEntry("ty");
     private final NetworkTableEntry tv = table.getEntry("tv");
@@ -29,6 +38,14 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         PortForwarder.add(5801, "limelight.local", 5801);
     }
 
+//    public void periodic(){
+//        double txValue = tx.get();
+//        double tyValue = ty.get();
+//        boolean tvValue = tv.get();
+//        double tsValue = ts.get();
+//        long tidValue = tid.get();
+//    }
+
     public Limelight getInstance() {
 
 
@@ -39,28 +56,28 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     public boolean hasTargets() {
-        return tv.getDouble(0) != 0;
+        return tv.getBoolean(false);
     }
 
-    public int getTagId() {
-        return tid.getHandle();
+    public long getTagId() {
+        return tid.getInteger(0);
     }
 
     public Rotation2d getPitch() {
-        return new Rotation2d(ty.getDouble(0));
+        return new Rotation2d(ty.getDouble(0.0));
     }
 
     public OptionalDouble getTargetDistance() {
         double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
         if (hasTargets()) {
-            return OptionalDouble.of(tx.getDouble(0) * Math.sin(totalPitch));
+            return OptionalDouble.of(tx.getDouble(0.0) * Math.sin(totalPitch));
         }
         return OptionalDouble.empty();
     }
 
     public OptionalDouble getYaw() {
         if (hasTargets()) {
-            return OptionalDouble.of(ts.getDouble(0));
+            return OptionalDouble.of(ts.getDouble(0.0));
         }
         return OptionalDouble.empty();
     }

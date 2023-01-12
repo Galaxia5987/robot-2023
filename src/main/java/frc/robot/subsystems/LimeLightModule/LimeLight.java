@@ -9,6 +9,7 @@ import frc.robot.subsystems.LoggedSubsystem;
 
 
 public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
+    Constants constants = new Constants();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
@@ -50,7 +51,12 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         return loggerInputs.a;
     }
 
-
+public double getRobotX(){
+        return ((constants.CAMERA_HEIGHT-constants.TARGET_HEIGHT)*(Math.tan(Math.toRadians(getVerticalOffset()+ constants.CAMERA_ANGLE))));
+}
+public double getRobotY(){
+        return  (Math.tan(Math.toRadians(getHorizantalOffset()))*getRobotX());
+}
 
     public double getId(){
 return loggerInputs.id;

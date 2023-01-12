@@ -1,5 +1,7 @@
 package frc.robot.subsystems.LimeLightModule;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -49,11 +51,8 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
 
-    public double[] getTargetOffSet(){
-        return  new double[]{getHorizantalOffset(), getVerticalOffset(), getSkewOffset()};
-    }
 
-    public double apriTag(){
+    public double getId(){
 return loggerInputs.id;
     }
 

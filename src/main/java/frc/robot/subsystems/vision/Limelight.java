@@ -25,27 +25,46 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         PortForwarder.add(5801, "limelight.local", 5801);
     }
 
+    /**
+     * if there is no instace of the limelight class it creates one and returns it
+     * @return
+     */
     public Limelight getInstance() {
-
-
         if (INSTANCE == null) {
             INSTANCE = new Limelight();
         }
         return INSTANCE;
     }
 
+    /**
+     * checks weather the limelight can see any targets
+     * @return
+     */
     public boolean hasTargets() {
         return tv.get();
     }
 
+    /**
+     * returns the id of the aprilTag the limelight sees
+     * @return
+     */
     public long getTagId() {
         return tid.get();
     }
 
+
+    /**
+     * returns the pitch from the robot to the target
+     * @return
+     */
     public Rotation2d getPitch() {
         return new Rotation2d(ty.get());
     }
 
+    /**
+     *returns the distance from the target
+     * @return
+     */
     public OptionalDouble getTargetDistance() {
         double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
         if (hasTargets()) {
@@ -54,6 +73,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return OptionalDouble.empty();
     }
 
+    /**
+     * returns the yaw
+     * @return
+     */
     public OptionalDouble getYaw() {
         if (hasTargets()) {
             return OptionalDouble.of(ts.get());
@@ -61,6 +84,11 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return OptionalDouble.empty();
     }
 
+    /**
+     * estimates the position of the robot
+     * @param robotAngle
+     * @return
+     */
     public Optional<Pose2d> estimatePose(Rotation2d robotAngle) {
         double absouluteAngle = robotAngle.getRadians() + getYaw().getAsDouble();
         double xTargetDistance = getTargetDistance().getAsDouble() * Math.sin(absouluteAngle);
@@ -74,6 +102,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.empty();
     }
 
+    /**
+     * updates the limelight log inputs periodically
+     */
     public void periodic() {
         updateInputs();
     }
@@ -83,6 +114,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return "Limelight";
     }
 
+    /**
+     * updates the limelight log inputs
+     */
     @Override
     public void updateInputs() {
         loggerInputs.hasTargets = hasTargets();

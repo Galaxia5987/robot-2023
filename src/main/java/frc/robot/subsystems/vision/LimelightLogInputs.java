@@ -15,6 +15,10 @@ public class LimelightLogInputs implements LoggableInputs {
     public LimelightLogInputs() {
     }
 
+    /**
+     * if there is no instance of the limelightLogInputs class it creates one and returns it
+     * @return
+     */
     public static LimelightLogInputs getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new LimelightLogInputs();

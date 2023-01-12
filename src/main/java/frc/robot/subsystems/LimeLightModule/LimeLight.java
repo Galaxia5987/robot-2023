@@ -12,6 +12,8 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ta = table.getEntry("ta");
     NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableEntry ts = table.getEntry("ts");
+    NetworkTableEntry tid = table.getEntry("tid");
     NetworkTableEntry pipeline = table.getEntry("pipeline");
 
 
@@ -20,6 +22,8 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.x = 0;
         loggerInputs.y = 0;
         loggerInputs.a = 0;
+        loggerInputs.s = 0;
+        loggerInputs.id = 0;
         loggerInputs.v = false;
         loggerInputs.pipeLine = 0;
     }
@@ -36,8 +40,21 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         return loggerInputs.y;
     }
 
+    public double getSkewOffset(){
+        return loggerInputs.s;
+    }
+
     public double getTargetPrecentage() {
         return loggerInputs.a;
+    }
+
+
+    public double[] getTargetOffSet(){
+        return  new double[]{getHorizantalOffset(), getVerticalOffset(), getSkewOffset()};
+    }
+
+    public double apriTag(){
+return loggerInputs.id;
     }
 
     public long getPipeLine() {
@@ -59,6 +76,8 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.y = ty.getDouble(0);
         loggerInputs.a = ta.getDouble(0);
         loggerInputs.v = tv.getBoolean(false);
+        loggerInputs.s = ts.getDouble(0);
+        loggerInputs.id = tid.getInteger(0);
     }
 
     @Override

@@ -4,6 +4,8 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class LimelightLogInputs implements LoggableInputs {
+    public double s;
+    public long id;
     double x;
     double y;
     double a;

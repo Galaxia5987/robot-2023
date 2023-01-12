@@ -14,37 +14,16 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public static Limelight INSTANCE = null;
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-//    private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
-//    private final DoubleSubscriber ty = table.getDoubleTopic("ty").subscribe(0.0);
-//    private final BooleanSubscriber tv = table.getBooleanTopic("tv").subscribe(false);
-//    private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
-//    private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
-
-//    private double prevTx;
-//    private double prevTy;
-//    private boolean prevTv;
-//    private double prevTs;
-//    private long prevTid;
-    private final NetworkTableEntry tx = table.getEntry("tx");
-    private final NetworkTableEntry ty = table.getEntry("ty");
-    private final NetworkTableEntry tv = table.getEntry("tv");
-    private final NetworkTableEntry ts = table.getEntry("ts");
-    private final NetworkTableEntry tid = table.getEntry("tid");
-    private LimelightLogInputs inputs = LimelightLogInputs.getInstance();
+    private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
+    private final DoubleSubscriber ty = table.getDoubleTopic("ty").subscribe(0.0);
+    private final BooleanSubscriber tv = table.getBooleanTopic("tv").subscribe(false);
+    private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
+    private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
 
     private Limelight() {
         super(new LimelightLogInputs());
-        inputs = LimelightLogInputs.getInstance();
         PortForwarder.add(5801, "limelight.local", 5801);
     }
-
-//    public void periodic(){
-//        double txValue = tx.get();
-//        double tyValue = ty.get();
-//        boolean tvValue = tv.get();
-//        double tsValue = ts.get();
-//        long tidValue = tid.get();
-//    }
 
     public Limelight getInstance() {
 
@@ -56,28 +35,28 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     public boolean hasTargets() {
-        return tv.getBoolean(false);
+        return tv.get();
     }
 
     public long getTagId() {
-        return tid.getInteger(0);
+        return tid.get();
     }
 
     public Rotation2d getPitch() {
-        return new Rotation2d(ty.getDouble(0.0));
+        return new Rotation2d(ty.get());
     }
 
     public OptionalDouble getTargetDistance() {
         double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
         if (hasTargets()) {
-            return OptionalDouble.of(tx.getDouble(0.0) * Math.sin(totalPitch));
+            return OptionalDouble.of(tx.get() * Math.sin(totalPitch));
         }
         return OptionalDouble.empty();
     }
 
     public OptionalDouble getYaw() {
         if (hasTargets()) {
-            return OptionalDouble.of(ts.getDouble(0.0));
+            return OptionalDouble.of(ts.get());
         }
         return OptionalDouble.empty();
     }
@@ -95,6 +74,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.empty();
     }
 
+    public void periodic(){
+        updateInputs();
+    }
+
     @Override
     public String getSubsystemName() {
         return "Limelight";
@@ -102,10 +85,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
 
     @Override
     public void updateInputs() {
-        inputs.hasTargets = hasTargets();
-        getYaw().ifPresent((value) -> inputs.yaw = value);
-        inputs.tagId = getTagId();
-        getTargetDistance().ifPresent((value) -> inputs.targetDistance = value);
+        loggerInputs.hasTargets = hasTargets();
+        getYaw().ifPresent((value) -> loggerInputs.yaw = value);
+        loggerInputs.tagId = getTagId();
+        getTargetDistance().ifPresent((value) -> loggerInputs.targetDistance = value);
 
     }
 }

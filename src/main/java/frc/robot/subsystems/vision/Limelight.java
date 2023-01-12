@@ -29,9 +29,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         PortForwarder.add(5801, "limelight.local", 5801);
     }
 
-    public Limelight getInstance() {]
+    public Limelight getInstance() {
 
-        
+
         if (INSTANCE == null) {
             INSTANCE = new Limelight();
         }

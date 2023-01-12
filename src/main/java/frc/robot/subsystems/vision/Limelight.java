@@ -74,7 +74,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.empty();
     }
 
-    public void periodic(){
+    public void periodic() {
         updateInputs();
     }
 

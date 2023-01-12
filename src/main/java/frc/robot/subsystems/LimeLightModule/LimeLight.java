@@ -1,7 +1,10 @@
 package frc.robot.subsystems.LimeLightModule;
 
 import edu.wpi.first.math.geometry.Pose2d;
+<<<<<<< HEAD
 import edu.wpi.first.math.geometry.Rotation2d;
+=======
+>>>>>>> lime-light
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -58,6 +61,7 @@ public double getRobotX(){
 public double getRobotY(){
         return  (Math.tan(Math.toRadians(getHorizantalOffset()))*getRobotX());
 }
+<<<<<<< HEAD
    public double getRobotTheta(){
         return getHorizantalOffset()+Math.toDegrees(Math.acos(getRobotX()/getRobotY()))-90;
    }
@@ -68,6 +72,9 @@ public double getRobotY(){
         return new Pose2d(robotPosition, robotRotation);
    }
 
+=======
+
+>>>>>>> lime-light
     public double getId(){
 return loggerInputs.id;
     }

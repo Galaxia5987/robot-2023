@@ -1,8 +1,10 @@
 package frc.robot.subsystems.LimeLightModule;
 
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
+@AutoLog
 public class LimelightLogInputs implements LoggableInputs {
     public double s;
     public long id;
@@ -23,6 +25,10 @@ public class LimelightLogInputs implements LoggableInputs {
 
     @Override
     public void fromLog(LogTable table) {
-
+        table.get("x");
+        table.get("y");
+        table.get("a");
+        table.get("v");
+        table.get("pipeLine");
     }
 }

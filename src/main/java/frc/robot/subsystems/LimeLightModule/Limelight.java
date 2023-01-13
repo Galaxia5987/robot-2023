@@ -1,10 +1,7 @@
 package frc.robot.subsystems.LimeLightModule;
 
 import edu.wpi.first.math.geometry.Pose2d;
-<<<<<<< HEAD
 import edu.wpi.first.math.geometry.Rotation2d;
-=======
->>>>>>> lime-light
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -12,7 +9,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.subsystems.LoggedSubsystem;
 
 
-public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
+public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     Constants constants = new Constants();
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
@@ -24,7 +21,7 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
     NetworkTableEntry pipeline = table.getEntry("pipeline");
 
 
-    public LimeLight() {
+    public Limelight() {
         super(new LimelightLogInputs());
         loggerInputs.x = 0;
         loggerInputs.y = 0;
@@ -47,7 +44,7 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         return loggerInputs.y;
     }
 
-    public double getSkewOffset(){
+    public double getSkewOffset() {
         return loggerInputs.s;
     }
 
@@ -55,31 +52,34 @@ public class LimeLight extends LoggedSubsystem<LimelightLogInputs> {
         return loggerInputs.a;
     }
 
-public double getRobotX(){
-        return ((constants.CAMERA_HEIGHT-constants.TARGET_HEIGHT)*(Math.tan(Math.toRadians(getVerticalOffset()+ constants.CAMERA_ANGLE))));
-}
-public double getRobotY(){
-        return  (Math.tan(Math.toRadians(getHorizantalOffset()))*getRobotX());
-}
-<<<<<<< HEAD
-   public double getRobotTheta(){
-        return getHorizantalOffset()+Math.toDegrees(Math.acos(getRobotX()/getRobotY()))-90;
-   }
-
-   public Pose2d getRobotPose(){
-        Translation2d robotPosition = new Translation2d(getRobotX(), getRobotY());
-       Rotation2d robotRotation = new Rotation2d(getRobotTheta());
-        return new Pose2d(robotPosition, robotRotation);
-   }
-
-=======
-
->>>>>>> lime-light
-    public double getId(){
-return loggerInputs.id;
+    public double getRobotX() {
+        return ((constants.CAMERA_HEIGHT - constants.TARGET_HEIGHT) * (Math.tan(Math.toRadians(getVerticalOffset() + constants.CAMERA_ANGLE))));
     }
 
-    public long getPipeLine() {
+    public double getRobotY() {
+        return (Math.tan(Math.toRadians(getHorizantalOffset())) * getRobotX());
+    }
+
+    public double getRobotTheta() {
+        return getHorizantalOffset() + Math.toDegrees(Math.acos(getRobotX() / getRobotY())) - 90;
+    }
+
+    public double getDistance(){
+        return Math.sqrt(Math.pow(Math.abs(getRobotX()-constants.X_TARGET), 2)+Math.pow(Math.abs(getRobotY()- constants.Y_TARGET), 2));
+    }
+
+    public Pose2d getRobotPose() {
+        Translation2d robotPosition = new Translation2d(getRobotX(), getRobotY());
+        Rotation2d robotRotation = new Rotation2d(getRobotTheta());
+        return new Pose2d(robotPosition, robotRotation);
+    }
+
+
+    public double getId() {
+        return loggerInputs.id;
+    }
+
+    public long getPipeline() {
         return loggerInputs.pipeLine;
     }
 
@@ -89,7 +89,7 @@ return loggerInputs.id;
 
     @Override
     public void periodic() {
-        pipeline.setInteger(getPipeLine());
+        pipeline.setInteger(getPipeline());
     }
 
     @Override
@@ -104,6 +104,6 @@ return loggerInputs.id;
 
     @Override
     public String getSubsystemName() {
-        return null;
+        return "vision-limeLight";
     }
 }

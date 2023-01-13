@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.drivetrain.DriveSignal;
+import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
@@ -15,10 +16,10 @@ public class BalanceOnStation extends CommandBase {
     private final Gyroscope gyroscope = Robot.gyroscope;
 
     private final ProfiledPIDController controller = new ProfiledPIDController(
-            Constants.SwerveDrive.CHARGING_STATION_BALANCE_Kp,
-            Constants.SwerveDrive.CHARGING_STATION_BALANCE_Ki,
-            Constants.SwerveDrive.CHARGING_STATION_BALANCE_Kd,
-            Constants.SwerveDrive.CHARGING_STATION_BALANCE_CONSTRAINTS
+            SwerveConstants.CHARGING_STATION_BALANCE_Kp,
+            SwerveConstants.CHARGING_STATION_BALANCE_Ki,
+            SwerveConstants.CHARGING_STATION_BALANCE_Kd,
+            SwerveConstants.CHARGING_STATION_BALANCE_CONSTRAINTS
     );
 
     public BalanceOnStation() {
@@ -39,7 +40,7 @@ public class BalanceOnStation extends CommandBase {
                 angles.roll()
         );
         double vx = controller.calculate(absoluteAngle, 0);
-        vx += Constants.SwerveDrive.CHARGING_STATION_BALANCE_Kf * Math.signum(vx);
+        vx += SwerveConstants.CHARGING_STATION_BALANCE_Kf * Math.signum(vx);
         swerveDrive.drive(new DriveSignal(vx, 0, 0, new Translation2d(), true));
     }
 

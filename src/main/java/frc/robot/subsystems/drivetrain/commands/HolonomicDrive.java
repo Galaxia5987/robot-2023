@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.drivetrain.DriveSignal;
+import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.utils.Utils;
 
@@ -15,9 +16,9 @@ import java.util.function.DoubleSupplier;
 
 public class HolonomicDrive extends CommandBase {
     protected final SwerveDrive swerveDrive = Robot.swerveSubsystem;
-    protected final SlewRateLimiter forwardLimiter = new SlewRateLimiter(Constants.SwerveDrive.XY_SLEW_RATE_LIMIT);
-    protected final SlewRateLimiter strafeLimiter = new SlewRateLimiter(Constants.SwerveDrive.XY_SLEW_RATE_LIMIT);
-    protected final SlewRateLimiter rotationLimiter = new SlewRateLimiter(Constants.SwerveDrive.ROTATION_SLEW_RATE_LIMIT);
+    protected final SlewRateLimiter forwardLimiter = new SlewRateLimiter(SwerveConstants.XY_SLEW_RATE_LIMIT);
+    protected final SlewRateLimiter strafeLimiter = new SlewRateLimiter(SwerveConstants.XY_SLEW_RATE_LIMIT);
+    protected final SlewRateLimiter rotationLimiter = new SlewRateLimiter(SwerveConstants.ROTATION_SLEW_RATE_LIMIT);
     protected final DoubleSupplier forward;
     protected final DoubleSupplier strafe;
     protected final DoubleSupplier rotation;
@@ -42,9 +43,9 @@ public class HolonomicDrive extends CommandBase {
         double strafeVal = Utils.deadband(strafeLimiter.calculate(strafe.getAsDouble()), 0.1);
         double rotationVal = Utils.deadband(rotationLimiter.calculate(rotation.getAsDouble()), 0.1);
 
-        return new ChassisSpeeds(forwardVal * Constants.SwerveDrive.MAX_VELOCITY_METERS_PER_SECOND,
-                strafeVal * Constants.SwerveDrive.MAX_VELOCITY_METERS_PER_SECOND,
-                rotationVal * Constants.SwerveDrive.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+        return new ChassisSpeeds(forwardVal * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                strafeVal * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                rotationVal * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
     }
 
     protected void turnToTarget(ChassisSpeeds speeds) {

@@ -26,9 +26,9 @@ public class FollowPath extends CommandBase {
     private final SwerveDrive swerveDrive = Robot.swerveSubsystem;
     private final AutonomousLogInputs logInputs = new AutonomousLogInputs();
 
-    public FollowPath(String trajectory, PIDConstants translationConstants, PIDConstants rotationConstants,
+    public FollowPath(String trajectoryName, PIDConstants translationConstants, PIDConstants rotationConstants,
                       HolonomicFeedforward feedforward, double maxVelocity, double maxAcceleration) {
-        this.trajectory = PathPlanner.loadPath(trajectory, maxVelocity, maxAcceleration);
+        this.trajectory = PathPlanner.loadPath(trajectoryName, maxVelocity, maxAcceleration);
         this.forwardController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD,
                 new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
         this.strafeController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD,
@@ -38,7 +38,7 @@ public class FollowPath extends CommandBase {
 
         this.feedforward = feedforward;
 
-        swerveDrive.resetOdometry(this.trajectory.getInitialPose());
+        addRequirements(swerveDrive);
     }
 
     @Override
@@ -47,6 +47,8 @@ public class FollowPath extends CommandBase {
         timer.reset();
         logInputs.initialPose = trajectory.getInitialState();
         logInputs.finalPose = trajectory.getEndState();
+
+        swerveDrive.resetOdometry(trajectory.getInitialPose(), Robot.gyroscope.getYaw());
     }
 
     @Override
@@ -64,12 +66,11 @@ public class FollowPath extends CommandBase {
         Translation2d feedforwardVector = feedforward.calculateFeedforward(segmentVelocity, segmentAcceleration);
 
         swerveDrive.drive(new DriveSignal(
-//                forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
-//                        + feedforwardVector.getX(),
-//                strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
-//                        + feedforwardVector.getY(),
-//                rotationController.calculate(currentPose.getRotation().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
-                1, 0, 0,
+                forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
+                        + feedforwardVector.getX(),
+                strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
+                        + feedforwardVector.getY(),
+                rotationController.calculate(currentPose.getRotation().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
                 new Translation2d(),
                 true
         ));
@@ -78,6 +79,8 @@ public class FollowPath extends CommandBase {
         logInputs.time = timer.get();
 
         Logger.getInstance().processInputs("Autonomous Path", logInputs);
+
+        System.out.println("");
     }
 
     @Override

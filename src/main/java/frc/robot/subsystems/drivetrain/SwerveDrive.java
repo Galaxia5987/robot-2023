@@ -112,8 +112,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      *
      * @param pose the pose to reset the odometry to.
      */
-    public void resetOdometry(Pose2d pose) {
-        mOdometry.resetPosition(Robot.gyroscope.getYaw(), swerveModulePositions, pose);
+    public void resetOdometry(Pose2d pose, Rotation2d gyroAngle) {
+        mOdometry.resetPosition(gyroAngle, swerveModulePositions, pose);
     }
 
     /**
@@ -131,20 +131,21 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @param driveSignal the drive signal to process.
      */
     public void drive(DriveSignal driveSignal) {
-//        if (Utils.epsilonEquals(driveSignal.vx(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-//                Utils.epsilonEquals(driveSignal.vy(), 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-//                Utils.epsilonEquals(driveSignal.omega(), 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
-//            stop();
-//            return;
-//        }
+        if (Utils.epsilonEquals(driveSignal.vx, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
+                Utils.epsilonEquals(driveSignal.vy, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
+                Utils.epsilonEquals(driveSignal.omega, 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
+            loggerInputs.setpoint = new double[]{0, 0, 0};
+            stop();
+            return;
+        }
 
-        var speeds = driveSignal.fieldOriented() ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                driveSignal.vx(),
-                driveSignal.vy(),
-                driveSignal.omega(),
+        var speeds = driveSignal.fieldOriented ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                driveSignal.vx,
+                driveSignal.vy,
+                driveSignal.omega,
                 Robot.gyroscope.getYaw()) : driveSignal.speeds();
         loggerInputs.setpoint = Utils.chassisSpeedsToArray(speeds);
-        swerveModuleStates = mKinematics.toSwerveModuleStates(speeds, driveSignal.centerOfRotation());
+        swerveModuleStates = mKinematics.toSwerveModuleStates(speeds, driveSignal.centerOfRotation);
     }
 
     /**

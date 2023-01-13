@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.motors.PIDTalon;
 
-import static frc.robot.Constants.SwerveDrive.*;
+import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
 import static frc.robot.Constants.*;
 
 public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.autonomous.HolonomicFeedforward;
+import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 
 public class RobotContainer {
@@ -50,9 +51,9 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new FollowPath(
                 "Onward",
-                Constants.SwerveDrive.TRANSLATION_PID_CONSTANTS,
-                Constants.SwerveDrive.ROTATION_PID_CONSTANTS,
-                new HolonomicFeedforward(Constants.SwerveDrive.TRANSLATION_FF_CONSTANTS),
+                SwerveConstants.TRANSLATION_PID_CONSTANTS,
+                SwerveConstants.ROTATION_PID_CONSTANTS,
+                new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS),
                 4, 2);
     }
 }

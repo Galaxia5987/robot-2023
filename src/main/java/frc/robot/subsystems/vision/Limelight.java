@@ -16,7 +16,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
     private final DoubleSubscriber ty = table.getDoubleTopic("ty").subscribe(0.0);
-    private final BooleanSubscriber tv = table.getBooleanTopic("tv").subscribe(false);
+    private final IntegerSubscriber tv = table.getIntegerTopic("tv").subscribe(0);
     private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
 
@@ -29,7 +29,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * if there is no instace of the limelight class it creates one and returns it
      * @return
      */
-    public Limelight getInstance() {
+    public static Limelight getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Limelight();
         }
@@ -41,7 +41,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * @return
      */
     public boolean hasTargets() {
-        return tv.get();
+        return tv.get() == 1;
     }
 
     /**
@@ -58,7 +58,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * @return
      */
     public Rotation2d getPitch() {
-        return new Rotation2d(ty.get());
+        return Rotation2d.fromDegrees(ty.get());
     }
 
     /**
@@ -67,8 +67,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      */
     public OptionalDouble getTargetDistance() {
         double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
+        double error = Constants.CAMERA_HEIGHT-Constants.TARGET_HEIGHT;
         if (hasTargets()) {
-            return OptionalDouble.of(tx.get() * Math.sin(totalPitch));
+            return OptionalDouble.of(Math.abs(error / Math.tan(totalPitch)));
         }
         return OptionalDouble.empty();
     }
@@ -102,16 +103,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.empty();
     }
 
-    /**
-     * updates the limelight log inputs periodically
-     */
-    public void periodic() {
-        updateInputs();
-    }
-
     @Override
     public String getSubsystemName() {
-        return "Limelight";
+        return "Vision";
     }
 
     /**

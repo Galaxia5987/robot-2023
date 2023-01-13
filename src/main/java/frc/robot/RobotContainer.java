@@ -4,10 +4,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.vision.Limelight;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
     private final XboxController xboxController = new XboxController(0);
+    private final Limelight limelight = Limelight.getInstance();
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);

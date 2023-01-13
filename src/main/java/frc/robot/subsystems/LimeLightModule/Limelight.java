@@ -25,8 +25,6 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         super(new LimelightLogInputs());
         loggerInputs.x = 0;
         loggerInputs.y = 0;
-        loggerInputs.a = 0;
-        loggerInputs.s = 0;
         loggerInputs.id = 0;
         loggerInputs.v = false;
         loggerInputs.pipeLine = 0;
@@ -44,13 +42,13 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return loggerInputs.y;
     }
 
-    public double getSkewOffset() {
-        return loggerInputs.s;
-    }
+//    public double getSkewOffset() {
+//        return loggerInputs.s;
+//    }
 
-    public double getTargetPrecentage() {
-        return loggerInputs.a;
-    }
+//    public double getTargetPrecentage() {
+//        return loggerInputs.a;
+//    }
 
     public double getRobotX() {
         return ((constants.CAMERA_HEIGHT - constants.TARGET_HEIGHT) * (Math.tan(Math.toRadians(getVerticalOffset() + constants.CAMERA_ANGLE))));
@@ -75,7 +73,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
 
-    public double getId() {
+    public long getId() {
         return loggerInputs.id;
     }
 
@@ -96,9 +94,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public void updateInputs() {
         loggerInputs.x = tx.getDouble(0);
         loggerInputs.y = ty.getDouble(0);
-        loggerInputs.a = ta.getDouble(0);
+        //loggerInputs.a = ta.getDouble(0);
         loggerInputs.v = tv.getBoolean(false);
-        loggerInputs.s = ts.getDouble(0);
+       // loggerInputs.s = ts.getDouble(0);
         loggerInputs.id = tid.getInteger(0);
     }
 

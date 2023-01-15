@@ -12,6 +12,12 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     private double zeroRoll;
     private boolean zeroInitialized = false;
 
+    public Gyroscope() {
+        super(new GyroscopeLogInputs());
+        navx = new AHRS(SPI.Port.kMXP);
+        loggerInputs.zeroYaw = new Rotation2d();
+    }
+
     @Override
     public void periodic() {
         if (!zeroInitialized && navx.isConnected()) {
@@ -21,15 +27,9 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
         }
     }
 
-    public Gyroscope() {
-        super(new GyroscopeLogInputs());
-        navx = new AHRS(SPI.Port.kMXP);
-        loggerInputs.zeroYaw = new Rotation2d();
-    }
-
     @Override
     public void updateInputs() {
-        loggerInputs.rawYaw = Rotation2d.fromDegrees(navx.getYaw());
+        loggerInputs.rawYaw = navx.getRotation2d();
         loggerInputs.yaw = getYaw();
         loggerInputs.pitch = Rotation2d.fromDegrees(Math.toDegrees(zeroPitch - navx.getPitch()));
         loggerInputs.roll = Rotation2d.fromDegrees(Math.toDegrees(navx.getRoll() - zeroRoll));
@@ -100,7 +100,7 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
      * Gets the yaw pitch roll object representing the angles of the gyro.
      *
      * @return the yaw pitch roll object representing the angles of the gyro.
-     *       The angles are in radians. See YawPitchRoll record documentation below for more information.
+     * The angles are in radians. See YawPitchRoll record documentation below for more information.
      */
     public YawPitchRoll getYawPitchRoll() {
         return new YawPitchRoll(loggerInputs.yaw.getRadians(),
@@ -110,11 +110,12 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
 
     /**
      * This record represents the angle of the gyro in all three axes.
-     *
+     * <p>
      * Params:
      * - yaw: the angle of the robot in the x-y plane. [rad]
      * - pitch: the angle of the robot in the x-z plane. [rad]
      * - roll: the angle of the robot in the y-z plane. [rad]
      */
-    public record YawPitchRoll(double yaw, double pitch, double roll) {}
+    public record YawPitchRoll(double yaw, double pitch, double roll) {
+    }
 }

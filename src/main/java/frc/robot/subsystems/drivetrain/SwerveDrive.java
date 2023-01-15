@@ -100,13 +100,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     /**
-     * Updates the odometry of the robot.
-     */
-    public void updateOdometry() {
-        mOdometry.update(Robot.gyroscope.getYaw(), swerveModulePositions);
-    }
-
-    /**
      * Resets the odometry of the robot to a specified pose. This is usually used
      * in the autonomous period.
      *
@@ -146,6 +139,17 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 Robot.gyroscope.getYaw()) : driveSignal.speeds();
         loggerInputs.setpoint = Utils.chassisSpeedsToArray(speeds);
         swerveModuleStates = mKinematics.toSwerveModuleStates(speeds, driveSignal.centerOfRotation);
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_VELOCITY_METERS_PER_SECOND);
+
+        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.FL.number].angle);
+        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.FR.number].angle);
+        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.RL.number].angle);
+        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.RR.number].angle);
     }
 
     /**
@@ -210,18 +214,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearRight.getPosition()
         };
 
-        updateOdometry();
-
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_VELOCITY_METERS_PER_SECOND);
-
-        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.FL.number].angle);
-        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.FR.number].angle);
-        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.RL.number].angle);
-        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.RR.number].angle);
+        mOdometry.update(Robot.gyroscope.getYaw(), swerveModulePositions);
 
         SmartDashboard.putString("Encoder Positions", "{" +
                 mFrontLeft.getEncoderTicks() + ", " +

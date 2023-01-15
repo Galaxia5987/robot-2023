@@ -34,7 +34,7 @@ public class FollowPath extends CommandBase {
         this.strafeController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD,
                 new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
         this.rotationController = new PIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD);
-        this.rotationController.enableContinuousInput(0.0, 2.0 * Math.PI);
+        this.rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
         this.feedforward = feedforward;
 
@@ -49,6 +49,7 @@ public class FollowPath extends CommandBase {
         logInputs.finalPose = trajectory.getEndState();
 
         swerveDrive.resetOdometry(trajectory.getInitialPose(), Robot.gyroscope.getYaw());
+        Robot.gyroscope.resetYaw(trajectory.getInitialState().holonomicRotation);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class FollowPath extends CommandBase {
 
         Translation2d feedforwardVector = feedforward.calculateFeedforward(segmentVelocity, segmentAcceleration);
 
-        swerveDrive.drive(new DriveSignal(
+        var signal = new DriveSignal(
                 forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
                         + feedforwardVector.getX(),
                 strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
@@ -73,14 +74,17 @@ public class FollowPath extends CommandBase {
                 rotationController.calculate(currentPose.getRotation().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
                 new Translation2d(),
                 true
-        ));
+        );
+        swerveDrive.drive(signal);
 
         logInputs.desiredState = desiredState;
         logInputs.time = timer.get();
 
         Logger.getInstance().processInputs("Autonomous Path", logInputs);
 
-        System.out.println("");
+        System.out.println("vx: " + signal.vx);
+        System.out.println("vy: " + signal.vy);
+        System.out.println("omega: " + signal.omega);
     }
 
     @Override

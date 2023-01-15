@@ -30,7 +30,7 @@ public class HolonomicFeedforward {
 
         // Apply the kS constant proportionally to the forward and strafe feedforwards based on their relative
         // magnitudes
-        Translation2d feedforwardUnitVector = feedforwardVector.times( 1 / feedforwardVector.getNorm());
+        Translation2d feedforwardUnitVector = feedforwardVector.times(1 / feedforwardVector.getNorm());
 
         forwardFeedforward += Math.copySign(feedforwardUnitVector.getX() * forwardConstants.getStaticConstant(),
                 forwardFeedforward);

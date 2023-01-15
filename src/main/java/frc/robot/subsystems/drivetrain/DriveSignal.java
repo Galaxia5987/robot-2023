@@ -13,12 +13,12 @@ public class DriveSignal {
     /**
      * This is the main drive signal constructor.
      *
-     * @param vx is the forward velocity. [m/s]
-     * @param vy is the strafe velocity. [m/s]
-     * @param omega is the rotation velocity. [rad/s]
+     * @param vx               is the forward velocity. [m/s]
+     * @param vy               is the strafe velocity. [m/s]
+     * @param omega            is the rotation velocity. [rad/s]
      * @param centerOfRotation is the center of rotation to rotate around. This is mostly (0, 0),
      *                         except when doing a tornado spin. ([m], [m])
-     * @param fieldOriented is whether the swerve should drive field oriented.
+     * @param fieldOriented    is whether the swerve should drive field oriented.
      */
     public DriveSignal(double vx, double vy, double omega, Translation2d centerOfRotation, boolean fieldOriented) {
         this.vx = vx;

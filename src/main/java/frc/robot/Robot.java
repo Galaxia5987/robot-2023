@@ -4,15 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.LoggedSubsystem;
-import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.gyroscope.Gyroscope;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -27,9 +22,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-    public static Gyroscope gyroscope = new Gyroscope();
-    public static SwerveDrive swerveSubsystem = new SwerveDrive();
-
     public static boolean debug = false;
 
     private RobotContainer robotContainer;

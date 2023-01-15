@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.Utils;
 
@@ -136,7 +136,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 driveSignal.vx,
                 driveSignal.vy,
                 driveSignal.omega,
-                Robot.gyroscope.getYaw()) : driveSignal.speeds();
+                RobotContainer.gyroscope.getYaw()) : driveSignal.speeds();
         loggerInputs.setpoint = Utils.chassisSpeedsToArray(speeds);
         swerveModuleStates = mKinematics.toSwerveModuleStates(speeds, driveSignal.centerOfRotation);
 
@@ -205,6 +205,10 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         mRearRight.vroom();
     }
 
+    public void defaultExecute() {
+
+    }
+
     @Override
     public void periodic() {
         swerveModulePositions = new SwerveModulePosition[]{
@@ -214,7 +218,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearRight.getPosition()
         };
 
-        mOdometry.update(Robot.gyroscope.getYaw(), swerveModulePositions);
+        mOdometry.update(RobotContainer.gyroscope.getYaw(), swerveModulePositions);
 
         SmartDashboard.putString("Encoder Positions", "{" +
                 mFrontLeft.getEncoderTicks() + ", " +

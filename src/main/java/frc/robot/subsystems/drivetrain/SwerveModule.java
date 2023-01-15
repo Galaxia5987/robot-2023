@@ -12,17 +12,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.motors.PIDTalon;
 
+import static frc.robot.Constants.TALON_TIMEOUT;
 import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
-import static frc.robot.Constants.*;
 
 public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
     private final TalonFX driveMotor;
     private final PIDTalon angleMotor;
     private final DutyCycleEncoder encoder;
     private final int offset;
-    private boolean initializedOffset = false;
     private final SwerveDrive.Module number;
     private final double[] motionMagicConfigs;
+    private boolean initializedOffset = false;
 
     public SwerveModule(SwerveDrive.Module number, int driveMotorPort, int angleMotorPort, int encoderPort, int offset, boolean driveInverted,
                         boolean angleInverted, boolean angleSensorPhase, double[] motionMagicConfigs) {
@@ -180,7 +180,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
      * to use this position because it is always differentiated.
      *
      * @return the position of the module.
-     *          Comprised of the distance [m], and the angle.
+     * Comprised of the distance [m], and the angle.
      */
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(loggerInputs.moduleDistance, getAngle());

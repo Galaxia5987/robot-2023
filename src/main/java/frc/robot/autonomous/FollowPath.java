@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import org.littletonrobotics.junction.Logger;
@@ -23,7 +23,7 @@ public class FollowPath extends CommandBase {
     private final PIDController rotationController;
     private final HolonomicFeedforward feedforward;
 
-    private final SwerveDrive swerveDrive = Robot.swerveSubsystem;
+    private final SwerveDrive swerveDrive = RobotContainer.swerveSubsystem;
     private final AutonomousLogInputs logInputs = new AutonomousLogInputs();
 
     public FollowPath(String trajectoryName, PIDConstants translationConstants, PIDConstants rotationConstants,
@@ -48,8 +48,8 @@ public class FollowPath extends CommandBase {
         logInputs.initialPose = trajectory.getInitialState();
         logInputs.finalPose = trajectory.getEndState();
 
-        swerveDrive.resetOdometry(trajectory.getInitialPose(), Robot.gyroscope.getYaw());
-        Robot.gyroscope.resetYaw(trajectory.getInitialState().holonomicRotation);
+        swerveDrive.resetOdometry(trajectory.getInitialPose(), RobotContainer.gyroscope.getYaw());
+        RobotContainer.gyroscope.resetYaw(trajectory.getInitialState().holonomicRotation);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class FollowPath extends CommandBase {
         var currentPose = swerveDrive.getPose();
         Rotation2d heading = new Rotation2d(toDesiredTranslation.getX(), toDesiredTranslation.getY());
         Translation2d segment = new Translation2d(
-            heading.getCos(), heading.getSin());
+                heading.getCos(), heading.getSin());
 
         Translation2d segmentVelocity = segment.times(desiredState.velocityMetersPerSecond);
         Translation2d segmentAcceleration = segment.times(desiredState.accelerationMetersPerSecondSq);

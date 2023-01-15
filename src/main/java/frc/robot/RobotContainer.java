@@ -8,9 +8,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.autonomous.HolonomicFeedforward;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
-import frc.robot.subsystems.drivetrain.commands.XboxDrive;
+import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
+import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.utils.ui.XboxMap;
 
 public class RobotContainer {
+    public static Gyroscope gyroscope = new Gyroscope();
+    public static SwerveDrive swerveSubsystem = new SwerveDrive();
     private static RobotContainer INSTANCE = null;
     private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
@@ -35,11 +40,17 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        Robot.swerveSubsystem.setDefaultCommand(new XboxDrive(xboxController));
+        swerveSubsystem.setDefaultCommand(
+                new HolonomicDrive(
+                        swerveSubsystem,
+                        gyroscope,
+                        new XboxMap(xboxController)
+                )
+        );
     }
 
     private void configureButtonBindings() {
-        rb.onTrue(new InstantCommand(Robot.gyroscope::resetYaw));
+        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 
 

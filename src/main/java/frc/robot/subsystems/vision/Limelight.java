@@ -26,7 +26,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     /**
-     * if there is no instace of the limelight class it creates one and returns it
+     * if there is no instance of the limelight class it creates one and returns it
      * @return
      */
     public static Limelight getInstance() {

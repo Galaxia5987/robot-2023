@@ -1,4 +1,4 @@
-package frc.robot.subsystems.gyroscope;
+package subsystems.gyroscope;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.LogTable;

@@ -4,13 +4,17 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import subsystems.Leds.Leds;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
+
+
     private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
+    private final JoystickButton lb = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
 
     /**
@@ -30,6 +34,12 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
+        if (rb.getAsBoolean()) {
+            Leds.getINSTANCE().setYellow();
+        } else if (lb.getAsBoolean()) {
+            Leds.getINSTANCE().setPurple();
+        }
+
     }
 
     private void configureButtonBindings() {

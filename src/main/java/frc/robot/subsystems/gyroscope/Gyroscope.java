@@ -2,6 +2,7 @@ package frc.robot.subsystems.gyroscope;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.math.AngleUtil;
@@ -97,25 +98,13 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     }
 
     /**
-     * Gets the yaw pitch roll object representing the angles of the gyro.
+     * Gets the object representing all three angles of the gyro.
      *
-     * @return the yaw pitch roll object representing the angles of the gyro.
-     * The angles are in radians. See YawPitchRoll record documentation below for more information.
+     * @return object representing all three of the angles of the gyro.
      */
-    public YawPitchRoll getYawPitchRoll() {
-        return new YawPitchRoll(loggerInputs.yaw.getRadians(),
+    public Rotation3d getAll() {
+        return new Rotation3d(loggerInputs.roll.getRadians(),
                 loggerInputs.pitch.getRadians(),
-                loggerInputs.roll.getRadians());
-    }
-
-    /**
-     * This record represents the angle of the gyro in all three axes.
-     * <p>
-     * Params:
-     * - yaw: the angle of the robot in the x-y plane. [rad]
-     * - pitch: the angle of the robot in the x-z plane. [rad]
-     * - roll: the angle of the robot in the y-z plane. [rad]
-     */
-    public record YawPitchRoll(double yaw, double pitch, double roll) {
+                loggerInputs.yaw.getRadians());
     }
 }

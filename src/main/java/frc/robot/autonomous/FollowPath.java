@@ -3,24 +3,27 @@ package frc.robot.autonomous;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import org.apache.velocity.runtime.parser.node.MathUtils;
 import org.littletonrobotics.junction.Logger;
 
 public class FollowPath extends CommandBase {
     private final PathPlannerTrajectory trajectory;
     private final Timer timer = new Timer();
-    private final ProfiledPIDController forwardController;
-    private final ProfiledPIDController strafeController;
+    private PIDController forwardController;
+    private PIDController strafeController;
     private final PIDController rotationController;
     private final HolonomicFeedforward feedforward;
 
@@ -33,10 +36,8 @@ public class FollowPath extends CommandBase {
         this.swerveDrive = swerveDrive;
         this.gyroscope = gyroscope;
         this.trajectory = PathPlanner.loadPath(trajectoryName, maxVelocity, maxAcceleration);
-        this.forwardController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD,
-                new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
-        this.strafeController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD,
-                new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
+        this.forwardController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
+        this.strafeController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
         this.rotationController = new PIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD);
         this.rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -52,8 +53,15 @@ public class FollowPath extends CommandBase {
         logInputs.initialPose = trajectory.getInitialState();
         logInputs.finalPose = trajectory.getEndState();
 
-        swerveDrive.resetOdometry(trajectory.getInitialPose(), gyroscope.getYaw());
         gyroscope.resetYaw(trajectory.getInitialState().holonomicRotation);
+        swerveDrive.resetOdometry(trajectory.getInitialPose(), gyroscope.getYaw());
+
+        forwardController = new PIDController(SmartDashboard.getNumber("Kp", 0),
+                SmartDashboard.getNumber("Ki", 0),
+                SmartDashboard.getNumber("Kd", 0));
+        strafeController = new PIDController(SmartDashboard.getNumber("Kp", 0),
+                SmartDashboard.getNumber("Ki", 0),
+                SmartDashboard.getNumber("Kd", 0));
     }
 
     @Override
@@ -75,11 +83,11 @@ public class FollowPath extends CommandBase {
 //        System.out.println("FeedForward: " + feedforwardVector);
 
         var signal = new DriveSignal(
-                -forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
-                        - feedforwardVector.getX(),
-                -strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
-                        - feedforwardVector.getY(),
-                -rotationController.calculate(gyroscope.getYaw().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
+                 forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
+                        + feedforwardVector.getX(),
+                strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
+                        + feedforwardVector.getY(),
+                rotationController.calculate(gyroscope.getYaw().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
                 new Translation2d(),
                 true
         );

@@ -24,12 +24,12 @@ public class XboxMap implements ButtonMap {
         vy = strafeRateLimiter.calculate(vy);
         omega = rotationRateLimiter.calculate(omega);
 
-        vx = Utils.deadband(vx, 0.2);
-        vy = Utils.deadband(vy, 0.2);
-        omega = Utils.deadband(omega, 0.2);
-//        vx = 0.5;
-//        vy = 0;
-//        omega = 0;
+        double magnitude = Math.hypot(vx, vy);
+        double angle = Math.atan2(vy, vx);
+        magnitude = Utils.deadband(magnitude, 0.1);
+        vx = Math.cos(angle) * magnitude;
+        vy = Math.sin(angle) * magnitude;
+        omega = Utils.deadband(omega, 0.1);
 
         return new DriveSignal(vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                 vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,

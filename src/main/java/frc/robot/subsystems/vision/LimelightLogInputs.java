@@ -4,6 +4,14 @@ import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
+//@AutoLog
+//public class LimelightLogInputs {
+//    public double targetDistance = 0;
+//    public double yaw = 0;
+//    public boolean hasTargets = false;
+//    public float tagId = 0;
+//}
+
 public class LimelightLogInputs implements LoggableInputs {
     public double targetDistance = 0;
     public double yaw = 0;

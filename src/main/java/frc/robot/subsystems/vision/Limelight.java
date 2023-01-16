@@ -96,9 +96,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * @return
      */
     public Optional<Pose2d> estimatePose(Rotation2d robotAngle) {
-        double absouluteAngle = robotAngle.getRadians() + getYaw().getAsDouble();
-        double xTargetDistance = getTargetDistance().getAsDouble() * Math.sin(absouluteAngle);
-        double yTargetDistance = getTargetDistance().getAsDouble() * Math.cos(absouluteAngle);
+        double absoluteAngle = robotAngle.getRadians() + getYaw().orElse(0);
+        double xTargetDistance = getTargetDistance().orElse(0) * Math.sin(absoluteAngle);
+        double yTargetDistance = getTargetDistance().getAsDouble() * Math.cos(absoluteAngle);
         if (hasTargets()) {
             double xDistance = xTargetDistance - Constants.UPPER_CONE_TARGET11_X_DISTANCE;
             double yDistance = yTargetDistance - Constants.UPPER_CONE_TARGET11_Y_DISTANCE;
@@ -122,6 +122,5 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         getYaw().ifPresent((value) -> loggerInputs.yaw = value);
         loggerInputs.tagId = getTagId();
         getTargetDistance().ifPresent((value) -> loggerInputs.targetDistance = value);
-
     }
 }

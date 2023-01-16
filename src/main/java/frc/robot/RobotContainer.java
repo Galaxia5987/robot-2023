@@ -61,6 +61,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new FollowPath(
+                swerveSubsystem, gyroscope,
                 "Onward",
                 SwerveConstants.TRANSLATION_PID_CONSTANTS,
                 SwerveConstants.ROTATION_PID_CONSTANTS,

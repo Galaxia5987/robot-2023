@@ -20,6 +20,7 @@ public class HolonomicDrive extends CommandBase {
         this.swerveDrive = swerveDrive;
         this.gyroscope = gyroscope;
         this.buttonMap = buttonMap;
+        addRequirements(swerveDrive);
     }
 
     @Override

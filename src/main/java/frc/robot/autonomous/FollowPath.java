@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.gyroscope.Gyroscope;
 import org.littletonrobotics.junction.Logger;
 
 public class FollowPath extends CommandBase {
@@ -23,11 +24,14 @@ public class FollowPath extends CommandBase {
     private final PIDController rotationController;
     private final HolonomicFeedforward feedforward;
 
-    private final SwerveDrive swerveDrive = RobotContainer.swerveSubsystem;
+    private final SwerveDrive swerveDrive;
+    private final Gyroscope gyroscope;
     private final AutonomousLogInputs logInputs = new AutonomousLogInputs();
 
-    public FollowPath(String trajectoryName, PIDConstants translationConstants, PIDConstants rotationConstants,
+    public FollowPath(SwerveDrive swerveDrive, Gyroscope gyroscope, String trajectoryName, PIDConstants translationConstants, PIDConstants rotationConstants,
                       HolonomicFeedforward feedforward, double maxVelocity, double maxAcceleration) {
+        this.swerveDrive = swerveDrive;
+        this.gyroscope = gyroscope;
         this.trajectory = PathPlanner.loadPath(trajectoryName, maxVelocity, maxAcceleration);
         this.forwardController = new ProfiledPIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD,
                 new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
@@ -48,43 +52,44 @@ public class FollowPath extends CommandBase {
         logInputs.initialPose = trajectory.getInitialState();
         logInputs.finalPose = trajectory.getEndState();
 
-        swerveDrive.resetOdometry(trajectory.getInitialPose(), RobotContainer.gyroscope.getYaw());
-        RobotContainer.gyroscope.resetYaw(trajectory.getInitialState().holonomicRotation);
+        swerveDrive.resetOdometry(trajectory.getInitialPose(), gyroscope.getYaw());
+        gyroscope.resetYaw(trajectory.getInitialState().holonomicRotation);
     }
 
     @Override
     public void execute() {
         var desiredState = trajectory.sample(timer.get());
-        var toDesiredTranslation = desiredState.poseMeters.minus(swerveDrive.getPose());
         var currentPose = swerveDrive.getPose();
+        var toDesiredTranslation = desiredState.poseMeters.minus(currentPose);
         Rotation2d heading = new Rotation2d(toDesiredTranslation.getX(), toDesiredTranslation.getY());
+//        System.out.println("Heading: " + heading);
+
         Translation2d segment = new Translation2d(
                 heading.getCos(), heading.getSin());
+//        System.out.println("Segment: " + segment);
 
         Translation2d segmentVelocity = segment.times(desiredState.velocityMetersPerSecond);
         Translation2d segmentAcceleration = segment.times(desiredState.accelerationMetersPerSecondSq);
 
         Translation2d feedforwardVector = feedforward.calculateFeedforward(segmentVelocity, segmentAcceleration);
+//        System.out.println("FeedForward: " + feedforwardVector);
 
         var signal = new DriveSignal(
-                forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
-                        + feedforwardVector.getX(),
-                strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
-                        + feedforwardVector.getY(),
-                rotationController.calculate(currentPose.getRotation().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
+                -forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
+                        - feedforwardVector.getX(),
+                -strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
+                        - feedforwardVector.getY(),
+                -rotationController.calculate(gyroscope.getYaw().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
                 new Translation2d(),
                 true
         );
         swerveDrive.drive(signal);
 
         logInputs.desiredState = desiredState;
+        logInputs.desiredSpeeds = signal.speeds();
         logInputs.time = timer.get();
 
         Logger.getInstance().processInputs("Autonomous Path", logInputs);
-
-        System.out.println("vx: " + signal.vx);
-        System.out.println("vy: " + signal.vy);
-        System.out.println("omega: " + signal.omega);
     }
 
     @Override

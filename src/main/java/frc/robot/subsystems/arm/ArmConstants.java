@@ -1,8 +1,16 @@
 package frc.robot.subsystems.arm;
 
-public class ArmConstants { // TODO: Update all constants at zero
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+
+public class ArmConstants { // TODO: Update all constants at zero, check if clockWise is inverted
 
     // Arm constants
+    public static final double CONFIG_VOLT_COMP = 10; //[voltage]
+    public static final boolean ENABLE_VOLT_COMPANSATION = true;
+    public static final boolean clockWise = true;
+    public static final double ENCODER_RATIO = 1/25;
+    public static final double TICKS_PER_RADIAN = (4096/ENCODER_RATIO)/ (Math.PI*2);
+
     public static final double SHOULDER_GEARING = 0; // Arbitrary units
     public static final double SHOULDER_MASS = 0; // [kg]
     public static final double SHOULDER_LENGTH = 0; // [m]

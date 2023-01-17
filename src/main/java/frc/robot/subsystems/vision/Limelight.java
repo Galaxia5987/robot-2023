@@ -110,10 +110,11 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * Updates the limelight log inputs
      */
-    public void updateInputs(double targetHeight) {
+    public void updateInputs() {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value);
         loggerInputs.tagId = getTagId();
-        getTargetDistance(targetHeight).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(117).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(65).ifPresent((value) -> loggerInputs.targetDistance = value);
     }
 }

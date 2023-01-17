@@ -65,9 +65,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * @return distance from target
      */
-    public OptionalDouble getTargetDistance() {
+    public OptionalDouble getTargetDistance(double targetHeight) {
         double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
-        double error = Constants.CAMERA_HEIGHT-Constants.TARGET_HEIGHT;
+        double error = Constants.CAMERA_HEIGHT-targetHeight;
         if (hasTargets()) {
             return OptionalDouble.of(Math.abs(error / Math.tan(totalPitch)));
         }
@@ -89,15 +89,15 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * @param robotAngle The angle of the robot
      * @return Optional Pose2d of the robot coordinates
      */
-    public Optional<Pose2d> estimatePose(Rotation2d robotAngle) {
+    public Optional<Pose2d> estimatePose(Rotation2d robotAngle, Pose3d target) {
         double absoluteAngle = robotAngle.getRadians() + getYaw().orElse(0);
-        double xTargetDistance = getTargetDistance().orElse(0) * Math.sin(absoluteAngle);
-        double yTargetDistance = getTargetDistance().getAsDouble() * Math.cos(absoluteAngle);
+        double xTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.sin(absoluteAngle);
+        double yTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.cos(absoluteAngle);
         if (!hasTargets()) {
             return Optional.empty();
         }
-        double xDistance = xTargetDistance - Constants.UPPER_CONE_LEFT_GRID_TARGET.getX();
-        double yDistance = yTargetDistance - Constants.UPPER_CONE_LEFT_GRID_TARGET.getY();
+        double xDistance = xTargetDistance - target.getX();
+        double yDistance = yTargetDistance - target.getY();
         Translation2d translation2d = new Translation2d(xDistance, yDistance);
         return Optional.of(new Pose2d(translation2d, robotAngle));
     }
@@ -110,11 +110,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * Updates the limelight log inputs
      */
-    @Override
-    public void updateInputs() {
+    public void updateInputs(double targetHeight) {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value);
         loggerInputs.tagId = getTagId();
-        getTargetDistance().ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(targetHeight).ifPresent((value) -> loggerInputs.targetDistance = value);
     }
 }

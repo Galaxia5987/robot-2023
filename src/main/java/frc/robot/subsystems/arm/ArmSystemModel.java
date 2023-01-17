@@ -1,0 +1,100 @@
+package frc.robot.subsystems.arm;
+
+import frc.robot.utils.math.Vector2;
+import frc.robot.utils.motors.FalconConstants;
+import org.ejml.data.MatrixType;
+import org.ejml.simple.SimpleMatrix;
+
+public class ArmSystemModel {
+    private final double m1;
+    private final double m2;
+    private final double l1;
+    private final double r1;
+    private final double r2;
+    private final double I1;
+    private final double I2;
+    private final double g1;
+    private final double g2;
+
+    private final SimpleMatrix M_MATRIX = new SimpleMatrix(2, 2, MatrixType.DDRM);
+    private final SimpleMatrix C_MATRIX = new SimpleMatrix(2, 2, MatrixType.DDRM);
+    private final SimpleMatrix Tg_VECTOR = new SimpleMatrix(2, 1, MatrixType.DDRM);
+    private final SimpleMatrix Kb_MATRIX = new SimpleMatrix(2, 2, MatrixType.DDRM);
+    private final SimpleMatrix B_MATRIX = new SimpleMatrix(2, 2, MatrixType.DDRM);
+
+    public ArmSystemModel(InertialConstants inertialConstants) {
+        var shoulderJointConstants = inertialConstants.getShoulderJointConstants();
+        var elbowJointConstants = inertialConstants.getElbowJointConstants();
+        this.m1 = shoulderJointConstants.mass;
+        this.m2 = elbowJointConstants.mass;
+        this.l1 = shoulderJointConstants.length;
+        this.r1 = shoulderJointConstants.cmRadius;
+        this.r2 = elbowJointConstants.cmRadius;
+        this.I1 = shoulderJointConstants.momentOfInertia;
+        this.I2 = elbowJointConstants.momentOfInertia;
+        this.g1 = shoulderJointConstants.gearing;
+        this.g2 = elbowJointConstants.gearing;
+        int n1 = shoulderJointConstants.numberOfMotors;
+        int n2 = elbowJointConstants.numberOfMotors;
+
+        B_MATRIX.set(0, 0, g1 * n1 * FalconConstants.Kt / FalconConstants.R);
+        B_MATRIX.set(1, 1, g2 * n2 * FalconConstants.Kt / FalconConstants.R);
+        B_MATRIX.set(1, 0, 0);
+        B_MATRIX.set(0, 1, 0);
+
+        Kb_MATRIX.set(0, 0, g1 * g1 * n1 * FalconConstants.Kt / FalconConstants.R / FalconConstants.Kv);
+        Kb_MATRIX.set(1, 1, g2 * g2 * n2 * FalconConstants.Kt / FalconConstants.R / FalconConstants.Kv);
+        Kb_MATRIX.set(1, 0, 0);
+        Kb_MATRIX.set(0, 1, 0);
+    }
+
+    public void updateMMatrix(double theta2) {
+        double c2 = Math.cos(theta2);
+        double diagonal = m2 * (r2 * r2 + l1 * r2 * c2) + I2;
+
+        M_MATRIX.set(0, 0, m1 * r1 * r1 + m2 * (l1 * l1 + r2 * r2 + 2 * l1 * r2 * c2) + I1 + I2);
+        M_MATRIX.set(0, 1, diagonal);
+        M_MATRIX.set(1, 0, diagonal);
+        M_MATRIX.set(1, 1, m2 * r2 * r2 + I2);
+    }
+
+    public void updateCMatrix(double theta2, double theta1Dot, double theta2Dot) {
+        double s2 = Math.sin(theta2);
+
+        C_MATRIX.set(0, 0, -m2 * l1 * r2 * s2 * theta2Dot);
+        C_MATRIX.set(0, 1, -m2 * l1 * r2 * s2 * (theta1Dot + theta2Dot));
+        C_MATRIX.set(1, 0, m2 * l1 * r2 * s2 * theta1Dot);
+        C_MATRIX.set(1, 1, 0);
+    }
+
+    public void updateTgVector(double theta1, double theta2) {
+        double c1 = Math.cos(theta1);
+        double c12 = Math.cos(theta1 + theta2);
+
+        Tg_VECTOR.set(0, 0, (m1 * r1 + m2 * l1) * g1 * c1 + m2 * r2 * g2 * c12);
+        Tg_VECTOR.set(1, 0, m2 * r2 * g2 * c12);
+    }
+
+    public Vector2 calculateFeedForward(double theta1, double theta2, double theta1Dot, double theta2Dot, double theta1DotDot, double theta2DotDot) {
+        updateMMatrix(theta2);
+        updateCMatrix(theta2, theta1Dot, theta2Dot);
+        updateTgVector(theta1, theta2);
+
+        var thetaDotVector = new SimpleMatrix(2, 1, MatrixType.DDRM);
+        thetaDotVector.set(0, 0, theta1Dot);
+        thetaDotVector.set(1, 0, theta2Dot);
+
+        var thetaDotDotVector = new SimpleMatrix(2, 1, MatrixType.DDRM);
+        thetaDotDotVector.set(0, 0, theta1DotDot);
+        thetaDotDotVector.set(1, 0, theta2DotDot);
+
+        var M = M_MATRIX.mult(thetaDotDotVector);
+        var C = C_MATRIX.mult(thetaDotVector);
+        var Kb = Kb_MATRIX.mult(thetaDotVector);
+        var B_INV = B_MATRIX.invert();
+
+        var u = B_INV.mult(M.plus(C).plus(Kb).plus(Tg_VECTOR));
+
+        return new Vector2(u.get(0, 0), u.get(1, 0));
+    }
+}

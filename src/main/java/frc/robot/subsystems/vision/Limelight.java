@@ -1,6 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
@@ -22,17 +23,14 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
 
     private Limelight() {
         super(new LimelightLogInputs());
-        PortForwarder.add(5800, "limelight.local", 5800);
-        PortForwarder.add(5801, "limelight.local", 5801);
-        PortForwarder.add(5802, "limelight.local", 5802);
-        PortForwarder.add(5803, "limelight.local", 5803);
-        PortForwarder.add(5804, "limelight.local", 5804);
-        PortForwarder.add(5805, "limelight.local", 5805);
+        for (int i=5800; i<=5805; i++){
+            PortForwarder.add(i, "limelight.local", i);
+        }
     }
 
     /**
-     * if there is no instance of the limelight class it creates one and returns it
-     * @return
+     * If there is no instance of the limelight class it creates one and returns it
+     * @return Limelight instance
      */
     public static Limelight getInstance() {
         if (INSTANCE == null) {
@@ -42,16 +40,15 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     /**
-     * checks weather the limelight can see any targets
-     * @return
+     * Checks weather the limelight can see any targets
+     * @return weather the limelight detects any targets
      */
     public boolean hasTargets() {
         return tv.get() == 1;
     }
 
     /**
-     * returns the id of the aprilTag the limelight sees
-     * @return
+     * @return aprilTag id
      */
     public long getTagId() {
         return tid.get();
@@ -59,16 +56,14 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
 
 
     /**
-     * returns the pitch from the robot to the target
-     * @return
+     * @return pitch from robot to target
      */
     public Rotation2d getPitch() {
         return Rotation2d.fromDegrees(ty.get());
     }
 
     /**
-     *returns the distance from the target
-     * @return
+     * @return distance from target
      */
     public OptionalDouble getTargetDistance() {
         double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
@@ -80,8 +75,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     /**
-     * returns the yaw
-     * @return
+     * @return robot yaw
      */
     public OptionalDouble getYaw() {
         if (hasTargets()) {
@@ -91,30 +85,30 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     /**
-     * estimates the position of the robot
-     * @param robotAngle
-     * @return
+     * Estimates the position of the robot
+     * @param robotAngle The angle of the robot
+     * @return Optional Pose2d of the robot coordinates
      */
     public Optional<Pose2d> estimatePose(Rotation2d robotAngle) {
         double absoluteAngle = robotAngle.getRadians() + getYaw().orElse(0);
         double xTargetDistance = getTargetDistance().orElse(0) * Math.sin(absoluteAngle);
         double yTargetDistance = getTargetDistance().getAsDouble() * Math.cos(absoluteAngle);
-        if (hasTargets()) {
-            double xDistance = xTargetDistance - Constants.UPPER_CONE_TARGET11_X_DISTANCE;
-            double yDistance = yTargetDistance - Constants.UPPER_CONE_TARGET11_Y_DISTANCE;
-            Translation2d translation2d = new Translation2d(xDistance, yDistance);
-            return Optional.of(new Pose2d(translation2d, robotAngle));
+        if (!hasTargets()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        double xDistance = xTargetDistance - Constants.UPPER_CONE_LEFT_GRID_TARGET.getX();
+        double yDistance = yTargetDistance - Constants.UPPER_CONE_LEFT_GRID_TARGET.getY();
+        Translation2d translation2d = new Translation2d(xDistance, yDistance);
+        return Optional.of(new Pose2d(translation2d, robotAngle));
     }
 
     @Override
     public String getSubsystemName() {
-        return "Vision";
+        return "Limelight";
     }
 
     /**
-     * updates the limelight log inputs
+     * Updates the limelight log inputs
      */
     @Override
     public void updateInputs() {

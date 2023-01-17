@@ -109,5 +109,13 @@ public class ArmSystemModel {
         return new ArmFeedForward(u.get(0, 0), u.get(1, 0));
     }
 
-    public record ArmFeedForward(double shoulderFeedForward, double elbowFeedForward) {}
+    public static class ArmFeedForward {
+        double shoulderFeedForward;
+        double elbowFeedForward;
+
+        public ArmFeedForward(double shoulderFeedForward, double elbowFeedForward) {
+            this.shoulderFeedForward = shoulderFeedForward;
+            this.elbowFeedForward = elbowFeedForward;
+        }
+    }
 }

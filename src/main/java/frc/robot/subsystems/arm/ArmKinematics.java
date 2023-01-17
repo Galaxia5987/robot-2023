@@ -26,6 +26,13 @@ public class ArmKinematics {
         return new InverseKinematicsSolution(theta1, theta2);
     }
 
-    public record InverseKinematicsSolution(double theta1, double theta2) {
+    public static class InverseKinematicsSolution {
+        public double theta1;
+        public double theta2;
+
+        public InverseKinematicsSolution(double theta1, double theta2) {
+            this.theta1 = theta1;
+            this.theta2 = theta2;
+        }
     }
 }

@@ -30,13 +30,6 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowMotor.setInverted(ArmConstants.clockWise);
     }
 
-    public PrototypeArm getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new PrototypeArm();
-        }
-        return INSTANCE;
-    }
-
     public void setShoulderJointPower(double power) {
         shoulderMotor.set(TalonSRXControlMode.PercentOutput, power);
     }

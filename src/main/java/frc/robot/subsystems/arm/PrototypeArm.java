@@ -30,6 +30,13 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowMotor.setInverted(ArmConstants.clockWise);
     }
 
+    public PrototypeArm getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new PrototypeArm();
+        }
+        return INSTANCE;
+    }
+
     public void setShoulderJointPower(double power) {
         shoulderMotor.set(TalonSRXControlMode.PercentOutput, power);
     }
@@ -54,11 +61,11 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowEncoder.setPosition(unitModel.toTicks(Math.toRadians(angle)));
     }
 
-    public double getShoulderMotorPower(){
+    public double getShoulderMotorPower() {
         return shoulderMotor.getMotorOutputPercent();
     }
 
-    public double getElbowMotorPower(){
+    public double getElbowMotorPower() {
         return elbowMotor.getMotorOutputPercent();
     }
 
@@ -67,6 +74,9 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     }
 
     public void updateInputs() {
-
+        loggerInputs.elbowAngle = getElbowJointPosition();
+        loggerInputs.shoulderAngle = getShoulderJointPosition();
+        loggerInputs.elbowMotorPower = getElbowMotorPower();
+        loggerInputs.shoulderMotorPower = getShoulderMotorPower();
     }
 }

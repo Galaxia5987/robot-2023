@@ -1,8 +1,9 @@
 package frc.robot;
 
 public final class Ports {
-    class Led{
-        private final int PORT = 0;
-    }
 
+
+    public static class Leds {
+            public static final int LED = 0;
+    }
 }

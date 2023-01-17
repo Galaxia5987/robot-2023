@@ -75,7 +75,18 @@ public class ArmSystemModel {
         Tg_VECTOR.set(1, 0, m2 * r2 * g2 * c12);
     }
 
-    public Vector2 calculateFeedForward(double theta1, double theta2, double theta1Dot, double theta2Dot, double theta1DotDot, double theta2DotDot) {
+    /**
+     * Calculates the voltage feedforward required to move the arm in a certain state.
+     *
+     * @param theta1 the angle of the shoulder joint. [rad]
+     * @param theta2 the angle of the elbow joint. [rad]
+     * @param theta1Dot the angular velocity of the shoulder joint. [rad/s]
+     * @param theta2Dot the angular velocity of the elbow joint. [rad/s]
+     * @param theta1DotDot the angular acceleration of the shoulder joint. [rad/s^2]
+     * @param theta2DotDot the angular acceleration of the elbow joint. [rad/s^2]
+     * @return the voltage feedforward required to move the arm in the given state. [V]
+     */
+    public ArmFeedForward calculateFeedForward(double theta1, double theta2, double theta1Dot, double theta2Dot, double theta1DotDot, double theta2DotDot) {
         updateMMatrix(theta2);
         updateCMatrix(theta2, theta1Dot, theta2Dot);
         updateTgVector(theta1, theta2);
@@ -95,6 +106,8 @@ public class ArmSystemModel {
 
         var u = B_INV.mult(M.plus(C).plus(Kb).plus(Tg_VECTOR));
 
-        return new Vector2(u.get(0, 0), u.get(1, 0));
+        return new ArmFeedForward(u.get(0, 0), u.get(1, 0));
     }
+
+    public record ArmFeedForward(double shoulderFeedForward, double elbowFeedForward) {}
 }

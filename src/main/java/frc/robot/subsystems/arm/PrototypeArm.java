@@ -54,6 +54,14 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowEncoder.setPosition(unitModel.toTicks(Math.toRadians(angle)));
     }
 
+    public double getShoulderMotorPower(){
+        return shoulderMotor.getMotorOutputPercent();
+    }
+
+    public double getElbowMotorPower(){
+        return elbowMotor.getMotorOutputPercent();
+    }
+
     public String getSubsystemName() {
         return "PrototypeArm";
     }

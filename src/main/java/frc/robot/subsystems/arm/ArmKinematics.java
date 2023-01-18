@@ -26,8 +26,8 @@ public class ArmKinematics {
      */
     public Translation2d forwardKinematics(double shoulderAngle, double elbowAngle) {
         double theta = elbowAngle + shoulderAngle - Math.PI / 2;
-        double x = l1 * Math.cos(shoulderAngle) + l2 * Math.cos(shoulderAngle + theta);
-        double y = l1 * Math.sin(shoulderAngle) + l2 * Math.sin(shoulderAngle + theta);
+        double x = l1 * Math.cos(shoulderAngle) + l2 * Math.sin(theta);
+        double y = l1 * Math.sin(shoulderAngle) + l2 * Math.cos(theta);
         return new Translation2d(x, y);
     }
 

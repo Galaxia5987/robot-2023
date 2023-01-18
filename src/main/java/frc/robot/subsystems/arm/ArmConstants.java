@@ -6,6 +6,11 @@ public class ArmConstants { // TODO: Update all constants at zero, check if cloc
     public static final double CONFIG_VOLT_COMP = 10; //[voltage]
     public static final boolean ENABLE_VOLT_COMPANSATION = true;
     public static final boolean clockWise = true;
+
+    public static final double kP = 0.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
     public static final double ENCODER_RATIO = 1/25;
     public static final double TICKS_PER_RADIAN = (4096/ENCODER_RATIO)/ (Math.PI*2);
 

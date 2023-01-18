@@ -44,7 +44,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * @return weather the limelight detects any targets
      */
     public boolean hasTargets() {
-        return tv.get() == 1;
+        return tv.get() > 0;
     }
 
     /**
@@ -90,12 +90,12 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * @return Optional Pose2d of the robot coordinates
      */
     public Optional<Pose2d> estimatePose(Rotation2d robotAngle, Pose3d target) {
-        double absoluteAngle = robotAngle.getRadians() + getYaw().orElse(0);
-        double xTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.sin(absoluteAngle);
-        double yTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.cos(absoluteAngle);
         if (!hasTargets()) {
             return Optional.empty();
         }
+        double absoluteAngle = robotAngle.getRadians() + getYaw().orElse(0);
+        double xTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.sin(absoluteAngle);
+        double yTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.cos(absoluteAngle);
         double xDistance = xTargetDistance - target.getX();
         double yDistance = yTargetDistance - target.getY();
         Translation2d translation2d = new Translation2d(xDistance, yDistance);
@@ -114,7 +114,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value);
         loggerInputs.tagId = getTagId();
-        getTargetDistance(117).ifPresent((value) -> loggerInputs.targetDistance = value);
-        getTargetDistance(65).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(Constants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(Constants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
     }
 }

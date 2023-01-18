@@ -1,16 +1,16 @@
 package frc.robot.subsystems.arm;
 
-public class InertialConstants {
+public class SystemConstants {
     private final JointConstants shoulderJointConstants;
     private final JointConstants elbowJointConstants;
 
-    public InertialConstants(JointConstants shoulderJointConstants, JointConstants elbowJointConstants) {
+    public SystemConstants(JointConstants shoulderJointConstants, JointConstants elbowJointConstants) {
         this.shoulderJointConstants = shoulderJointConstants;
         this.elbowJointConstants = elbowJointConstants;
     }
 
-    public InertialConstants(double shoulderMass, double shoulderLength, double shoulderMomentOfInertia, double shoulderCmRadius, double shoulderGearing, int shoulderNumMotors,
-                             double elbowMass, double elbowLength, double elbowMomentOfInertia, double elbowCmRadius, double elbowGearing, int elbowNumMotors) {
+    public SystemConstants(double shoulderMass, double shoulderLength, double shoulderMomentOfInertia, double shoulderCmRadius, double shoulderGearing, int shoulderNumMotors,
+                           double elbowMass, double elbowLength, double elbowMomentOfInertia, double elbowCmRadius, double elbowGearing, int elbowNumMotors) {
         this(new JointConstants(shoulderMass, shoulderLength, shoulderMomentOfInertia, shoulderCmRadius, shoulderGearing, shoulderNumMotors),
              new JointConstants(elbowMass, elbowLength, elbowMomentOfInertia, elbowCmRadius, elbowGearing, elbowNumMotors));
     }

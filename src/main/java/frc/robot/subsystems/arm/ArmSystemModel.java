@@ -1,10 +1,17 @@
 package frc.robot.subsystems.arm;
 
-import frc.robot.utils.math.Vector2;
 import frc.robot.utils.motors.FalconConstants;
 import org.ejml.data.MatrixType;
 import org.ejml.simple.SimpleMatrix;
 
+/**
+ * This class is used to calculate the feedforward for the arm.
+ * Notice that this class does not calculate velocities or accelerations,
+ * and relies on the user to do so (in the subsystem class).
+ *
+ * Documentation for the math used in this class can be found here:
+ * https://www.chiefdelphi.com/t/whitepaper-two-jointed-arm-dynamics/423060?u=dan
+ */
 public class ArmSystemModel {
     private final double m1;
     private final double m2;
@@ -22,9 +29,14 @@ public class ArmSystemModel {
     private final SimpleMatrix Kb_MATRIX = new SimpleMatrix(2, 2, MatrixType.DDRM);
     private final SimpleMatrix B_MATRIX = new SimpleMatrix(2, 2, MatrixType.DDRM);
 
-    public ArmSystemModel(InertialConstants inertialConstants) {
-        var shoulderJointConstants = inertialConstants.getShoulderJointConstants();
-        var elbowJointConstants = inertialConstants.getElbowJointConstants();
+    /**
+     * The constructor for the system model.
+     *
+     * @param systemConstants the system constants of the arm.
+     */
+    public ArmSystemModel(SystemConstants systemConstants) {
+        var shoulderJointConstants = systemConstants.getShoulderJointConstants();
+        var elbowJointConstants = systemConstants.getElbowJointConstants();
         this.m1 = shoulderJointConstants.mass;
         this.m2 = elbowJointConstants.mass;
         this.l1 = shoulderJointConstants.length;
@@ -48,6 +60,11 @@ public class ArmSystemModel {
         Kb_MATRIX.set(0, 1, 0);
     }
 
+    /**
+     * Calculates the M matrix.
+     *
+     * @param theta2 the angle of the elbow joint. [rad]
+     */
     public void updateMMatrix(double theta2) {
         double c2 = Math.cos(theta2);
         double diagonal = m2 * (r2 * r2 + l1 * r2 * c2) + I2;
@@ -58,6 +75,13 @@ public class ArmSystemModel {
         M_MATRIX.set(1, 1, m2 * r2 * r2 + I2);
     }
 
+    /**
+     * Calculates the C matrix.
+     *
+     * @param theta2 the angle of the elbow joint. [rad]
+     * @param theta1Dot the angular velocity of the shoulder joint. [rad/s]
+     * @param theta2Dot the angular velocity of the elbow joint. [rad/s]
+     */
     public void updateCMatrix(double theta2, double theta1Dot, double theta2Dot) {
         double s2 = Math.sin(theta2);
 
@@ -67,6 +91,12 @@ public class ArmSystemModel {
         C_MATRIX.set(1, 1, 0);
     }
 
+    /**
+     * Calculates the Tg vector.
+     *
+     * @param theta1 the angle of the shoulder joint. [rad]
+     * @param theta2 the angle of the elbow joint. [rad]
+     */
     public void updateTgVector(double theta1, double theta2) {
         double c1 = Math.cos(theta1);
         double c12 = Math.cos(theta1 + theta2);
@@ -109,10 +139,19 @@ public class ArmSystemModel {
         return new ArmFeedForward(u.get(0, 0), u.get(1, 0));
     }
 
+    /**
+     * Calculates the voltage feedforward required to move the arm in a certain state.
+     */
     public static class ArmFeedForward {
         double shoulderFeedForward;
         double elbowFeedForward;
 
+        /**
+         * Constructor.
+         *
+         * @param shoulderFeedForward the voltage feedforward required to move the shoulder joint. [V]
+         * @param elbowFeedForward the voltage feedforward required to move the elbow joint. [V]
+         */
         public ArmFeedForward(double shoulderFeedForward, double elbowFeedForward) {
             this.shoulderFeedForward = shoulderFeedForward;
             this.elbowFeedForward = elbowFeedForward;

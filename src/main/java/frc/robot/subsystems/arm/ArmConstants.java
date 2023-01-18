@@ -1,7 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-
 public class ArmConstants { // TODO: Update all constants at zero, check if clockWise is inverted
 
     // Arm constants
@@ -25,10 +23,10 @@ public class ArmConstants { // TODO: Update all constants at zero, check if cloc
     public static final double ELBOW_CM_RADIUS = 0; // [m]
     public static final int ELBOW_NUMBER_OF_MOTORS = 0; // Arbitrary units
 
-    public static final InertialConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new InertialConstants.JointConstants(
+    public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CM_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);
-    public static final InertialConstants.JointConstants ELBOW_JOINT_CONSTANTS = new InertialConstants.JointConstants(
+    public static final SystemConstants.JointConstants ELBOW_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             ELBOW_MASS, ELBOW_LENGTH, ELBOW_MOMENT_OF_INERTIA, ELBOW_CM_RADIUS, ELBOW_GEARING, ELBOW_NUMBER_OF_MOTORS);
 
-    public static final InertialConstants ARM_CONSTANTS = new InertialConstants(SHOULDER_JOINT_CONSTANTS, ELBOW_JOINT_CONSTANTS);
+    public static final SystemConstants ARM_CONSTANTS = new SystemConstants(SHOULDER_JOINT_CONSTANTS, ELBOW_JOINT_CONSTANTS);
 }

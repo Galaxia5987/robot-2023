@@ -27,7 +27,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     public final CANCoder elbowEncoder = new CANCoder(Ports.prototypeArmPorts.ELBOW_ENCODER);
     public final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
 
-    private double prevShzoulderVelocity;
+    private double prevShoulderVelocity;
     private double shoulderTime2;
     private double shoulderFeedforward;
     private double prevElbowVelocity;
@@ -121,8 +121,8 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         timer.start();
         double shoulderVelocity = getShoulderMotorVelocity();
         double shoulderTime = timer.get();
-        double shoulderAcceleration = (shoulderVelocity - prevShzoulderVelocity)/ Math.abs(shoulderTime-shoulderTime2);
-        prevShzoulderVelocity = shoulderVelocity;
+        double shoulderAcceleration = (shoulderVelocity - prevShoulderVelocity)/ Math.abs(shoulderTime-shoulderTime2);
+        prevShoulderVelocity = shoulderVelocity;
         shoulderTime2 = timer.get();
 
         double elbowVelocity = getElbowMotorVelocity();

@@ -16,6 +16,8 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.utils.controllers.PIDFConstants;
+import frc.robot.utils.controllers.PIDFController;
 import org.apache.velocity.runtime.parser.node.MathUtils;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,21 +26,21 @@ public class FollowPath extends CommandBase {
     private final Timer timer = new Timer();
     private PIDController forwardController;
     private PIDController strafeController;
-    private final PIDController rotationController;
+    private PIDFController rotationController;
     private final HolonomicFeedforward feedforward;
 
     private final SwerveDrive swerveDrive;
     private final Gyroscope gyroscope;
     private final AutonomousLogInputs logInputs = new AutonomousLogInputs();
 
-    public FollowPath(SwerveDrive swerveDrive, Gyroscope gyroscope, String trajectoryName, PIDConstants translationConstants, PIDConstants rotationConstants,
+    public FollowPath(SwerveDrive swerveDrive, Gyroscope gyroscope, String trajectoryName, PIDConstants translationConstants, PIDFConstants rotationConstants,
                       HolonomicFeedforward feedforward, double maxVelocity, double maxAcceleration) {
         this.swerveDrive = swerveDrive;
         this.gyroscope = gyroscope;
         this.trajectory = PathPlanner.loadPath(trajectoryName, maxVelocity, maxAcceleration);
         this.forwardController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
         this.strafeController = new PIDController(translationConstants.kP, translationConstants.kI, translationConstants.kD);
-        this.rotationController = new PIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD);
+        this.rotationController = new PIDFController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD, rotationConstants.kF);
         this.rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
         this.feedforward = feedforward;
@@ -62,6 +64,10 @@ public class FollowPath extends CommandBase {
         strafeController = new PIDController(SmartDashboard.getNumber("Kp", 0),
                 SmartDashboard.getNumber("Ki", 0),
                 SmartDashboard.getNumber("Kd", 0));
+        rotationController = new PIDFController(SmartDashboard.getNumber("Kp", 0),
+                SmartDashboard.getNumber("Ki", 0),
+                SmartDashboard.getNumber("Kd", 0),
+                SmartDashboard.getNumber("Kf", 0));
     }
 
     @Override

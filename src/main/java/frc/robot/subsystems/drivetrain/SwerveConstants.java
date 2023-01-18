@@ -34,15 +34,15 @@ public class SwerveConstants {
 
     public static double TORNADO_SPIN_DISTANCE = 0.4;
 
-    public static double AUTO_XY_Kp = 10.0;
-    public static double AUTO_XY_Ki = 0.0;
+    public static double AUTO_XY_Kp = 25.0;
+    public static double AUTO_XY_Ki = 7.0;
     public static double AUTO_XY_Kd = 0.0;
-    public static double AUTO_ROTATION_Kp = 10.0;
+    public static double AUTO_ROTATION_Kp = 1.0;
     public static double AUTO_ROTATION_Ki = 0.0;
     public static double AUTO_ROTATION_Kd = 0.0;
-    public static double AUTO_XY_VELOCITY_FEEDFORWARD = 0.3314;
-    public static double AUTO_XY_ACCELERATION_FEEDFORWARD = 0.044236;
-    public static double AUTO_XY_STATIC_FEEDFORWARD = 0.26355;
+    public static double AUTO_XY_VELOCITY_FEEDFORWARD = 0.33031;
+    public static double AUTO_XY_ACCELERATION_FEEDFORWARD = 0.080553;
+    public static double AUTO_XY_STATIC_FEEDFORWARD = 0.21189;
 
     public static DrivetrainFeedforwardConstants TRANSLATION_FF_CONSTANTS = new DrivetrainFeedforwardConstants(
             AUTO_XY_VELOCITY_FEEDFORWARD, AUTO_XY_ACCELERATION_FEEDFORWARD, AUTO_XY_STATIC_FEEDFORWARD

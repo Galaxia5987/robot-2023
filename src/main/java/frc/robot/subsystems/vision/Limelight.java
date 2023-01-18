@@ -58,7 +58,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * @return pitch from robot to target
      */
-    public Rotation2d getPitch() {
+    public Rotation2d getAngleFromTarget() {
         return Rotation2d.fromDegrees(ty.get());
     }
 
@@ -66,12 +66,11 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      * @return distance from target
      */
     public OptionalDouble getTargetDistance(double targetHeight) {
-        double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
-        double error = Constants.CAMERA_HEIGHT-targetHeight;
-        if (hasTargets()) {
-            return OptionalDouble.of(Math.abs(error / Math.tan(totalPitch)));
+        if (!hasTargets()) {
+            return OptionalDouble.empty();
         }
-        return OptionalDouble.empty();
+        double error = Constants.CAMERA_HEIGHT-targetHeight;
+        return OptionalDouble.of(Math.abs(error * Math.tan(Constants.CAMERA_PITCH)));
     }
 
     /**

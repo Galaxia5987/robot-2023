@@ -1,33 +1,54 @@
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.utils.controllers.PIDFController;
 import frc.robot.utils.units.UnitModel;
 
+import javax.swing.*;
+
 public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
-    public static final TalonSRX shoulderMotor = new TalonSRX(Ports.prototypeArmPorts.SHOULDER_MOTOR);
-    public static final TalonSRX elbowMotor = new TalonSRX(Ports.prototypeArmPorts.ELBOW_MOTOR);
-    public static final CANCoder shoulderEncoder = new CANCoder(Ports.prototypeArmPorts.SHOULDER_ENCODER);
-    public static final CANCoder elbowEncoder = new CANCoder(Ports.prototypeArmPorts.ELBOW_ENCODER);
-    public static final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
     public static PrototypeArm INSTANCE = null;
+    public final TalonSRX shoulderMotor = new TalonSRX(Ports.prototypeArmPorts.SHOULDER_MOTOR);
+    public final TalonSRX elbowMotor = new TalonSRX(Ports.prototypeArmPorts.ELBOW_MOTOR);
+    public final CANCoder shoulderEncoder = new CANCoder(Ports.prototypeArmPorts.SHOULDER_ENCODER);
+    public final CANCoder elbowEncoder = new CANCoder(Ports.prototypeArmPorts.ELBOW_ENCODER);
+    public final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
+    public final edu.wpi.first.wpilibj.Timer timer = new edu.wpi.first.wpilibj.Timer();
+    private final ArmKinematics kinematics = new ArmKinematics(ArmConstants.SHOULDER_ARM_LENGTH, ArmConstants.ELBOW_ARM_LENGTH);
+    private double prevElbowVelocity;
+    private double elbowTime2;
+    private double prevShzoulderVelocity;
+    private double shoulderTime2;
 
     public PrototypeArm() {
         super(new PrototypeArmLogInputs());
+        timer.reset();
+        timer.start();
 
         shoulderMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
         shoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
         shoulderMotor.setNeutralMode(NeutralMode.Brake);
         shoulderMotor.setInverted(ArmConstants.clockWise);
+        shoulderMotor.config_kP(0, ArmConstants.kP);
+        shoulderMotor.config_kI(0, ArmConstants.kI);
+        shoulderMotor.config_kD(0, ArmConstants.kD);
+        
 
         elbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
         elbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
         elbowMotor.setNeutralMode(NeutralMode.Brake);
         elbowMotor.setInverted(ArmConstants.clockWise);
+        elbowMotor.config_kP(0, ArmConstants.kP);
+        elbowMotor.config_kI(0, ArmConstants.kI);
+        elbowMotor.config_kD(0, ArmConstants.kD);
     }
 
     public void setShoulderJointPower(double power) {
@@ -36,6 +57,14 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
 
     public void setElbowJointPower(double power) {
         elbowMotor.set(TalonSRXControlMode.PercentOutput, power);
+    }
+
+    public void setShoulderJointVelocity(double velocity){
+        shoulderMotor.set(ControlMode.Velocity, velocity);
+    }
+
+    public void setElbowJointVelocity(double velocity){
+        elbowMotor.set(ControlMode.Velocity, velocity);
     }
 
     public double getShoulderJointPosition() {
@@ -54,6 +83,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowEncoder.setPosition(unitModel.toTicks(Math.toRadians(angle)));
     }
 
+
     public double getShoulderMotorPower() {
         return shoulderMotor.getMotorOutputPercent();
     }
@@ -62,8 +92,37 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         return elbowMotor.getMotorOutputPercent();
     }
 
+    public double getShoulderMotorVelocity(){
+        return shoulderMotor.getSelectedSensorVelocity();
+    }
+
+    public double getElbowMotorVelocity(){
+        return elbowMotor.getSelectedSensorVelocity();
+    }
+
+    public void setPosition(Translation2d armLocation){
+        setShoulderJointPosition(kinematics.inverseKinematics(armLocation.getX(), armLocation.getY()).shoulderAngle);
+        setElbowJointPosition(kinematics.inverseKinematics(armLocation.getX(), armLocation.getY()).elbowAngle);
+    }
+
     public String getSubsystemName() {
         return "PrototypeArm";
+    }
+
+    public void periodic(){
+        timer.reset();
+        timer.start();
+        double shoulderVelocity = getShoulderMotorVelocity();
+        double shoulderTime = timer.get();
+        double shoulderAcceleration = (shoulderVelocity - prevShzoulderVelocity)/ Math.abs(shoulderTime-shoulderTime2);
+        prevShzoulderVelocity = shoulderVelocity;
+        shoulderTime2 = timer.get();
+
+        double elbowVelocity = getElbowMotorVelocity();
+        double elbowTime = timer.get();
+        double elbowAcceleration = (elbowVelocity - prevElbowVelocity)/Math.abs(elbowTime-elbowTime2);
+        prevElbowVelocity = elbowVelocity;
+        elbowTime2 = timer.get();
     }
 
     public void updateInputs() {

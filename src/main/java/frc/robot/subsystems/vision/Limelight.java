@@ -108,7 +108,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     /**
-     * Updates the limelight log inputs
+     * Updates the limelight log inputs.
      */
     public void updateInputs() {
         loggerInputs.hasTargets = hasTargets();

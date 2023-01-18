@@ -20,6 +20,7 @@ public class ArmConstants { // TODO: Update all constants at zero, check if cloc
     public static final double SHOULDER_MOMENT_OF_INERTIA = 0; // [kg*m^2]
     public static final double SHOULDER_CM_RADIUS = 0; // [m]
     public static final int SHOULDER_NUMBER_OF_MOTORS = 0; // Arbitrary units
+    public static final double SHOULDER_ARM_LENGTH = 0; //[m]
 
     public static final double ELBOW_GEARING = 0; // Arbitrary units
     public static final double ELBOW_MASS = 0; // [kg]
@@ -27,6 +28,7 @@ public class ArmConstants { // TODO: Update all constants at zero, check if cloc
     public static final double ELBOW_MOMENT_OF_INERTIA = 0; // [kg*m^2]
     public static final double ELBOW_CM_RADIUS = 0; // [m]
     public static final int ELBOW_NUMBER_OF_MOTORS = 0; // Arbitrary units
+    public static final double ELBOW_ARM_LENGTH = 0; //[m]
 
     public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CM_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);

@@ -17,7 +17,7 @@ public class ArmConstants { // TODO: Update all constants at zero, check if cloc
     public static final double SHOULDER_GEARING = (66/16)*25; // Arbitrary units
     public static final double SHOULDER_MASS = 0.2859; // [kg]
     public static final double SHOULDER_LENGTH = 0.385; // [m]
-    public static final double SHOULDER_MOMENT_OF_INERTIA = 0.0212405825; // [kg*m^2]
+    public static final double SHOULDER_MOMENT_OF_INERTIA = 0.0212405825*0.9; // [kg*m^2]
     public static final double SHOULDER_CM_RADIUS = 0.15869; // [m]
     public static final int SHOULDER_NUMBER_OF_MOTORS = 1; // Arbitrary units
     public static final double SHOULDER_ARM_LENGTH = 0.385; //[m]
@@ -25,7 +25,7 @@ public class ArmConstants { // TODO: Update all constants at zero, check if cloc
     public static final double ELBOW_GEARING = (66/16)*25; // Arbitrary units
     public static final double ELBOW_MASS =0.2859; // [kg]
     public static final double ELBOW_LENGTH = 0.385; // [m]
-    public static final double ELBOW_MOMENT_OF_INERTIA = 0.0212405825; // [kg*m^2]
+    public static final double ELBOW_MOMENT_OF_INERTIA = 0.0212405825*0.9; // [kg*m^2]
     public static final double ELBOW_CM_RADIUS = 0.15869; // [m]
     public static final int ELBOW_NUMBER_OF_MOTORS = 1; // Arbitrary units
     public static final double ELBOW_ARM_LENGTH = 0.385; //[m]

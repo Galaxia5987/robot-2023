@@ -23,4 +23,10 @@ public class SetArmsPosition extends CommandBase {
     public void execute() {
         prototypeArm.setPosition(position);
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        prototypeArm.setShoulderJointPower(0);
+        prototypeArm.setElbowJointPower(0);
+    }
 }

@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -11,7 +12,6 @@ import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.units.UnitModel;
 
 public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
-    public static PrototypeArm INSTANCE = null;
     private final ArmKinematics kinematics = new ArmKinematics(ArmConstants.SHOULDER_ARM_LENGTH, ArmConstants.ELBOW_ARM_LENGTH);
     private final ArmSystemModel systemModel = new ArmSystemModel(ArmConstants.ARM_CONSTANTS);
 
@@ -24,11 +24,10 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     public final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
 
     private double prevShoulderVelocity;
-    private double shoulderTime2;
     private double shoulderFeedforward;
     private double prevElbowVelocity;
-    private double elbowTime2;
     private double elbowFeedForward;
+    private double Time2;
 
     public PrototypeArm() {
         super(new PrototypeArmLogInputs());
@@ -42,7 +41,6 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         shoulderMotor.config_kP(0, ArmConstants.kP);
         shoulderMotor.config_kI(0, ArmConstants.kI);
         shoulderMotor.config_kD(0, ArmConstants.kD);
-        shoulderMotor.config_kF(0, shoulderFeedforward);
 
         elbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
         elbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
@@ -75,7 +73,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     }
 
     public void setShoulderJointPosition(double angle) {
-        shoulderEncoder.setPosition(unitModel.toTicks(Math.toRadians(angle)));
+        shoulderMotor.set(ControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, shoulderFeedforward);
     }
 
     public double getElbowJointPosition() {
@@ -83,7 +81,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     }
 
     public void setElbowJointPosition(double angle) {
-        elbowEncoder.setPosition(unitModel.toTicks(Math.toRadians(angle)));
+        elbowMotor.set(ControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, elbowFeedForward);
     }
 
 
@@ -121,19 +119,17 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         timer.reset();
         timer.start();
         double shoulderVelocity = getShoulderMotorVelocity();
-        double shoulderTime = timer.get();
-        double shoulderAcceleration = (shoulderVelocity - prevShoulderVelocity)/ Math.abs(shoulderTime-shoulderTime2);
-        prevShoulderVelocity = shoulderVelocity;
-        shoulderTime2 = timer.get();
-
         double elbowVelocity = getElbowMotorVelocity();
-        double elbowTime = timer.get();
-        double elbowAcceleration = (elbowVelocity - prevElbowVelocity)/Math.abs(elbowTime-elbowTime2);
+        double Time = timer.get();
+        double shoulderAcceleration = (shoulderVelocity - prevShoulderVelocity)/ Math.abs(Time-Time2);
+        double elbowAcceleration = (elbowVelocity - prevElbowVelocity)/Math.abs(Time-Time2);
+        prevShoulderVelocity = shoulderVelocity;
         prevElbowVelocity = elbowVelocity;
-        elbowTime2 = timer.get();
+        Time2 = timer.get();
 
-        shoulderFeedforward = systemModel.calculateFeedForward(Math.toDegrees(unitModel.toUnits(getShoulderJointPosition())), Math.toDegrees(unitModel.toUnits(getElbowJointPosition())), getShoulderMotorVelocity(), getElbowMotorVelocity(), shoulderAcceleration, elbowAcceleration).shoulderFeedForward;
-        elbowFeedForward = systemModel.calculateFeedForward(Math.toDegrees(unitModel.toUnits(getShoulderJointPosition())), Math.toDegrees(unitModel.toUnits(getElbowJointPosition())), getShoulderMotorVelocity(), getElbowMotorVelocity(), shoulderAcceleration, elbowAcceleration).elbowFeedForward;
+        ArmSystemModel.ArmFeedForward tempFeedforward = systemModel.calculateFeedForward(Math.toDegrees(unitModel.toUnits(getShoulderJointPosition())), Math.toDegrees(unitModel.toUnits(getElbowJointPosition())), getShoulderMotorVelocity(), getElbowMotorVelocity(), shoulderAcceleration, elbowAcceleration);
+        shoulderFeedforward = tempFeedforward.shoulderFeedForward;
+        elbowFeedForward = tempFeedforward.elbowFeedForward;
     }
 
     public void updateInputs() {

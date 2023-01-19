@@ -172,3 +172,5 @@ build/
 .gradle/
 
 !/.idea/fileTemplates/**
+
+BuildConstants.java

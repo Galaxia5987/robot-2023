@@ -7,8 +7,8 @@ public class SetShoulderAngle extends CommandBase {
     private final PrototypeArm prototypeArm;
     private final double angle;
 
-    public SetShoulderAngle(double angle) {
-        this.prototypeArm = new PrototypeArm();
+    public SetShoulderAngle(PrototypeArm prototypeArm, double angle) {
+        this.prototypeArm = prototypeArm;
         this.angle = angle;
         addRequirements(prototypeArm);
     }

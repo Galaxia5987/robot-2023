@@ -13,8 +13,8 @@ public class SetArmsPosition extends CommandBase {
     private final PrototypeArm prototypeArm;
     private final Translation2d position;
 
-    public SetArmsPosition(Translation2d position) {
-        this.prototypeArm = new PrototypeArm();
+    public SetArmsPosition(PrototypeArm prototypeArm, Translation2d position) {
+        this.prototypeArm = prototypeArm;
         this.position = position;
         addRequirements();
     }

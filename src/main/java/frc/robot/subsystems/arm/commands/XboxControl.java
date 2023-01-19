@@ -8,8 +8,8 @@ public class XboxControl extends CommandBase {
     private final PrototypeArm prototypeArm;
     private final XboxController xboxController;
 
-    public XboxControl(XboxController xboxController) {
-        this.prototypeArm = new PrototypeArm();
+    public XboxControl(PrototypeArm prototypeArm, XboxController xboxController) {
+        this.prototypeArm = prototypeArm;
         this.xboxController = xboxController;
         addRequirements(prototypeArm);
     }

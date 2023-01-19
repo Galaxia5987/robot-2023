@@ -14,21 +14,21 @@ public class ArmConstants { // TODO: Update all constants at zero, check if cloc
     public static final double ENCODER_RATIO = 1/25;
     public static final double TICKS_PER_RADIAN = (4096/ENCODER_RATIO)/ (Math.PI*2);
 
-    public static final double SHOULDER_GEARING = 0; // Arbitrary units
-    public static final double SHOULDER_MASS = 0; // [kg]
-    public static final double SHOULDER_LENGTH = 0; // [m]
-    public static final double SHOULDER_MOMENT_OF_INERTIA = 0; // [kg*m^2]
-    public static final double SHOULDER_CM_RADIUS = 0; // [m]
-    public static final int SHOULDER_NUMBER_OF_MOTORS = 0; // Arbitrary units
-    public static final double SHOULDER_ARM_LENGTH = 0; //[m]
+    public static final double SHOULDER_GEARING = (66/16)*25; // Arbitrary units
+    public static final double SHOULDER_MASS = 0.2859; // [kg]
+    public static final double SHOULDER_LENGTH = 0.385; // [m]
+    public static final double SHOULDER_MOMENT_OF_INERTIA = 0.0212405825; // [kg*m^2]
+    public static final double SHOULDER_CM_RADIUS = 0.15869; // [m]
+    public static final int SHOULDER_NUMBER_OF_MOTORS = 1; // Arbitrary units
+    public static final double SHOULDER_ARM_LENGTH = 0.385; //[m]
 
-    public static final double ELBOW_GEARING = 0; // Arbitrary units
-    public static final double ELBOW_MASS = 0; // [kg]
-    public static final double ELBOW_LENGTH = 0; // [m]
-    public static final double ELBOW_MOMENT_OF_INERTIA = 0; // [kg*m^2]
-    public static final double ELBOW_CM_RADIUS = 0; // [m]
-    public static final int ELBOW_NUMBER_OF_MOTORS = 0; // Arbitrary units
-    public static final double ELBOW_ARM_LENGTH = 0; //[m]
+    public static final double ELBOW_GEARING = (66/16)*25; // Arbitrary units
+    public static final double ELBOW_MASS =0.2859; // [kg]
+    public static final double ELBOW_LENGTH = 0.385; // [m]
+    public static final double ELBOW_MOMENT_OF_INERTIA = 0.0212405825; // [kg*m^2]
+    public static final double ELBOW_CM_RADIUS = 0.15869; // [m]
+    public static final int ELBOW_NUMBER_OF_MOTORS = 1; // Arbitrary units
+    public static final double ELBOW_ARM_LENGTH = 0.385; //[m]
 
     public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CM_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);

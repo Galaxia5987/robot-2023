@@ -108,6 +108,11 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         setElbowJointPosition(kinematics.inverseKinematics(armLocation.getX(), armLocation.getY()).elbowAngle);
     }
 
+    public double deadBend(double value){
+        if (Math.abs(value)>0.05) return value;
+        return 0;
+    }
+
     public String getSubsystemName() {
         return "PrototypeArm";
     }

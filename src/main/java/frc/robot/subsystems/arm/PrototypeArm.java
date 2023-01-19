@@ -5,14 +5,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
-import frc.robot.utils.controllers.PIDFController;
 import frc.robot.utils.units.UnitModel;
-
-import javax.swing.*;
 
 public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     public static PrototypeArm INSTANCE = null;

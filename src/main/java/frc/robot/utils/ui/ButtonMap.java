@@ -18,4 +18,6 @@ public interface ButtonMap {
     boolean getIntakeCube();
 
     boolean getChargeStation();
+
+    boolean lock();
 }

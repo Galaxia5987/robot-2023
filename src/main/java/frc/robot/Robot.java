@@ -56,6 +56,11 @@ public class Robot extends LoggedRobot {
         SmartDashboard.putNumber("Kp", SwerveConstants.AUTO_XY_Kp);
         SmartDashboard.putNumber("Ki", SwerveConstants.AUTO_XY_Ki);
         SmartDashboard.putNumber("Kd", SwerveConstants.AUTO_XY_Kd);
+
+        SmartDashboard.putNumber("Rotation_Kp", SwerveConstants.AUTO_ROTATION_Kp);
+        SmartDashboard.putNumber("Rotation_Ki", SwerveConstants.AUTO_ROTATION_Ki);
+        SmartDashboard.putNumber("Rotation_Kd", SwerveConstants.AUTO_ROTATION_Kd);
+        SmartDashboard.putNumber("Rotation_Kf", SwerveConstants.AUTO_ROTATION_Kf);
     }
 
     /**

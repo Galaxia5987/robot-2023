@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -64,36 +65,35 @@ public class FollowPath extends CommandBase {
         strafeController = new PIDController(SmartDashboard.getNumber("Kp", 0),
                 SmartDashboard.getNumber("Ki", 0),
                 SmartDashboard.getNumber("Kd", 0));
-        rotationController = new PIDFController(SmartDashboard.getNumber("Kp", 0),
-                SmartDashboard.getNumber("Ki", 0),
-                SmartDashboard.getNumber("Kd", 0),
-                SmartDashboard.getNumber("Kf", 0));
+        rotationController = new PIDFController(SmartDashboard.getNumber("Rotation_Kp", 0),
+                SmartDashboard.getNumber("Rotation_Ki", 0),
+                SmartDashboard.getNumber("Rotation_Kd", 0),
+                SmartDashboard.getNumber("Rotation_Kf", 0));
     }
 
     @Override
     public void execute() {
-        var desiredState = trajectory.sample(timer.get());
+        double time = timer.get();
+        var desiredState = (PathPlannerTrajectory.PathPlannerState) trajectory.sample(time);
         var currentPose = swerveDrive.getPose();
         var toDesiredTranslation = desiredState.poseMeters.minus(currentPose);
         Rotation2d heading = new Rotation2d(toDesiredTranslation.getX(), toDesiredTranslation.getY());
-//        System.out.println("Heading: " + heading);
 
         Translation2d segment = new Translation2d(
                 heading.getCos(), heading.getSin());
-//        System.out.println("Segment: " + segment);
 
         Translation2d segmentVelocity = segment.times(desiredState.velocityMetersPerSecond);
         Translation2d segmentAcceleration = segment.times(desiredState.accelerationMetersPerSecondSq);
 
-        Translation2d feedforwardVector = feedforward.calculateFeedforward(segmentVelocity, segmentAcceleration);
-//        System.out.println("FeedForward: " + feedforwardVector);
+        Translation2d feedforwardResult = feedforward.calculateFeedforward(
+                segmentVelocity, segmentAcceleration);
 
         var signal = new DriveSignal(
-                 forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
-                        + feedforwardVector.getX(),
+                forwardController.calculate(currentPose.getTranslation().getX(), desiredState.poseMeters.getX())
+                        + feedforwardResult.getX(),
                 strafeController.calculate(currentPose.getTranslation().getY(), desiredState.poseMeters.getY())
-                        + feedforwardVector.getY(),
-                rotationController.calculate(gyroscope.getYaw().getRadians(), desiredState.poseMeters.getRotation().getRadians()),
+                        + feedforwardResult.getY(),
+                    rotationController.calculate(gyroscope.getYaw().getRadians(), desiredState.holonomicRotation.getRadians()),
                 new Translation2d(),
                 true
         );
@@ -101,7 +101,7 @@ public class FollowPath extends CommandBase {
 
         logInputs.desiredState = desiredState;
         logInputs.desiredSpeeds = signal.speeds();
-        logInputs.time = timer.get();
+        logInputs.time = time;
 
         Logger.getInstance().processInputs("Autonomous Path", logInputs);
     }

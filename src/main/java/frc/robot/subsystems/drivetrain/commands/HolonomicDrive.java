@@ -38,6 +38,8 @@ public class HolonomicDrive extends CommandBase {
 
         } else if (buttonMap.getSingleSubstation()) {
 
+        } else if(buttonMap.lock()) {
+            swerveDrive.lock();
         } else {
             swerveDrive.drive(buttonMap.defaultDriveSignal(
                     forwardLimiter, strafeLimiter, rotationLimiter));

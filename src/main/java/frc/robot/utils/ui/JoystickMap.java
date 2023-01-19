@@ -55,6 +55,11 @@ public class JoystickMap implements ButtonMap {
     }
 
     @Override
+    public boolean lock() {
+        return false;
+    }
+
+    @Override
     public boolean getChargeStation() {
         return false;
     }

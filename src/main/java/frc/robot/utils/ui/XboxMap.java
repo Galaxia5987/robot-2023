@@ -1,5 +1,6 @@
 package frc.robot.utils.ui;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -26,10 +27,10 @@ public class XboxMap implements ButtonMap {
 
         double magnitude = Math.hypot(vx, vy);
         double angle = Math.atan2(vy, vx);
-        magnitude = Utils.deadband(magnitude, 0.1);
+        magnitude = MathUtil.applyDeadband(magnitude, 0.1);
         vx = Math.cos(angle) * magnitude;
         vy = Math.sin(angle) * magnitude;
-        omega = Utils.deadband(omega, 0.1);
+        omega = MathUtil.applyDeadband(omega, 0.1);
 
         return new DriveSignal(vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                 vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
@@ -66,5 +67,10 @@ public class XboxMap implements ButtonMap {
     @Override
     public boolean getChargeStation() {
         return false;
+    }
+
+    @Override
+    public boolean lock() {
+        return xboxController.getXButton();
     }
 }

@@ -65,7 +65,7 @@ public class RobotContainer {
                 "Onward",
                 SwerveConstants.TRANSLATION_PID_CONSTANTS,
                 SwerveConstants.ROTATION_PID_CONSTANTS,
-                new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS),
+                new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS, SwerveConstants.ROTATION_FF_CONSTANTS),
                 4, 2);
     }
 }

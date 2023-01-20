@@ -1,9 +1,11 @@
 package frc.robot.utils.ui;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.drivetrain.DriveSignal;
+import frc.robot.subsystems.drivetrain.SwerveConstants;
 
 public class JoystickMap implements ButtonMap {
     private final Joystick leftJoystick;
@@ -15,18 +17,27 @@ public class JoystickMap implements ButtonMap {
     }
 
     @Override
-    public DriveSignal defaultDriveSignal(SlewRateLimiter forwardRateLimiter, SlewRateLimiter strafeRateLimiter, SlewRateLimiter rotationRateLimiter) {
-        double vx = leftJoystick.getY();
-        double vy = leftJoystick.getX();
-        double omega = rightJoystick.getX();
+    public void defaultDriveSignal(DriveSignal signal, SlewRateLimiter forwardRateLimiter, SlewRateLimiter strafeRateLimiter, SlewRateLimiter rotationRateLimiter) {
+        double vx = -leftJoystick.getY();
+        double vy = -leftJoystick.getX();
+        double omega = -rightJoystick.getX();
 
         vx = forwardRateLimiter.calculate(vx);
         vy = strafeRateLimiter.calculate(vy);
         omega = rotationRateLimiter.calculate(omega);
 
-        return new DriveSignal(vx, vy, omega,
-                new Translation2d(),
-                leftJoystick.getTrigger());
+        double magnitude = Math.hypot(vx, vy);
+        double angle = Math.atan2(vy, vx);
+        magnitude = MathUtil.applyDeadband(magnitude, 0.1);
+        vx = Math.cos(angle) * magnitude;
+        vy = Math.sin(angle) * magnitude;
+        omega = MathUtil.applyDeadband(omega, 0.1);
+
+        signal.vx = vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
+        signal.vy = vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
+        signal.omega = omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+        signal.centerOfRotation = new Translation2d();
+        signal.fieldOriented = leftJoystick.getTrigger();
     }
 
     @Override

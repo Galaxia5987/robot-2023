@@ -5,7 +5,7 @@ import frc.robot.subsystems.drivetrain.DriveSignal;
 
 public interface ButtonMap {
 
-    DriveSignal defaultDriveSignal(SlewRateLimiter forwardRateLimiter, SlewRateLimiter strafeRateLimiter, SlewRateLimiter rotationRateLimiter);
+    void defaultDriveSignal(DriveSignal signal, SlewRateLimiter forwardRateLimiter, SlewRateLimiter strafeRateLimiter, SlewRateLimiter rotationRateLimiter);
 
     boolean getDoubleSubstation();
 

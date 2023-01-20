@@ -16,7 +16,7 @@ public class XboxMap implements ButtonMap {
     }
 
     @Override
-    public DriveSignal defaultDriveSignal(SlewRateLimiter forwardRateLimiter, SlewRateLimiter strafeRateLimiter, SlewRateLimiter rotationRateLimiter) {
+    public void defaultDriveSignal(DriveSignal signal, SlewRateLimiter forwardRateLimiter, SlewRateLimiter strafeRateLimiter, SlewRateLimiter rotationRateLimiter) {
         double vx = -xboxController.getLeftY();
         double vy = -xboxController.getLeftX();
         double omega = -xboxController.getRightX();
@@ -32,11 +32,11 @@ public class XboxMap implements ButtonMap {
         vy = Math.sin(angle) * magnitude;
         omega = MathUtil.applyDeadband(omega, 0.1);
 
-        return new DriveSignal(vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-                new Translation2d(),
-                xboxController.getLeftTriggerAxis() <= 0.1);
+        signal.vx = vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
+        signal.vy = vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
+        signal.omega = omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+        signal.centerOfRotation = new Translation2d();
+        signal.fieldOriented = xboxController.getLeftTriggerAxis() <= 0.1;
     }
 
     @Override

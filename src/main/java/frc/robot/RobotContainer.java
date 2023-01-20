@@ -44,7 +44,10 @@ public class RobotContainer {
                 new HolonomicDrive(
                         swerveSubsystem,
                         gyroscope,
-                        new XboxMap(xboxController)
+                        new XboxMap(xboxController),
+                        SwerveConstants.TRANSLATION_PID_CONSTANTS,
+                        SwerveConstants.ROTATION_PID_CONSTANTS,
+                        new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS, SwerveConstants.ROTATION_FF_CONSTANTS)
                 )
         );
     }

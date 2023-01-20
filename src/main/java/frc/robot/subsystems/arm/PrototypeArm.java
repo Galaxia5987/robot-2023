@@ -1,9 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,8 +16,6 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
 
     public final TalonSRX shoulderMotor = new TalonSRX(Ports.prototypeArmPorts.SHOULDER_MOTOR);
     public final TalonSRX elbowMotor = new TalonSRX(Ports.prototypeArmPorts.ELBOW_MOTOR);
-    public final CANCoder shoulderEncoder = new CANCoder(Ports.prototypeArmPorts.SHOULDER_ENCODER);
-    public final CANCoder elbowEncoder = new CANCoder(Ports.prototypeArmPorts.ELBOW_ENCODER);
     public final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
 
     private double prevShoulderVelocity;
@@ -38,18 +33,20 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         shoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
         shoulderMotor.setNeutralMode(NeutralMode.Brake);
         shoulderMotor.setInverted(ArmConstants.clockWise);
-        shoulderMotor.config_kP(0, ArmConstants.kP);
-        shoulderMotor.config_kI(0, ArmConstants.kI);
-        shoulderMotor.config_kD(0, ArmConstants.kD);
+        shoulderMotor.config_kP(0, ArmConstants.shoulderP);
+        shoulderMotor.config_kI(0, ArmConstants.shoulderI);
+        shoulderMotor.config_kD(0, ArmConstants.shoulderD);
+//        shoulderMotor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.Analog, 0, 20);
+
 
         elbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
         elbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
         elbowMotor.setNeutralMode(NeutralMode.Brake);
         elbowMotor.setInverted(ArmConstants.clockWise);
-        elbowMotor.config_kP(0, ArmConstants.kP);
-        elbowMotor.config_kI(0, ArmConstants.kI);
-        elbowMotor.config_kD(0, ArmConstants.kD);
-        elbowMotor.config_kF(0, elbowFeedForward);
+        elbowMotor.config_kP(0, ArmConstants.elbowP);
+        elbowMotor.config_kI(0, ArmConstants.elbowI);
+        elbowMotor.config_kD(0, ArmConstants.elbowD);
+
     }
 
     public void setShoulderJointPower(double power) {
@@ -69,7 +66,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     }
 
     public double getShoulderJointPosition() {
-        return Math.toDegrees(unitModel.toUnits(shoulderEncoder.getPosition()));
+        return Math.toDegrees(unitModel.toUnits(shoulderMotor.getSelectedSensorPosition()));
     }
 
     public void setShoulderJointPosition(double angle) {
@@ -77,7 +74,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     }
 
     public double getElbowJointPosition() {
-        return Math.toDegrees(unitModel.toUnits(elbowEncoder.getPosition()));
+        return Math.toDegrees(unitModel.toUnits(elbowMotor.getSelectedSensorPosition()));
     }
 
     public void setElbowJointPosition(double angle) {
@@ -137,5 +134,12 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         loggerInputs.shoulderAngle = getShoulderJointPosition();
         loggerInputs.elbowMotorPower = getElbowMotorPower();
         loggerInputs.shoulderMotorPower = getShoulderMotorPower();
+        loggerInputs.shoulderP = ArmConstants.shoulderP;
+        loggerInputs.shoulderI = ArmConstants.shoulderI;
+        loggerInputs.shoulderD = ArmConstants.shoulderD;
+        loggerInputs.elbowP = ArmConstants.elbowP;
+        loggerInputs.elbowI = ArmConstants.elbowI;
+        loggerInputs.elbowD = ArmConstants.elbowD;
+
     }
 }

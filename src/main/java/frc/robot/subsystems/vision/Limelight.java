@@ -20,16 +20,18 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final IntegerSubscriber tv = table.getIntegerTopic("tv").subscribe(0);
     private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
+    private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
 
     private Limelight() {
         super(new LimelightLogInputs());
-        for (int i=5800; i<=5805; i++){
+        for (int i = 5800; i <= 5805; i++) {
             PortForwarder.add(i, "limelight.local", i);
         }
     }
 
     /**
      * If there is no instance of the limelight class it creates one and returns it
+     *
      * @return Limelight instance
      */
     public static Limelight getInstance() {
@@ -40,8 +42,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     /**
-     * Checks weather the limelight can see any targets
-     * @return weather the limelight detects any targets
+     * Checks whether the limelight can see any targets
+     *
+     * @return whether the limelight detects any targets
      */
     public boolean hasTargets() {
         return tv.get() > 0;
@@ -69,8 +72,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         if (!hasTargets()) {
             return OptionalDouble.empty();
         }
-        double totalPitch = Constants.CAMERA_PITCH + getPitch().getRadians();
-        double error = Constants.CAMERA_HEIGHT-targetHeight;
+        double totalPitch = VisionConstants.CAMERA_PITCH + getPitch().getRadians();
+        double error = VisionConstants.CAMERA_HEIGHT - targetHeight;
         return OptionalDouble.of(Math.abs(error * Math.tan(totalPitch)));
     }
 
@@ -86,6 +89,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
 
     /**
      * Estimates the position of the robot
+     *
      * @param robotAngle The angle of the robot
      * @return Optional Pose2d of the robot coordinates
      */
@@ -102,6 +106,16 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.of(new Pose2d(translation2d, robotAngle));
     }
 
+    public Optional<Pose2d> getBotPose() {
+        double[] botPosition = botPose.get();
+        if (!hasTargets() || botPosition.length == 0) {
+            return Optional.empty();
+        }
+        var translation = new Translation2d(botPosition[0], botPosition[1]);
+        var absoluteTranslation = VisionConstants.CENTER_POSE.plus(translation);
+        return Optional.of(new Pose2d(absoluteTranslation, Rotation2d.fromDegrees(botPosition[5])));
+    }
+
     @Override
     public String getSubsystemName() {
         return "Limelight";
@@ -114,7 +128,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value);
         loggerInputs.tagId = getTagId();
-        getTargetDistance(Constants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
-        getTargetDistance(Constants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getBotPose().ifPresent((value) -> loggerInputs.botPose = value);
     }
 }

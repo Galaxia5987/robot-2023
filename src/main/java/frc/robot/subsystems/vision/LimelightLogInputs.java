@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
@@ -17,6 +18,7 @@ public class LimelightLogInputs implements LoggableInputs {
     public double yaw = 0;
     public boolean hasTargets = false;
     public float tagId = 0;
+    public Pose2d botPose = new Pose2d();
 
     public LimelightLogInputs() {
     }
@@ -26,6 +28,7 @@ public class LimelightLogInputs implements LoggableInputs {
         table.put("yaw", yaw);
         table.put("hasTargets", hasTargets);
         table.put("tagId", tagId);
+        table.put("botPose", new double[] {botPose.getX(), botPose.getY(), botPose.getRotation().getDegrees()});
     }
 
     public void fromLog(LogTable table) {

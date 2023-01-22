@@ -27,10 +27,10 @@ public class XboxMap implements ButtonMap {
 
         double magnitude = Math.hypot(vx, vy);
         double angle = Math.atan2(vy, vx);
-        magnitude = MathUtil.applyDeadband(magnitude, 0.1);
+        magnitude = MathUtil.applyDeadband(magnitude, 0.2);
         vx = Math.cos(angle) * magnitude;
         vy = Math.sin(angle) * magnitude;
-        omega = MathUtil.applyDeadband(omega, 0.1);
+        omega = MathUtil.applyDeadband(omega, 0.2);
 
         signal.vx = vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
         signal.vy = vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
@@ -51,7 +51,7 @@ public class XboxMap implements ButtonMap {
 
     @Override
     public boolean getScoreGamePiece() {
-        return false;
+        return xboxController.getAButton();
     }
 
     @Override

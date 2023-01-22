@@ -7,7 +7,7 @@ import frc.robot.utils.controllers.PIDFConstants;
 
 public class SwerveConstants {
     public static final double TICKS_PER_ROTATION = 2048;
-    public static final int[] OFFSETS = {20260, 6453, 16114, 1743};
+    public static final int[] OFFSETS = {20175, 6485, 15989, 1741};
 
     public static final double DRIVETRAIN_TRACK_WIDTH_METERS = 0.595;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.595;
@@ -17,10 +17,10 @@ public class SwerveConstants {
     public static final double WHEEL_DIAMETER = 0.1023679821;
     // kP, kI, kD, kF, sCurveStrength, cruiseVelocity, acceleration, allowableError,
     // maxIntegralAccum, peakOutput
-    public static final double[] FRONT_LEFT_MOTION_MAGIC_CONFIGS = {0.8, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
-    public static final double[] FRONT_RIGHT_MOTION_MAGIC_CONFIGS = {0.8, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
-    public static final double[] REAR_LEFT_MOTION_MAGIC_CONFIGS = {0.8, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
-    public static final double[] REAR_RIGHT_MOTION_MAGIC_CONFIGS = {0.8, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
+    public static final double[] FRONT_LEFT_MOTION_MAGIC_CONFIGS = {1, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
+    public static final double[] FRONT_RIGHT_MOTION_MAGIC_CONFIGS = {1, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
+    public static final double[] REAR_LEFT_MOTION_MAGIC_CONFIGS = {1, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
+    public static final double[] REAR_RIGHT_MOTION_MAGIC_CONFIGS = {1, 0, 0, 0.2, 1, 21288, 25000, 10, 5, 1};
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
             DRIVE_REDUCTION *
             WHEEL_DIAMETER * Math.PI;
@@ -42,6 +42,13 @@ public class SwerveConstants {
     public static double AUTO_ROTATION_Ki = 0.15;
     public static double AUTO_ROTATION_Kd = 0.0;
     public static double AUTO_ROTATION_Kf = 0.0;
+    public static double TARGET_XY_Kp = 3.0;
+    public static double TARGET_XY_Ki = 0.0;
+    public static double TARGET_XY_Kd = 0.0;
+    public static double TARGET_ROTATION_Kp = 4.5;
+    public static double TARGET_ROTATION_Ki = 0.0;
+    public static double TARGET_ROTATION_Kd = 0.0;
+    public static double TARGET_ROTATION_Kf = 0.0;
     public static double AUTO_XY_VELOCITY_FEEDFORWARD = 0.33031;
     public static double AUTO_XY_ACCELERATION_FEEDFORWARD = 0.080553;
     public static double AUTO_XY_STATIC_FEEDFORWARD = 0.21189;
@@ -55,11 +62,17 @@ public class SwerveConstants {
     public static DrivetrainFeedforwardConstants ROTATION_FF_CONSTANTS = new DrivetrainFeedforwardConstants(
             AUTO_ROTATION_VELOCITY_FEEDFORWARD, AUTO_ROTATION_ACCELERATION_FEEDFORWARD, AUTO_ROTATION_STATIC_FEEDFORWARD
     );
-    public static PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(
+    public static PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(
             AUTO_XY_Kp, AUTO_XY_Ki, AUTO_XY_Kd
     );
-    public static PIDFConstants ROTATION_PID_CONSTANTS = new PIDFConstants(
+    public static PIDFConstants AUTO_ROTATION_PID_CONSTANTS = new PIDFConstants(
             AUTO_ROTATION_Kp, AUTO_ROTATION_Ki, AUTO_ROTATION_Kd, AUTO_ROTATION_Kf
+    );
+    public static PIDConstants TARGET_TRANSLATION_PID_CONSTANTS = new PIDConstants(
+            TARGET_XY_Kp, TARGET_XY_Ki, TARGET_XY_Kd
+    );
+    public static PIDFConstants TARGET_ROTATION_PID_CONSTANTS = new PIDFConstants(
+            TARGET_ROTATION_Kp, TARGET_ROTATION_Ki, TARGET_ROTATION_Kd, TARGET_ROTATION_Kf
     );
 
     public static double CHARGING_STATION_BALANCE_Kp = 0.5;

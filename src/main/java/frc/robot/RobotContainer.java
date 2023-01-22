@@ -46,10 +46,11 @@ public class RobotContainer {
                 new HolonomicDrive(
                         swerveSubsystem,
                         gyroscope,
+                        limelight,
                         new XboxMap(xboxController),
-                        SwerveConstants.TRANSLATION_PID_CONSTANTS,
-                        SwerveConstants.ROTATION_PID_CONSTANTS,
-                        new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS, SwerveConstants.ROTATION_FF_CONSTANTS)
+                        SwerveConstants.TARGET_TRANSLATION_PID_CONSTANTS,
+                        SwerveConstants.TARGET_ROTATION_PID_CONSTANTS,
+                        new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS)
                 )
         );
     }
@@ -68,8 +69,8 @@ public class RobotContainer {
         return new FollowPath(
                 swerveSubsystem, gyroscope,
                 "Onward",
-                SwerveConstants.TRANSLATION_PID_CONSTANTS,
-                SwerveConstants.ROTATION_PID_CONSTANTS,
+                SwerveConstants.AUTO_TRANSLATION_PID_CONSTANTS,
+                SwerveConstants.AUTO_ROTATION_PID_CONSTANTS,
                 new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS, SwerveConstants.ROTATION_FF_CONSTANTS),
                 4, 2);
     }

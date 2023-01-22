@@ -11,4 +11,8 @@ public class toggleSolenoid extends CommandBase {
         gripper.toggleSolenoid();
     }
 
+    @Override
+    public void end(boolean interrupted) {
+
+    }
 }

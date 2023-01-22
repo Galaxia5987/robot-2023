@@ -10,8 +10,6 @@ public class Gripper extends SubsystemBase {
     private final Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.RIGHT_SOLENOID);
 
    private Gripper(){
-       leftSolenoid.set(false);
-       rightSolenoid.set(false);
    }
     public void setSolenoid(boolean state) {
         leftSolenoid.set(state);

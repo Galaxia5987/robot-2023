@@ -4,11 +4,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 
-public class SetArmsPosition extends CommandBase {
+public class SetArmsAngles extends CommandBase {
     private final Arm arm;
     private final Translation2d position;
 
-    public SetArmsPosition(Arm arm, Translation2d position) {
+    public SetArmsAngles(Arm arm, Translation2d position) {
         this.arm = arm;
         this.position = position;
         addRequirements();

@@ -9,12 +9,12 @@ import edu.wpi.first.math.geometry.Translation2d;
  * There is a table of contents containing the kinematics section, and the inverse kinematics section.
  */
 public class ArmKinematics {
-    private final double l1;
-    private final double l2;
+    private final double length1;
+    private final double length2;
 
-    public ArmKinematics(double l1, double l2) {
-        this.l1 = l1;
-        this.l2 = l2;
+    public ArmKinematics(double length1, double length2) {
+        this.length1 = length1;
+        this.length2 = length2;
     }
 
     /**
@@ -26,8 +26,8 @@ public class ArmKinematics {
      */
     public Translation2d forwardKinematics(double shoulderAngle, double elbowAngle) {
         double theta = elbowAngle + shoulderAngle - Math.PI / 2;
-        double x = l1 * Math.cos(shoulderAngle) + l2 * Math.sin(theta);
-        double y = l1 * Math.sin(shoulderAngle) + l2 * Math.cos(theta);
+        double x = length1 * Math.cos(shoulderAngle) + length2 * Math.sin(theta);
+        double y = length1 * Math.sin(shoulderAngle) + length2 * Math.cos(theta);
         return new Translation2d(x, y);
     }
 
@@ -39,10 +39,10 @@ public class ArmKinematics {
      * @return the angles of the shoulder and elbow joints. ([rad, rad])
      */
     public InverseKinematicsSolution inverseKinematics(double x, double y) {
-        double c2 = (x * x + y * y - l1 * l1 - l2 * l2) / (2 * l1 * l2);
+        double c2 = (x * x + y * y - length1 * length1 - length2 * length2) / (2 * length1 * length2);
         double s2 = Math.sqrt(1 - c2 * c2);
         double shoulderAngle = Math.acos(c2);
-        double theta = Math.acos((y * (l1 + l2 * c2) - x * l2 * s2) / (x * x + y * y));
+        double theta = Math.acos((y * (length1 + length2 * c2) - x * length2 * s2) / (x * x + y * y));
         double elbowAngle = theta - shoulderAngle + Math.PI / 2;
 
         return new InverseKinematicsSolution(shoulderAngle, elbowAngle);

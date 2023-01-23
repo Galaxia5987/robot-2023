@@ -12,7 +12,7 @@ public class SystemConstants {
     public SystemConstants(double shoulderMass, double shoulderLength, double shoulderMomentOfInertia, double shoulderCmRadius, double shoulderGearing, int shoulderNumMotors,
                            double elbowMass, double elbowLength, double elbowMomentOfInertia, double elbowCmRadius, double elbowGearing, int elbowNumMotors) {
         this(new JointConstants(shoulderMass, shoulderLength, shoulderMomentOfInertia, shoulderCmRadius, shoulderGearing, shoulderNumMotors),
-             new JointConstants(elbowMass, elbowLength, elbowMomentOfInertia, elbowCmRadius, elbowGearing, elbowNumMotors));
+                new JointConstants(elbowMass, elbowLength, elbowMomentOfInertia, elbowCmRadius, elbowGearing, elbowNumMotors));
     }
 
     public JointConstants getShoulderJointConstants() {

@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-public class ArmConstants { // TODO:
+public class ArmConstants {
 
     // Arm constants
     public static final double CONFIG_VOLT_COMP = 10; //[voltage]

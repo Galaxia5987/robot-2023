@@ -41,7 +41,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         timer.reset();
         timer.start();
 
-        mainShoulderMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
+        mainShoulderMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
         mainShoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         mainShoulderMotor.setNeutralMode(NeutralMode.Brake);
         mainShoulderMotor.setInverted(ArmConstants.clockWise);
@@ -50,11 +50,11 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         mainShoulderMotor.config_kD(0, ArmConstants.shoulderD);
         mainShoulderMotor.configNeutralDeadband(0.05);
         auxShoulderMotor.follow(mainShoulderMotor);
-        auxShoulderMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
+        auxShoulderMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
         auxShoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         auxShoulderMotor.setNeutralMode(NeutralMode.Brake);
 
-        mainElbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
+        mainElbowMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
         mainElbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         mainElbowMotor.setNeutralMode(NeutralMode.Brake);
         mainElbowMotor.setInverted(ArmConstants.clockWise);
@@ -63,7 +63,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         mainElbowMotor.config_kD(0, ArmConstants.elbowD);
         mainElbowMotor.configNeutralDeadband(0.05);
         auxElbowMotor.follow(mainElbowMotor);
-        auxElbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
+        auxElbowMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
         auxElbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         auxElbowMotor.setNeutralMode(NeutralMode.Brake);
     }

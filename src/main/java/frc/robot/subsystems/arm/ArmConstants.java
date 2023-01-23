@@ -3,7 +3,7 @@ package frc.robot.subsystems.arm;
 public class ArmConstants {
 
     // Arm constants
-    public static final double CONFIG_VOLT_COMP = 10; //[voltage]
+    public static final double VOLT_COMP_Saturation = 10; //[V]
     public static final boolean ENABLE_VOLT_COMPENSATION = true;
     public static final boolean clockWise = true;
 

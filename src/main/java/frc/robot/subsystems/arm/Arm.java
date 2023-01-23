@@ -48,6 +48,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         mainShoulderMotor.config_kP(0, ArmConstants.shoulderP);
         mainShoulderMotor.config_kI(0, ArmConstants.shoulderI);
         mainShoulderMotor.config_kD(0, ArmConstants.shoulderD);
+        mainShoulderMotor.configNeutralDeadband(0.05);
         auxShoulderMotor.follow(mainShoulderMotor);
         auxShoulderMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
         auxShoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
@@ -60,6 +61,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         mainElbowMotor.config_kP(0, ArmConstants.elbowP);
         mainElbowMotor.config_kI(0, ArmConstants.elbowI);
         mainElbowMotor.config_kD(0, ArmConstants.elbowD);
+        mainElbowMotor.configNeutralDeadband(0.05);
         auxElbowMotor.follow(mainElbowMotor);
         auxElbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
         auxElbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
@@ -125,11 +127,6 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
 
     public double getElbowMotorVelocity() {
         return unitModel.toVelocity(mainElbowMotor.getSelectedSensorVelocity());
-    }
-
-    public double deadBend(double value) {
-        if (Math.abs(value) > 0.05) return value;
-        return 0;
     }
 
     public String getSubsystemName() {

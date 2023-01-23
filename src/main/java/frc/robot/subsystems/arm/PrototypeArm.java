@@ -43,8 +43,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         shoulderMotor.config_kP(0, ArmConstants.shoulderP);
         shoulderMotor.config_kI(0, ArmConstants.shoulderI);
         shoulderMotor.config_kD(0, ArmConstants.shoulderD);
-//        shoulderMotor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.Analog, 0, 20);
-
+        shoulderMotor.configNeutralDeadband(0.05);
 
         elbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
         elbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
@@ -53,6 +52,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowMotor.config_kP(0, ArmConstants.elbowP);
         elbowMotor.config_kI(0, ArmConstants.elbowI);
         elbowMotor.config_kD(0, ArmConstants.elbowD);
+        elbowMotor.configNeutralDeadband(0.05);
     }
 
     public static PrototypeArm getInstance() {
@@ -114,11 +114,6 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         var angles = kinematics.inverseKinematics(armLocation.getX(), armLocation.getY());
         setShoulderJointAngle(angles.shoulderAngle);
         setElbowJointAngle(angles.elbowAngle);
-    }
-
-    public double deadBend(double value) {
-        if (Math.abs(value) > 0.05) return value;
-        return 0;
     }
 
     public String getSubsystemName() {

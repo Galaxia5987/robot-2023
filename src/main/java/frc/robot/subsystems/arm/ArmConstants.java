@@ -15,7 +15,7 @@ public class ArmConstants {
     public static final double elbowD = 0.0;
 
     public static final double ENCODER_RATIO = 1 / 25.0;
-    public static final double TICKS_PER_RADIAN = (4096 * ENCODER_RATIO) / (Math.PI * 2);
+    public static final double TICKS_PER_RADIAN = (1024 * ENCODER_RATIO) / (Math.PI * 2);
 
     public static final double SHOULDER_GEARING = (66 / 16.0) * 25; // Arbitrary units
     public static final double SHOULDER_MASS = 0.2859; // [kg]

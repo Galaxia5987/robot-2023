@@ -2,26 +2,26 @@ package frc.robot.subsystems.arm.commands;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.arm.PrototypeArm;
+import frc.robot.subsystems.arm.Arm;
 
 public class SetArmsPosition extends CommandBase {
-    private final PrototypeArm prototypeArm;
+    private final Arm arm;
     private final Translation2d position;
 
-    public SetArmsPosition(Translation2d position) {
-        this.prototypeArm = PrototypeArm.getInstance();
+    public SetArmsPosition(Arm arm, Translation2d position) {
+        this.arm = arm;
         this.position = position;
         addRequirements();
     }
 
     @Override
     public void execute() {
-        prototypeArm.setPosition(position);
+        arm.setPosition(position);
     }
 
     @Override
     public void end(boolean interrupted) {
-        prototypeArm.setShoulderJointPower(0);
-        prototypeArm.setElbowJointPower(0);
+        arm.setShoulderJointPower(0);
+        arm.setElbowJointPower(0);
     }
 }

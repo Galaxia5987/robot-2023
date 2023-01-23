@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.subsystems.arm.PrototypeArm;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.commands.SetShoulderAngle;
 import frc.robot.subsystems.arm.commands.XboxControl;
 
@@ -17,7 +17,7 @@ public class RobotContainer {
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
 
-    private static final PrototypeArm arm = PrototypeArm.getInstance();
+    private static final Arm arm = Arm.getInstance();
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.

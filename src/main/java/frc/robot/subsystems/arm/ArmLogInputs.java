@@ -3,7 +3,7 @@ package frc.robot.subsystems.arm;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public class PrototypeArmLogInputs implements LoggableInputs {
+public class ArmLogInputs implements LoggableInputs {
     public double elbowAngle = 0;
     public double shoulderAngle = 8;
     public double elbowMotorPower = 0;
@@ -15,7 +15,7 @@ public class PrototypeArmLogInputs implements LoggableInputs {
     public double elbowI = 0;
     public double elbowD = 0;
 
-    public PrototypeArmLogInputs() {
+    public ArmLogInputs() {
     }
 
     public void toLog(LogTable table) {

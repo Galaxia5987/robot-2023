@@ -1,26 +1,26 @@
 package frc.robot.subsystems.arm.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.arm.PrototypeArm;
+import frc.robot.subsystems.arm.Arm;
 
 public class SetShoulderAngle extends CommandBase {
-    private final PrototypeArm prototypeArm;
+    private final Arm arm;
     private final double angle;
 
-    public SetShoulderAngle(PrototypeArm prototypeArm, double angle) {
-        this.prototypeArm = prototypeArm;
+    public SetShoulderAngle(Arm arm, double angle) {
+        this.arm = arm;
         this.angle = angle;
-        addRequirements(prototypeArm);
+        addRequirements(arm);
     }
 
     @Override
     public void execute() {
-        prototypeArm.setShoulderJointPosition(angle);
+        arm.setShoulderJointPosition(angle);
     }
 
     @Override
     public void end(boolean interrupted) {
-        prototypeArm.setShoulderJointPower(0);
-        prototypeArm.setElbowJointPower(0);
+        arm.setShoulderJointPower(0);
+        arm.setElbowJointPower(0);
     }
 }

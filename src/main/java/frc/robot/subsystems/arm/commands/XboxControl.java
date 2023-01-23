@@ -2,27 +2,27 @@ package frc.robot.subsystems.arm.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.arm.PrototypeArm;
+import frc.robot.subsystems.arm.Arm;
 
 public class XboxControl extends CommandBase {
-    private final PrototypeArm prototypeArm;
+    private final Arm arm;
     private final XboxController xboxController;
 
-    public XboxControl(PrototypeArm prototypeArm, XboxController xboxController) {
-        this.prototypeArm = prototypeArm;
+    public XboxControl(Arm arm, XboxController xboxController) {
+        this.arm = arm;
         this.xboxController = xboxController;
-        addRequirements(prototypeArm);
+        addRequirements(arm);
     }
 
     @Override
     public void execute() {
-        prototypeArm.setShoulderJointPower(prototypeArm.deadBend(xboxController.getLeftY()));
-        prototypeArm.setElbowJointPower(prototypeArm.deadBend(xboxController.getRightY()));
+        arm.setShoulderJointPower(arm.deadBend(xboxController.getLeftY()));
+        arm.setElbowJointPower(arm.deadBend(xboxController.getRightY()));
     }
 
     @Override
     public void end(boolean interrupted) {
-        prototypeArm.setShoulderJointPower(0);
-        prototypeArm.setElbowJointPower(0);
+        arm.setShoulderJointPower(0);
+        arm.setElbowJointPower(0);
     }
 }

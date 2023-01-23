@@ -111,8 +111,9 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     }
 
     public void setPosition(Translation2d armLocation) {
-        setShoulderJointPosition(kinematics.inverseKinematics(armLocation.getX(), armLocation.getY()).shoulderAngle);
-        setElbowJointPosition(kinematics.inverseKinematics(armLocation.getX(), armLocation.getY()).elbowAngle);
+        var angles = kinematics.inverseKinematics(armLocation.getX(), armLocation.getY());
+        setShoulderJointPosition(angles.shoulderAngle);
+        setElbowJointPosition(angles.elbowAngle);
     }
 
     public double deadBend(double value) {

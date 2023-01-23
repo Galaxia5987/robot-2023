@@ -98,9 +98,9 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     }
 
     public void setPosition(Translation2d armLocation) {
-        ArmKinematics.InverseKinematicsSolution inverseKinematicsSolution = kinematics.inverseKinematics(armLocation.getX(), armLocation.getY());
-        setShoulderJointPosition(inverseKinematicsSolution.shoulderAngle);
-        setElbowJointPosition(inverseKinematicsSolution.elbowAngle);
+        var angles = kinematics.inverseKinematics(armLocation.getX(), armLocation.getY());
+        setShoulderJointPosition(angles.shoulderAngle);
+        setElbowJointPosition(angles.elbowAngle);
     }
 
     public double getShoulderJointPosition() {

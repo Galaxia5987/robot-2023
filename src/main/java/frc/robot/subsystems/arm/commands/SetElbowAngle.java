@@ -15,7 +15,7 @@ public class SetElbowAngle extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setElbowJointPosition(angle);
+        arm.setElbowJointAngle(angle);
     }
 
     @Override

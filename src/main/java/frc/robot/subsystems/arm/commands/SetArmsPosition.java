@@ -16,7 +16,7 @@ public class SetArmsPosition extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setPosition(position);
+        arm.setAngle(position);
     }
 
     @Override

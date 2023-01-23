@@ -2,8 +2,8 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.units.UnitModel;
@@ -12,11 +12,11 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     private final ArmKinematics kinematics = new ArmKinematics(ArmConstants.SHOULDER_ARM_LENGTH, ArmConstants.ELBOW_ARM_LENGTH);
     private final ArmSystemModel systemModel = new ArmSystemModel(ArmConstants.ARM_CONSTANTS);
 
-    public final edu.wpi.first.wpilibj.Timer timer = new edu.wpi.first.wpilibj.Timer();
+    private final Timer timer = new Timer();
 
-    public final TalonSRX shoulderMotor = new TalonSRX(Ports.prototypeArmPorts.SHOULDER_MOTOR);
-    public final TalonSRX elbowMotor = new TalonSRX(Ports.prototypeArmPorts.ELBOW_MOTOR);
-    public final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
+    private final TalonSRX shoulderMotor = new TalonSRX(Ports.prototypeArmPorts.SHOULDER_MOTOR);
+    private final TalonSRX elbowMotor = new TalonSRX(Ports.prototypeArmPorts.ELBOW_MOTOR);
+    private final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
 
     private double prevShoulderVelocity;
     private double shoulderFeedforward;
@@ -30,7 +30,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         timer.start();
 
         shoulderMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
-        shoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
+        shoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         shoulderMotor.setNeutralMode(NeutralMode.Brake);
         shoulderMotor.setInverted(ArmConstants.clockWise);
         shoulderMotor.config_kP(0, ArmConstants.shoulderP);
@@ -40,7 +40,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
 
 
         elbowMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
-        elbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
+        elbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         elbowMotor.setNeutralMode(NeutralMode.Brake);
         elbowMotor.setInverted(ArmConstants.clockWise);
         elbowMotor.config_kP(0, ArmConstants.elbowP);

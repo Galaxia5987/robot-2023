@@ -4,7 +4,7 @@ public class ArmConstants { // TODO:
 
     // Arm constants
     public static final double CONFIG_VOLT_COMP = 10; //[voltage]
-    public static final boolean ENABLE_VOLT_COMPANSATION = true;
+    public static final boolean ENABLE_VOLT_COMPENSATION = true;
     public static final boolean clockWise = true;
 
     public static final double shoulderP = 0.1;

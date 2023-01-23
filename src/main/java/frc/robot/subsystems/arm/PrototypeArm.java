@@ -94,7 +94,6 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowMotor.set(ControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, elbowFeedForward);
     }
 
-
     public double getShoulderMotorPower() {
         return shoulderMotor.getMotorOutputPercent();
     }
@@ -104,11 +103,11 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     }
 
     public double getShoulderMotorVelocity() {
-        return shoulderMotor.getSelectedSensorVelocity();
+        return unitModel.toVelocity(shoulderMotor.getSelectedSensorVelocity());
     }
 
     public double getElbowMotorVelocity() {
-        return elbowMotor.getSelectedSensorVelocity();
+        return unitModel.toVelocity(elbowMotor.getSelectedSensorVelocity());
     }
 
     public void setPosition(Translation2d armLocation) {

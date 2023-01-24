@@ -106,14 +106,6 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         return unitModel.toUnits(elbowEncoder.getSelectedSensorPosition());
     }
 
-    public double getShoulderMotorPower() {
-        return shoulderMainMotor.getMotorOutputPercent();
-    }
-
-    public double getElbowMotorPower() {
-        return elbowMainMotor.getMotorOutputPercent();
-    }
-
     public double getShoulderMotorVelocity() {
         return unitModel.toVelocity(shoulderMainMotor.getSelectedSensorVelocity());
     }
@@ -144,9 +136,9 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     }
 
     public void updateInputs() {
-        loggerInputs.elbowAngle = getElbowJointAngle();
         loggerInputs.shoulderAngle = getShoulderJointAngle();
-        loggerInputs.elbowMotorPower = getElbowMotorPower();
-        loggerInputs.shoulderMotorPower = getShoulderMotorPower();
+        loggerInputs.elbowAngle = getElbowJointAngle();
+        loggerInputs.shoulderMotorPower = shoulderMainMotor.getMotorOutputPercent();
+        loggerInputs.elbowMotorPower = elbowMainMotor.getMotorOutputPercent();
     }
 }

@@ -99,11 +99,11 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     }
 
     public double getShoulderJointAngle() {
-        return Math.toDegrees(unitModel.toUnits(shoulderEncoder.getSelectedSensorPosition()));
+        return unitModel.toUnits(shoulderEncoder.getSelectedSensorPosition());
     }
 
     public double getElbowJointAngle() {
-        return Math.toDegrees(unitModel.toUnits(elbowEncoder.getSelectedSensorPosition()));
+        return unitModel.toUnits(elbowEncoder.getSelectedSensorPosition());
     }
 
     public double getShoulderMotorPower() {

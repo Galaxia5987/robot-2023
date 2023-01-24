@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,10 +18,10 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
 
     private final Timer timer = new Timer();
 
-    private final TalonFX mainShoulderMotor = new TalonFX(Ports.ArmPorts.MAIN_SHOULDER_MOTOR);
-    private final TalonFX auxShoulderMotor = new TalonFX(Ports.ArmPorts.AUX_SHOULDER_MOTOR);
-    private final TalonFX mainElbowMotor = new TalonFX(Ports.ArmPorts.MAIN_ELBOW_MOTOR);
-    private final TalonFX auxElbowMotor = new TalonFX(Ports.ArmPorts.AUX_ELBOW_MOTOR);
+    private final TalonFX shoulderMainMotor = new TalonFX(Ports.ArmPorts.SHOULDER_MAIN_MOTOR);
+    private final TalonFX shoulderAuxMotor = new TalonFX(Ports.ArmPorts.SHOULDER_AUX_MOTOR);
+    private final TalonFX elbowMainMotor = new TalonFX(Ports.ArmPorts.ELBOW_MAIN_MOTOR);
+    private final TalonFX elbowAuxMotor = new TalonFX(Ports.ArmPorts.ELBOW_AUX_MOTOR);
     private final TalonSRX shoulderEncoder = new TalonSRX(Ports.ArmPorts.SHOULDER_ENCODER);
     private final TalonSRX elbowEncoder = new TalonSRX(Ports.ArmPorts.ELBOW_ENCODER);
     private final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
@@ -41,31 +42,31 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         timer.reset();
         timer.start();
 
-        mainShoulderMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
-        mainShoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
-        mainShoulderMotor.setNeutralMode(NeutralMode.Brake);
-        mainShoulderMotor.setInverted(ArmConstants.clockWise);
-        mainShoulderMotor.config_kP(0, ArmConstants.shoulderP);
-        mainShoulderMotor.config_kI(0, ArmConstants.shoulderI);
-        mainShoulderMotor.config_kD(0, ArmConstants.shoulderD);
-        mainShoulderMotor.configNeutralDeadband(0.05);
-        auxShoulderMotor.follow(mainShoulderMotor);
-        auxShoulderMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
-        auxShoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
-        auxShoulderMotor.setNeutralMode(NeutralMode.Brake);
+        shoulderMainMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
+        shoulderMainMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
+        shoulderMainMotor.setNeutralMode(NeutralMode.Brake);
+        shoulderMainMotor.setInverted(ArmConstants.clockWise);
+        shoulderMainMotor.config_kP(0, ArmConstants.shoulderP);
+        shoulderMainMotor.config_kI(0, ArmConstants.shoulderI);
+        shoulderMainMotor.config_kD(0, ArmConstants.shoulderD);
+        shoulderMainMotor.configNeutralDeadband(0.05);
+        shoulderAuxMotor.follow(shoulderMainMotor);
+        shoulderAuxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
+        shoulderAuxMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
+        shoulderAuxMotor.setNeutralMode(NeutralMode.Brake);
 
-        mainElbowMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
-        mainElbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
-        mainElbowMotor.setNeutralMode(NeutralMode.Brake);
-        mainElbowMotor.setInverted(ArmConstants.clockWise);
-        mainElbowMotor.config_kP(0, ArmConstants.elbowP);
-        mainElbowMotor.config_kI(0, ArmConstants.elbowI);
-        mainElbowMotor.config_kD(0, ArmConstants.elbowD);
-        mainElbowMotor.configNeutralDeadband(0.05);
-        auxElbowMotor.follow(mainElbowMotor);
-        auxElbowMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
-        auxElbowMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
-        auxElbowMotor.setNeutralMode(NeutralMode.Brake);
+        elbowMainMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
+        elbowMainMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
+        elbowMainMotor.setNeutralMode(NeutralMode.Brake);
+        elbowMainMotor.setInverted(ArmConstants.clockWise);
+        elbowMainMotor.config_kP(0, ArmConstants.elbowP);
+        elbowMainMotor.config_kI(0, ArmConstants.elbowI);
+        elbowMainMotor.config_kD(0, ArmConstants.elbowD);
+        elbowMainMotor.configNeutralDeadband(0.05);
+        elbowAuxMotor.follow(elbowMainMotor);
+        elbowAuxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
+        elbowAuxMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
+        elbowAuxMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     public static Arm getInstance() {
@@ -76,30 +77,22 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     }
 
     public void setShoulderJointPower(double power) {
-        mainShoulderMotor.set(TalonFXControlMode.PercentOutput, power);
+        shoulderMainMotor.set(TalonFXControlMode.PercentOutput, power);
     }
 
     public void setElbowJointPower(double power) {
-        mainElbowMotor.set(TalonFXControlMode.PercentOutput, power);
-    }
-
-    public void setShoulderJointVelocity(double velocity) {
-        mainShoulderMotor.set(TalonFXControlMode.Velocity, velocity);
-    }
-
-    public void setElbowJointVelocity(double velocity) {
-        mainElbowMotor.set(TalonFXControlMode.Velocity, velocity);
+        elbowMainMotor.set(TalonFXControlMode.PercentOutput, power);
     }
 
     public void setShoulderJointAngle(double angle) {
-        mainShoulderMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, shoulderFeedforward);
+        shoulderMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, shoulderFeedforward);
     }
 
     public void setElbowJointAngle(double angle) {
-        mainElbowMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, elbowFeedForward);
+        elbowMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, elbowFeedForward);
     }
 
-    public void setAngle(Translation2d armLocation) {
+    public void setPosition(Translation2d armLocation) {
         var angles = kinematics.inverseKinematics(armLocation.getX(), armLocation.getY());
         setShoulderJointAngle(angles.shoulderAngle);
         setElbowJointAngle(angles.elbowAngle);
@@ -114,19 +107,19 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     }
 
     public double getShoulderMotorPower() {
-        return mainShoulderMotor.getMotorOutputPercent();
+        return shoulderMainMotor.getMotorOutputPercent();
     }
 
     public double getElbowMotorPower() {
-        return mainElbowMotor.getMotorOutputPercent();
+        return elbowMainMotor.getMotorOutputPercent();
     }
 
     public double getShoulderMotorVelocity() {
-        return unitModel.toVelocity(mainShoulderMotor.getSelectedSensorVelocity());
+        return unitModel.toVelocity(shoulderMainMotor.getSelectedSensorVelocity());
     }
 
     public double getElbowMotorVelocity() {
-        return unitModel.toVelocity(mainElbowMotor.getSelectedSensorVelocity());
+        return unitModel.toVelocity(elbowMainMotor.getSelectedSensorVelocity());
     }
 
     public String getSubsystemName() {

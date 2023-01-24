@@ -14,6 +14,7 @@ public class ArmConstants {
     public static final double elbowI = 0.0;
     public static final double elbowD = 0.0;
 
+    public static final double DEAD_BEND = 0.05;
     public static final double TICKS_PER_RADIAN = 1024 / (Math.PI * 2);
 
     public static final double SHOULDER_GEARING = 0; // Arbitrary units

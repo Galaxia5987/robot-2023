@@ -14,7 +14,7 @@ public class SetShoulderAngle extends CommandBase {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         arm.setShoulderJointAngle(angle);
     }
 

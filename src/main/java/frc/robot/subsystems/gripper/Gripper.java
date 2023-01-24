@@ -1,12 +1,7 @@
 package frc.robot.subsystems.gripper;
 
-import edu.wpi.first.networktables.BooleanSubscriber;
-import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
@@ -17,7 +12,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
 
     public Gripper(GripperLoggedInputs inputs) {
-        super(inputs);
+        super(new GripperLoggedInputs());
     }
 
     /**
@@ -66,9 +61,9 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
     @Override
     public void updateInputs() {
-        loggerInputs.leftSolenoid = leftSolenoid.get();
+        loggerInputs.leftSolenoidState = leftSolenoid.get();
 
-        loggerInputs.rightSolenoid = rightSolenoid.get();
+        loggerInputs.rightSolenoidState = rightSolenoid.get();
 
     }
 

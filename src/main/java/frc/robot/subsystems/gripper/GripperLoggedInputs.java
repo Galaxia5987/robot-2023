@@ -4,16 +4,16 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class GripperLoggedInputs implements LoggableInputs {
-    boolean leftSolenoid;
-    boolean rightSolenoid;
+    boolean leftSolenoidState;
+    boolean rightSolenoidState;
 
     /**
      * puts parameters into the table
      */
     @Override
     public void toLog(LogTable table) {
-        table.put("leftSolenoid", leftSolenoid);
-        table.put("rightSolenoid", rightSolenoid);
+        table.put("leftSolenoid", leftSolenoidState);
+        table.put("rightSolenoid", rightSolenoidState);
 
     }
 
@@ -22,7 +22,7 @@ public class GripperLoggedInputs implements LoggableInputs {
      */
     @Override
     public void fromLog(LogTable table) {
-        leftSolenoid = table.getBoolean("leftSolenoid", leftSolenoid);
-        rightSolenoid = table.getBoolean("rightSolenoid", rightSolenoid);
+        leftSolenoidState = table.getBoolean("leftSolenoid", leftSolenoidState);
+        rightSolenoidState = table.getBoolean("rightSolenoid", rightSolenoidState);
     }
 }

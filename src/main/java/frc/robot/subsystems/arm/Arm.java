@@ -31,7 +31,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     private double prevElbowVelocity;
     private double elbowFeedForward;
     private double time;
-    private double time2;
+    private double time2 = 0;
     private double shoulderVelocity;
     private double elbowVelocity;
     private double shoulderAcceleration;
@@ -148,12 +148,5 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         loggerInputs.shoulderAngle = getShoulderJointAngle();
         loggerInputs.elbowMotorPower = getElbowMotorPower();
         loggerInputs.shoulderMotorPower = getShoulderMotorPower();
-        loggerInputs.shoulderP = ArmConstants.shoulderP;
-        loggerInputs.shoulderI = ArmConstants.shoulderI;
-        loggerInputs.shoulderD = ArmConstants.shoulderD;
-        loggerInputs.elbowP = ArmConstants.elbowP;
-        loggerInputs.elbowI = ArmConstants.elbowI;
-        loggerInputs.elbowD = ArmConstants.elbowD;
-
     }
 }

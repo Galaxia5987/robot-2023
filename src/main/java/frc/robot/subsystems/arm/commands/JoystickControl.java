@@ -17,6 +17,7 @@ public class JoystickControl extends CommandBase {
     public void execute() {
         arm.setShoulderJointPower(joystick.getY());
         arm.setElbowJointPower(joystick.getY());
+        addRequirements(arm);
     }
 
     @Override

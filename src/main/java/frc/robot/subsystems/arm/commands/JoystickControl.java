@@ -11,6 +11,7 @@ public class JoystickControl extends CommandBase {
     public JoystickControl(Arm arm, Joystick joystick) {
         this.arm = arm;
         this.joystick = joystick;
+        addRequirements(arm);
     }
 
     @Override

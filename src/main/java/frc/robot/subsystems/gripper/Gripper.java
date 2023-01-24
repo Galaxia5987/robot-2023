@@ -47,12 +47,12 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     /**
      * return the current state of the solenoids
      */
-    public void getRightSolenoid() {
-        rightSolenoid.get();
+    public boolean getRightSolenoid() {
+         return rightSolenoid.get();
     }
 
-    public void getLeftSolenoid() {
-        leftSolenoid.get();
+    public boolean getLeftSolenoid() {
+        return leftSolenoid.get();
     }
 
     /**

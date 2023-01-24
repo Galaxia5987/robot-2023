@@ -66,9 +66,9 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
     @Override
     public void updateInputs() {
-        gripperLoggedInputs.leftSolenoid = leftSolenoid.get();
+        loggerInputs.leftSolenoid = leftSolenoid.get();
 
-        gripperLoggedInputs.rightSolenoid = rightSolenoid.get();
+        loggerInputs.rightSolenoid = rightSolenoid.get();
 
     }
 

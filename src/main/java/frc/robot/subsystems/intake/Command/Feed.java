@@ -1,15 +1,13 @@
 package frc.robot.subsystems.intake.Command;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Ports;
 import frc.robot.subsystems.intake.Intake;
 
-public class feed extends CommandBase {
+public class Feed extends CommandBase {
     private Intake intake = Intake.getINSTANCE();
     private double power;
 
-    public feed(Intake intake, double power) {
+    public Feed(Intake intake, double power) {
         addRequirements(intake);
     }
 

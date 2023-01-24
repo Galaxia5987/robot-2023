@@ -4,9 +4,9 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class IntakeLoggedInputs implements LoggableInputs {
-    static double supMAX;
-    static double infMAX;
-    static boolean solenoid;
+    double supMAX;
+    double infMAX;
+    boolean solenoid;
 
     @Override
     public void toLog(LogTable table) {

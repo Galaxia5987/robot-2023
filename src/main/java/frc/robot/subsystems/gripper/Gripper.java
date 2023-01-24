@@ -11,11 +11,9 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
 public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
-    private GripperLoggedInputs gripperLoggedInputs;
     private final Solenoid leftSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.LEFT_SOLENOID);
     private final Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.RIGHT_SOLENOID);
 
-    private final NetworkTable table = NetworkTableInstance.getDefault().getTable("gripper");
 
 
     public Gripper(GripperLoggedInputs inputs) {

@@ -21,13 +21,21 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     }
 
     /**
-     * setSolenoid sets the Solenoid state
-     * @param state
+     * open the Gripper
      */
 
-    public void setSolenoid(boolean state) {
-        leftSolenoid.set(state);
-        rightSolenoid.set(state);
+    public void open() {
+        leftSolenoid.set(true);
+        rightSolenoid.set(true);
+
+    }
+
+    /**
+     * close the Gripper
+     */
+    public void close() {
+        leftSolenoid.set(false);
+        rightSolenoid.set(false);
 
     }
 
@@ -35,7 +43,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      * changes the current state to the other state
      */
 
-    public void toggleSolenoid() {
+    public void toggle() {
         leftSolenoid.toggle();
         rightSolenoid.toggle();
 

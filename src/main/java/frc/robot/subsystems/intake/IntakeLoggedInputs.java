@@ -7,6 +7,7 @@ public class IntakeLoggedInputs implements LoggableInputs {
     static double supMAX;
     static double infMAX;
     static boolean solenoid;
+
     @Override
     public void toLog(LogTable table) {
         table.put("superiorMAX", supMAX);
@@ -16,8 +17,8 @@ public class IntakeLoggedInputs implements LoggableInputs {
 
     @Override
     public void fromLog(LogTable table) {
-supMAX = table.getDouble("superiorMAX", 0);
-infMAX = table.getDouble("inferiorMAX", 0);
-solenoid = table.getBoolean("solenoid", false);
+        supMAX = table.getDouble("superiorMAX", 0);
+        infMAX = table.getDouble("inferiorMAX", 0);
+        solenoid = table.getBoolean("solenoid", false);
     }
 }

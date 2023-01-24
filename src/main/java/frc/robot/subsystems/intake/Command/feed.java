@@ -9,7 +9,7 @@ public class feed extends CommandBase {
     private Intake intake = Intake.getINSTANCE();
     private double power;
 
-    public feed(Intake intake, double power){
+    public feed(Intake intake, double power) {
         addRequirements(intake);
     }
 

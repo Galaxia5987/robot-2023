@@ -10,7 +10,6 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     private final Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.RIGHT_SOLENOID);
 
 
-
     public Gripper(GripperLoggedInputs inputs) {
         super(new GripperLoggedInputs());
     }
@@ -48,7 +47,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      * return the current state of the solenoids
      */
     public boolean getRightSolenoid() {
-         return rightSolenoid.get();
+        return rightSolenoid.get();
     }
 
     public boolean getLeftSolenoid() {

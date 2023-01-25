@@ -9,8 +9,16 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     private final Solenoid innerSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.OUTER_SOLENOID);
     private final Solenoid outerSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.INNER_SOLENOID);
 
+    public Gripper INSTANCE;
 
-    public Gripper(GripperLoggedInputs inputs) {
+    public Gripper getINSTANCE() {
+        if (INSTANCE == null){
+            INSTANCE = new Gripper(new GripperLoggedInputs());
+        }
+        return INSTANCE;
+    }
+
+    private Gripper(GripperLoggedInputs inputs) {
         super(new GripperLoggedInputs());
     }
 

@@ -9,14 +9,15 @@ import frc.robot.subsystems.LoggedSubsystem;
 
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     public static Intake INSTANCE;
-    private final CANSparkMax higherSparkMax = new CANSparkMax(Ports.Intake.LOWER_SPARK_MAX_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax lowerSparkMax = new CANSparkMax(Ports.Intake.HIGHER_SPARK_MAX_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax motor = new CANSparkMax(Ports.Intake.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Intake.SOLENOID);
+
+    //TODO: add beamBreaker
 
     private Intake() {
         super(new IntakeLoggedInputs());
-        higherSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        lowerSparkMax.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        //TODO: add flush method
     }
 
     /**
@@ -32,43 +33,43 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     /**
      * set the motors' relative output
      */
-    public void setSparkMax(double power) {
-        higherSparkMax.set(power);
-        lowerSparkMax.set(power);
+    public void setPower(double power) {
+        motor.set(power);
     }
 
     /**
      * @return the relative output of the higher motor.
      */
-    public double getHigher() {
-        return higherSparkMax.get();
+    public double getPower() {
+        return motor.get();
     }
 
     /**
      * @return the relative output of the lower motor.
      */
-    public double getLower() {
-        return lowerSparkMax.get();
-    }
 
     /**
      * set the wanted state for the retractor's solenoid.
      */
-    public void setSolenoid(boolean state) {
+    public void openRetractor(boolean state) {
+        solenoid.set(state);
+    }
+
+    public void closeRetractor(boolean state) {
         solenoid.set(state);
     }
 
     /**
      * toggle the Solenoid
      */
-    public void toggleSolenoid() {
+    public void toggleRetractor() {
         solenoid.toggle();
     }
 
     /**
      * @return the Solenoid's current state
      */
-    public boolean getSolenoid() {
+    public boolean getSolenoidState() {
         return solenoid.get();
     }
 
@@ -77,9 +78,8 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
     @Override
     public void updateInputs() {
-        loggerInputs.solenoid = getSolenoid();
-        loggerInputs.infMAX = getLower();
-        loggerInputs.supMAX = getHigher();
+        loggerInputs.solenoidState = getSolenoidState();
+        loggerInputs.motorPower = getPower();
     }
 
     @Override

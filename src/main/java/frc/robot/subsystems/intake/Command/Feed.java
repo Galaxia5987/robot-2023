@@ -9,6 +9,7 @@ public class Feed extends CommandBase {
 
     public Feed(Intake intake, double power) {
         addRequirements(intake);
+        this.power = power;
     }
 
     /**
@@ -16,7 +17,7 @@ public class Feed extends CommandBase {
      */
     @Override
     public void initialize() {
-        intake.setSolenoid(true);
+        intake.closeRetractor(true);
     }
 
     /**
@@ -24,11 +25,11 @@ public class Feed extends CommandBase {
      */
     @Override
     public void execute() {
-        intake.setSparkMax(power);
+        intake.setPower(power);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setSparkMax(0);
+        intake.setPower(0);
     }
 }

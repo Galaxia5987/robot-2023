@@ -6,8 +6,8 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
 public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
-    private final Solenoid leftSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.LEFT_SOLENOID);
-    private final Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.RIGHT_SOLENOID);
+    private final Solenoid innerSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.OUTER_SOLENOID);
+    private final Solenoid outerSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.INNER_SOLENOID);
 
 
     public Gripper(GripperLoggedInputs inputs) {
@@ -19,8 +19,8 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      */
 
     public void open() {
-        leftSolenoid.set(true);
-        rightSolenoid.set(true);
+        innerSolenoid.set(true);
+        outerSolenoid.set(true);
 
     }
 
@@ -28,8 +28,8 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      * close the Gripper
      */
     public void close() {
-        leftSolenoid.set(false);
-        rightSolenoid.set(false);
+        innerSolenoid.set(false);
+        outerSolenoid.set(false);
 
     }
 
@@ -38,20 +38,20 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      */
 
     public void toggle() {
-        leftSolenoid.toggle();
-        rightSolenoid.toggle();
+        innerSolenoid.toggle();
+        outerSolenoid.toggle();
 
     }
 
     /**
      * return the current state of the solenoids
      */
-    public boolean getRightSolenoid() {
-        return rightSolenoid.get();
+    public boolean getOuterSolenoid() {
+        return outerSolenoid.get();
     }
 
-    public boolean getLeftSolenoid() {
-        return leftSolenoid.get();
+    public boolean getInnerSolenoid() {
+        return innerSolenoid.get();
     }
 
     /**
@@ -60,9 +60,9 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
     @Override
     public void updateInputs() {
-        loggerInputs.leftSolenoidState = leftSolenoid.get();
+        loggerInputs.outerSolenoidState = innerSolenoid.get();
 
-        loggerInputs.rightSolenoidState = rightSolenoid.get();
+        loggerInputs.innerSolenoidState = outerSolenoid.get();
 
     }
 

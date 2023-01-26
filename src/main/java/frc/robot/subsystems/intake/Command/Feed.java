@@ -17,7 +17,7 @@ public class Feed extends CommandBase {
      */
     @Override
     public void initialize() {
-        intake.closeRetractor(true);
+        intake.openRetractor();
     }
 
     /**
@@ -30,6 +30,7 @@ public class Feed extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        intake.closeRetractor();
         intake.setPower(0);
     }
 }

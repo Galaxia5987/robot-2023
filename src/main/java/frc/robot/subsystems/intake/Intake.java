@@ -52,14 +52,14 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     /**
      * set the wanted state for the retractor's solenoid.
      */
-    public void openRetractor(boolean state) {
-        leftSolenoid.set(state);
-        rightSolenoid.set(state);
+    public void openRetractor() {
+        leftSolenoid.set(true);
+        rightSolenoid.set(true);
     }
 
-    public void closeRetractor(boolean state) {
-        leftSolenoid.set(state);
-        rightSolenoid.set(state);
+    public void closeRetractor() {
+        leftSolenoid.set(false);
+        rightSolenoid.set(false);
     }
 
     /**

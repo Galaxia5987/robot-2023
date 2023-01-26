@@ -6,8 +6,8 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
 public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
-    private final Solenoid innerSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.OUTER_SOLENOID);
-    private final Solenoid outerSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.INNER_SOLENOID);
+    private final Solenoid solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID_1);
+    private final Solenoid solenoid2 = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID_2);
 
     public Gripper INSTANCE;
 
@@ -27,8 +27,8 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      */
 
     public void open() {
-        innerSolenoid.set(true);
-        outerSolenoid.set(true);
+        solenoid1.set(true);
+        solenoid2.set(true);
 
     }
 
@@ -36,8 +36,8 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      * close the Gripper
      */
     public void close() {
-        innerSolenoid.set(false);
-        outerSolenoid.set(false);
+        solenoid1.set(false);
+        solenoid2.set(false);
 
     }
 
@@ -46,20 +46,20 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      */
 
     public void toggle() {
-        innerSolenoid.toggle();
-        outerSolenoid.toggle();
+        solenoid1.toggle();
+        solenoid2.toggle();
 
     }
 
     /**
      * return the current state of the solenoids
      */
-    public boolean getOuterSolenoid() {
-        return outerSolenoid.get();
+    public boolean getSolenoid2() {
+        return solenoid2.get();
     }
 
-    public boolean getInnerSolenoid() {
-        return innerSolenoid.get();
+    public boolean getSolenoid1() {
+        return solenoid1.get();
     }
 
     /**
@@ -68,9 +68,9 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
     @Override
     public void updateInputs() {
-        loggerInputs.outerSolenoidState = innerSolenoid.get();
+        loggerInputs.firstSolenoidState = solenoid1.get();
 
-        loggerInputs.innerSolenoidState = outerSolenoid.get();
+        loggerInputs.secondSolenoidState = solenoid2.get();
 
     }
 

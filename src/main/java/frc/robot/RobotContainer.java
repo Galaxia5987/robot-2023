@@ -1,10 +1,12 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.drivetrain.commands.AdjustToTarget;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.autonomous.HolonomicFeedforward;
@@ -23,6 +25,7 @@ public class RobotContainer {
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
+    private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
 
     /**
@@ -45,17 +48,18 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(
                 new HolonomicDrive(
                         swerveSubsystem,
-                        gyroscope,
-                        limelight,
-                        new XboxMap(xboxController),
-                        SwerveConstants.TARGET_TRANSLATION_PID_CONSTANTS,
-                        SwerveConstants.TARGET_ROTATION_PID_CONSTANTS,
-                        new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS)
+                        new XboxMap(xboxController)
                 )
         );
     }
 
     private void configureButtonBindings() {
+        a.whileTrue(new AdjustToTarget(
+                swerveSubsystem, gyroscope, limelight,
+                SwerveConstants.TARGET_TRANSLATION_PID_CONSTANTS,
+                SwerveConstants.TARGET_ROTATION_PID_CONSTANTS,
+                new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS))
+        );
         rb.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 

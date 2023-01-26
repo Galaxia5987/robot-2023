@@ -99,7 +99,7 @@ public class FollowPath extends CommandBase {
         );
         swerveDrive.drive(signal);
 
-        logInputs.desiredState = desiredState;
+        logInputs.desiredState = desiredState.poseMeters;
         logInputs.desiredSpeeds = signal.speeds();
         logInputs.time = time;
 

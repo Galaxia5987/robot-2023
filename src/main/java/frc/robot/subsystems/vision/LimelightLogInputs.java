@@ -1,7 +1,7 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import org.littletonrobotics.junction.AutoLog;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
@@ -18,7 +18,13 @@ public class LimelightLogInputs implements LoggableInputs {
     public double yaw = 0;
     public boolean hasTargets = false;
     public float tagId = 0;
-    public Pose2d botPose = new Pose2d();
+    public Limelight.AprilTagTarget aprilTagTarget = new Limelight.AprilTagTarget(
+            new Translation2d(),
+            new Translation2d(),
+            new Rotation2d(),
+            new Rotation2d(),
+            new Rotation2d()
+    );
 
     public LimelightLogInputs() {
     }
@@ -28,7 +34,8 @@ public class LimelightLogInputs implements LoggableInputs {
         table.put("yaw", yaw);
         table.put("hasTargets", hasTargets);
         table.put("tagId", tagId);
-        table.put("botPose", new double[] {botPose.getX(), botPose.getY(), botPose.getRotation().getDegrees()});
+        table.put("aprilTagDesiredTranslation", new double[]{aprilTagTarget.desiredTranslation.getX(), aprilTagTarget.desiredTranslation.getY(), aprilTagTarget.targetYaw.getDegrees()});
+        table.put("aprilTagCurrentTranslation", new double[]{aprilTagTarget.currentTranslation.getX(), aprilTagTarget.currentTranslation.getY(), aprilTagTarget.targetYaw.getDegrees()});
     }
 
     public void fromLog(LogTable table) {

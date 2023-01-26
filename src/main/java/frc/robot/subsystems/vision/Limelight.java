@@ -106,14 +106,15 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.of(new Pose2d(translation2d, robotAngle));
     }
 
-    public Optional<Pose2d> getBotPose() {
-        double[] botPosition = botPose.get();
-        if (!hasTargets() || botPosition.length == 0) {
-            return Optional.empty();
+    public Optional<AprilTagTarget> getAprilTagTarget() {
+        int tagId = (int) getTagId();
+        if (tagId > 0 && tagId < 9) {
+            var currentTranslation = botPose.get();
+            return Optional.of(AprilTagTarget.of(tagId,
+                    VisionConstants.CENTER_POSE.plus(new Translation2d(currentTranslation[0], currentTranslation[1]))
+            ));
         }
-        var translation = new Translation2d(botPosition[0], botPosition[1]);
-        var absoluteTranslation = VisionConstants.CENTER_POSE.plus(translation);
-        return Optional.of(new Pose2d(absoluteTranslation, Rotation2d.fromDegrees(botPosition[5])));
+        return Optional.empty();
     }
 
     @Override
@@ -130,6 +131,39 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.tagId = getTagId();
         getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
         getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
-        getBotPose().ifPresent((value) -> loggerInputs.botPose = value);
+        getAprilTagTarget().ifPresent((value) -> loggerInputs.aprilTagTarget = value);
+    }
+
+    public static class AprilTagTarget {
+        public Translation2d currentTranslation;
+        public Translation2d desiredTranslation;
+        public Rotation2d targetHeading;
+        public Rotation2d zeroHeading;
+        public Rotation2d targetYaw;
+
+        public AprilTagTarget(Translation2d currentTranslation, Translation2d desiredTranslation, Rotation2d targetHeading, Rotation2d zeroHeading, Rotation2d targetYaw) {
+            this.currentTranslation = currentTranslation;
+            this.desiredTranslation = desiredTranslation;
+            this.targetHeading = targetHeading;
+            this.zeroHeading = zeroHeading;
+            this.targetYaw = targetYaw;
+        }
+
+        public static AprilTagTarget of(int id, Translation2d currentTranslation) {
+            Rotation2d zeroHeading;
+            Rotation2d targetHeading;
+            Translation2d desiredTranslation;
+
+            if (id < 5) {
+                zeroHeading = Rotation2d.fromDegrees(180);
+                targetHeading = Rotation2d.fromDegrees(0);
+            } else {
+                zeroHeading = Rotation2d.fromDegrees(0);
+                targetHeading = Rotation2d.fromDegrees(180);
+            }
+            desiredTranslation = VisionConstants.getTargetDesiredTranslation(id);
+
+            return new AprilTagTarget(currentTranslation, desiredTranslation, targetHeading, zeroHeading, targetHeading);
+        }
     }
 }

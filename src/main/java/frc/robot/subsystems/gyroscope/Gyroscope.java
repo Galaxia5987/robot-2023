@@ -45,7 +45,8 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
      * Resets the yaw of the navx to the current yaw.
      */
     public void resetYaw() {
-        resetYaw(new Rotation2d());
+        loggerInputs.zeroYaw = new Rotation2d();
+        navx.reset();
     }
 
     /**

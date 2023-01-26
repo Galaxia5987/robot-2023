@@ -54,10 +54,12 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
     public void openRetractor(boolean state) {
         leftSolenoid.set(state);
+        rightSolenoid.set(state);
     }
 
     public void closeRetractor(boolean state) {
         leftSolenoid.set(state);
+        rightSolenoid.set(state);
     }
 
     /**
@@ -70,8 +72,12 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     /**
      * @return the Solenoid's current state
      */
-    public boolean getSolenoidState() {
+    public boolean getLeftSolenoidState() {
         return leftSolenoid.get();
+    }
+
+    public boolean getRightSolenoidState() {
+        return rightSolenoid.get();
     }
 
 
@@ -84,7 +90,8 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
     @Override
     public void updateInputs() {
-        loggerInputs.solenoidState = getSolenoidState();
+        loggerInputs.leftSolenoidState = getLeftSolenoidState();
+        loggerInputs.rightSolenoidState = getRightSolenoidState();
         loggerInputs.motorPower = getPower();
     }
 

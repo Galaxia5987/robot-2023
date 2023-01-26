@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     public static Intake INSTANCE;
     private final CANSparkMax motor = new CANSparkMax(Ports.Intake.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Intake.SOLENOID);
+    private final Solenoid leftSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Intake.LEFT_SOLENOID);
+    private final Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Intake.RIGHT_SOLENOID);
 
 
     private Intake() {
@@ -53,25 +53,25 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      * set the wanted state for the retractor's solenoid.
      */
     public void openRetractor(boolean state) {
-        solenoid.set(state);
+        leftSolenoid.set(state);
     }
 
     public void closeRetractor(boolean state) {
-        solenoid.set(state);
+        leftSolenoid.set(state);
     }
 
     /**
      * toggle the Solenoid
      */
     public void toggleRetractor() {
-        solenoid.toggle();
+        leftSolenoid.toggle();
     }
 
     /**
      * @return the Solenoid's current state
      */
     public boolean getSolenoidState() {
-        return solenoid.get();
+        return leftSolenoid.get();
     }
 
 

@@ -13,13 +13,12 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     public static Intake INSTANCE;
     private final CANSparkMax motor = new CANSparkMax(Ports.Intake.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Intake.SOLENOID);
-    private final DigitalInput beamBreaker = new DigitalInput(Ports.Intake.BEAMBREAKER);
 
 
     private Intake() {
         super(new IntakeLoggedInputs());
         motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        //TODO: add flush method
+        motor.burnFlash();
     }
 
     /**
@@ -75,25 +74,10 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         return solenoid.get();
     }
 
-    public boolean getCurrentBeam() {
-        return beamBreaker.get();
-    }
 
     /**
      * this function is supposed to return whether a cube has passed through the intake( I have no idea if that's correct or not so please don't publicly execute me :) )
      */
-    public String hasPassed() throws InterruptedException {
-        if (getCurrentBeam() == false) {
-            wait(3000);
-            if (getCurrentBeam() == true) {
-                return "a cube has passed";
-            } else {
-                return "a cube hasn't passed";
-            }
-        } else {
-            return "a cube isn't passing";
-        }
-    }
 
     /**
      * update the logger inputs' value

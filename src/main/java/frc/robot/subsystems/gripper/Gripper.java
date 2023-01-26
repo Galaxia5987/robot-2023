@@ -9,9 +9,9 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     private final Solenoid solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID_1);
     private final Solenoid solenoid2 = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID_2);
 
-    public Gripper INSTANCE;
+    public static Gripper INSTANCE;
 
-    public Gripper getINSTANCE() {
+    public static Gripper getInstance() {
         if (INSTANCE == null){
             INSTANCE = new Gripper(new GripperLoggedInputs());
         }

@@ -5,10 +5,13 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.server.PathPlannerServer;
+import com.pathplanner.lib.server.PathPlannerServerThread;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.autonomous.AutonomousLogInputs;
@@ -65,16 +68,16 @@ public class AdjustToTarget extends CommandBase {
             timer.reset();
             var pStart = new PathPoint(
                     aprilTag.get().currentTranslation,
-                    new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond).minus(aprilTag.get().zeroHeading),
-                    gyroscope.getYaw().minus(Rotation2d.fromDegrees(180)).plus(aprilTag.get().targetYaw),
+                    new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond).minus(aprilTagTarget.zeroHeading),
+                    gyroscope.getYaw().minus(aprilTagTarget.zeroHeading),
                     Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
             var pEnd = new PathPoint(
                     aprilTag.get().desiredTranslation,
                     aprilTag.get().targetHeading,
                     aprilTag.get().targetYaw,
                     0);
-            trajectory = PathPlanner.generatePath(new PathConstraints(4, 2), false,
-                    pStart, pEnd);
+            trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(PathPlanner.generatePath(new PathConstraints(4, 2), false,
+                    pStart, pEnd), DriverStation.getAlliance());
         } else {
             noTargets = true;
         }
@@ -86,7 +89,8 @@ public class AdjustToTarget extends CommandBase {
         var desiredState = (PathPlannerTrajectory.PathPlannerState) trajectory.sample(time);
         var toDesiredTranslation = desiredState.poseMeters.minus(swerveDrive.getPose());
         Rotation2d heading = new Rotation2d(toDesiredTranslation.getX(), toDesiredTranslation.getY())
-                .minus(aprilTagTarget.zeroHeading);
+                .minus(Rotation2d.fromDegrees(180));
+        logInputs.heading = heading;
 
         Translation2d segment = new Translation2d(
                 heading.getCos(), heading.getSin());
@@ -98,9 +102,9 @@ public class AdjustToTarget extends CommandBase {
                 segmentVelocity, segmentAcceleration);
 
         var signal = new DriveSignal(
-                adjustForwardController.calculate(swerveDrive.getPose().getTranslation().getX(), desiredState.poseMeters.getX())
+                adjustForwardController.calculate(swerveDrive.getPose().getTranslation().getX(), desiredState.poseMeters.getX()) * -1
                         + feedforwardResult.getX(),
-                adjustStrafeController.calculate(swerveDrive.getPose().getTranslation().getY(), desiredState.poseMeters.getY())
+                adjustStrafeController.calculate(swerveDrive.getPose().getTranslation().getY(), desiredState.poseMeters.getY())  * -1
                         + feedforwardResult.getY(),
                 adjustRotationController.calculate(gyroscope.getYaw().getRadians(), desiredState.holonomicRotation.plus(aprilTagTarget.zeroHeading).getRadians()),
                 new Translation2d(),
@@ -112,7 +116,7 @@ public class AdjustToTarget extends CommandBase {
         logInputs.time = time;
 
         Logger.getInstance().processInputs("Autonomous Path", logInputs);
-        swerveDrive.drive(signal);
+//        swerveDrive.drive(signal);
     }
 
     @Override

@@ -158,8 +158,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
                 zeroHeading = Rotation2d.fromDegrees(180);
                 targetHeading = Rotation2d.fromDegrees(0);
             } else {
-                zeroHeading = Rotation2d.fromDegrees(0);
-                targetHeading = Rotation2d.fromDegrees(180);
+                zeroHeading = Rotation2d.fromDegrees(180);
+                targetHeading = Rotation2d.fromDegrees(0);
             }
             desiredTranslation = VisionConstants.getTargetDesiredTranslation(id);
 

@@ -14,6 +14,7 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.utils.ui.JoystickMap;
 import frc.robot.utils.ui.XboxMap;
 
 public class RobotContainer {
@@ -27,6 +28,7 @@ public class RobotContainer {
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
+    private final JoystickButton rightTrigger = new JoystickButton(rightJoystick, 1);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -48,19 +50,21 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(
                 new HolonomicDrive(
                         swerveSubsystem,
-                        new XboxMap(xboxController)
+                        new JoystickMap(leftJoystick, rightJoystick)
                 )
         );
     }
 
     private void configureButtonBindings() {
-        a.whileTrue(new AdjustToTarget(
+        rightTrigger.whileTrue(new AdjustToTarget(
                 swerveSubsystem, gyroscope, limelight,
                 SwerveConstants.TARGET_TRANSLATION_PID_CONSTANTS,
                 SwerveConstants.TARGET_ROTATION_PID_CONSTANTS,
                 new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS))
         );
-        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
+        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
+//        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(90))));
+//        leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 
 

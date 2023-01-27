@@ -37,7 +37,7 @@ public class JoystickMap implements ButtonMap {
         signal.vy = vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
         signal.omega = omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
         signal.centerOfRotation = new Translation2d();
-        signal.fieldOriented = leftJoystick.getTrigger();
+        signal.fieldOriented = !leftJoystick.getTop();
     }
 
     @Override

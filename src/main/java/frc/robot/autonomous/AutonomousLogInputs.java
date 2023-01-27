@@ -1,6 +1,7 @@
 package frc.robot.autonomous;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -13,6 +14,7 @@ public class AutonomousLogInputs implements LoggableInputs {
     public Trajectory.State finalPose = new Trajectory.State();
     public Pose2d desiredState = new Pose2d();
     public ChassisSpeeds desiredSpeeds = new ChassisSpeeds();
+    public Rotation2d heading = new Rotation2d();
     public double time = 0;
 
     @Override
@@ -22,6 +24,7 @@ public class AutonomousLogInputs implements LoggableInputs {
         table.put("desiredState", Utils.pose2dToArray(desiredState));
         table.put("timeToEnd", finalPose.timeSeconds - time);
         table.put("desiredSpeeds", Utils.chassisSpeedsToArray(desiredSpeeds));
+        table.put("heading", heading.getDegrees());
     }
 
     @Override

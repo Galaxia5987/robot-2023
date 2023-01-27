@@ -1,13 +1,18 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.subsystems.LoggedSubsystem;
 
+import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -22,10 +27,19 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
     private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
 
+    private final AprilTagFieldLayout aprilTagFieldLayout;
+
     private Limelight() {
         super(new LimelightLogInputs());
         for (int i = 5800; i <= 5805; i++) {
             PortForwarder.add(i, "limelight.local", i);
+        }
+        try {
+            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(
+                    AprilTagFields.k2023ChargedUp.m_resourceFile
+            );
+        } catch (Throwable t) {
+            throw new RuntimeException();
         }
     }
 
@@ -106,13 +120,16 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.of(new Pose2d(translation2d, robotAngle));
     }
 
-    public Optional<AprilTagTarget> getAprilTagTarget() {
-        int tagId = (int) getTagId();
-        if (tagId > 0 && tagId < 9) {
-            var currentTranslation = botPose.get();
-            return Optional.of(AprilTagTarget.of(tagId,
-                    VisionConstants.CENTER_POSE.plus(new Translation2d(currentTranslation[0], currentTranslation[1]))
-            ));
+    public Optional<Pose3d> getAprilTagTarget() {
+        return aprilTagFieldLayout.getTagPose((int) getTagId());
+    }
+
+    public Optional<Pose2d> getBotPose() {
+        int id = (int) getTagId();
+        if (id > 0 && id < 9) {
+            return Optional.of(
+                    new Pose2d(botPose.get()[0], botPose.get()[1], Rotation2d.fromDegrees(botPose.get()[5]))
+            );
         }
         return Optional.empty();
     }
@@ -150,17 +167,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         }
 
         public static AprilTagTarget of(int id, Translation2d currentTranslation) {
-            Rotation2d zeroHeading;
-            Rotation2d targetHeading;
+            Rotation2d zeroHeading = new Rotation2d();
+            Rotation2d targetHeading = Rotation2d.fromDegrees(180);
             Translation2d desiredTranslation;
-
-            if (id < 5) {
-                zeroHeading = Rotation2d.fromDegrees(180);
-                targetHeading = Rotation2d.fromDegrees(0);
-            } else {
-                zeroHeading = Rotation2d.fromDegrees(180);
-                targetHeading = Rotation2d.fromDegrees(0);
-            }
             desiredTranslation = VisionConstants.getTargetDesiredTranslation(id);
 
             return new AprilTagTarget(currentTranslation, desiredTranslation, targetHeading, zeroHeading, targetHeading);

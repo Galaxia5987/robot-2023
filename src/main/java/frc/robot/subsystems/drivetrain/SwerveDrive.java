@@ -4,7 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.Utils;
@@ -105,8 +107,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      *
      * @param pose the pose to reset the odometry to.
      */
-    public void resetOdometry(Pose2d pose, Rotation2d gyroAngle) {
-        mOdometry.resetPosition(gyroAngle, swerveModulePositions, pose);
+    public void resetOdometry(Pose2d pose) {
+        mOdometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
     }
 
     /**
@@ -159,6 +161,15 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      */
     public void setStates(SwerveModuleState[] states) {
         swerveModuleStates = Arrays.copyOf(states, states.length);
+
+        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.FL.number].angle);
+        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.FR.number].angle);
+        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.RL.number].angle);
+        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+                swerveModuleStates[Module.RR.number].angle);
     }
 
     /**

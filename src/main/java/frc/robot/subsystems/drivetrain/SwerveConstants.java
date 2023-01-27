@@ -35,11 +35,11 @@ public class SwerveConstants {
 
     public static double TORNADO_SPIN_DISTANCE = 0.4;
 
-    public static double AUTO_XY_Kp = 25.0;
-    public static double AUTO_XY_Ki = 7.0;
+    public static double AUTO_XY_Kp = 4.0;
+    public static double AUTO_XY_Ki = 3.0;
     public static double AUTO_XY_Kd = 0.0;
-    public static double AUTO_ROTATION_Kp = 4.5;
-    public static double AUTO_ROTATION_Ki = 0.15;
+    public static double AUTO_ROTATION_Kp = 8.0;
+    public static double AUTO_ROTATION_Ki = 0.0;
     public static double AUTO_ROTATION_Kd = 0.0;
     public static double AUTO_ROTATION_Kf = 0.0;
     public static double TARGET_XY_Kp = 5.0;

@@ -1,21 +1,34 @@
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.subsystems.drivetrain.commands.AdjustToTarget;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.autonomous.FollowPath;
-import frc.robot.autonomous.HolonomicFeedforward;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.ui.JoystickMap;
-import frc.robot.utils.ui.XboxMap;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RobotContainer {
     public static Gyroscope gyroscope = new Gyroscope();
@@ -29,6 +42,18 @@ public class RobotContainer {
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
     private final JoystickButton rightTrigger = new JoystickButton(rightJoystick, 1);
+
+    private PathPlannerTrajectory trajectory = PathPlanner.loadPath("Onward", 2, 1);
+    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+            swerveSubsystem::getPose,
+            swerveSubsystem::resetOdometry,
+            swerveSubsystem.getKinematics(),
+            SwerveConstants.AUTO_TRANSLATION_PID_CONSTANTS,
+            SwerveConstants.AUTO_ROTATION_PID_CONSTANTS,
+            swerveSubsystem::setStates,
+            new HashMap<>(),
+            swerveSubsystem
+    );
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -56,15 +81,31 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        rightTrigger.whileTrue(new AdjustToTarget(
-                swerveSubsystem, gyroscope, limelight,
-                SwerveConstants.TARGET_TRANSLATION_PID_CONSTANTS,
-                SwerveConstants.TARGET_ROTATION_PID_CONSTANTS,
-                new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS))
-        );
-        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
+        rightTrigger.whileTrue(new InstantCommand(() -> {
+            var aprilTag = limelight.getAprilTagTarget();
+            var botPose = limelight.getBotPose();
+            var currVelocity = swerveSubsystem.getSpeeds();
+            if (aprilTag.isPresent() && botPose.isPresent()) {
+                gyroscope.resetYaw(botPose.get().getRotation());
+                var pStart = new PathPoint(
+                        botPose.get().getTranslation(),
+                        new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond),
+                        botPose.get().getRotation(),
+                        Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
+                var pEnd = new PathPoint(
+                        aprilTag.get().getTranslation().toTranslation2d(),
+                        aprilTag.get().getRotation().toRotation2d(),
+                        aprilTag.get().getRotation().toRotation2d(),
+                        0);
+                trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(PathPlanner.generatePath(new PathConstraints(5, 3), false,
+                        pStart, pEnd), DriverStation.getAlliance());
+            } else {
+                trajectory = new PathPlannerTrajectory();
+            }
+        }).andThen(autoBuilder.fullAuto(trajectory)).asProxy());
+//        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
 //        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(90))));
-//        leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 
 
@@ -74,12 +115,18 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new FollowPath(
-                swerveSubsystem, gyroscope,
-                "Onward",
-                SwerveConstants.AUTO_TRANSLATION_PID_CONSTANTS,
-                SwerveConstants.AUTO_ROTATION_PID_CONSTANTS,
-                new HolonomicFeedforward(SwerveConstants.TRANSLATION_FF_CONSTANTS, SwerveConstants.ROTATION_FF_CONSTANTS),
-                4, 2);
+        var trajectory = PathPlanner.loadPath("Onward", 5, 3);
+        PathPlannerServer.sendActivePath(trajectory.getStates());
+        return new PPSwerveControllerCommand(
+                trajectory,
+                swerveSubsystem::getPose,
+                swerveSubsystem.getKinematics(),
+                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
+                swerveSubsystem::setStates,
+                true,
+                swerveSubsystem
+        );
     }
 }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,6 +51,8 @@ public class Robot extends LoggedRobot {
             Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
             Logger.getInstance().addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
         }
+
+        PathPlannerServer.startServer(5811);
 
         Logger.getInstance().start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 

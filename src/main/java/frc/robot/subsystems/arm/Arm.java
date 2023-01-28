@@ -39,7 +39,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         shoulderMainMotor.config_kP(0, ArmConstants.shoulderP);
         shoulderMainMotor.config_kI(0, ArmConstants.shoulderI);
         shoulderMainMotor.config_kD(0, ArmConstants.shoulderD);
-        shoulderMainMotor.configNeutralDeadband(ArmConstants.DEAD_BEND);
+        shoulderMainMotor.configNeutralDeadband(ArmConstants.DEADBAND);
 //        shoulderMainMotor.configSelectedFeedbackSensor(RemoteFeedbackDevice.valueOf(shoulderEncoder.));
         shoulderAuxMotor.follow(shoulderMainMotor);
         shoulderAuxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
@@ -53,7 +53,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         elbowMainMotor.config_kP(0, ArmConstants.elbowP);
         elbowMainMotor.config_kI(0, ArmConstants.elbowI);
         elbowMainMotor.config_kD(0, ArmConstants.elbowD);
-        elbowMainMotor.configNeutralDeadband(ArmConstants.DEAD_BEND);
+        elbowMainMotor.configNeutralDeadband(ArmConstants.DEADBAND);
         elbowAuxMotor.follow(elbowMainMotor);
         elbowAuxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
         elbowAuxMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);

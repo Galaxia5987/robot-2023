@@ -20,6 +20,8 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     private double shoulderFeedforward;
     private double elbowFeedForward;
     private double[] accelerations;
+    private double shoulderSetPoint;
+    private double elbowSetPoint;
 
     private final TalonFX shoulderMainMotor = new TalonFX(Ports.ArmPorts.SHOULDER_MAIN_MOTOR);
     private final TalonFX shoulderAuxMotor = new TalonFX(Ports.ArmPorts.SHOULDER_AUX_MOTOR);
@@ -77,10 +79,12 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
 
     public void setShoulderJointAngle(double angle) {
         shoulderMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, shoulderFeedforward);
+        shoulderSetPoint = angle;
     }
 
     public void setElbowJointAngle(double angle) {
         elbowMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)), DemandType.ArbitraryFeedForward, elbowFeedForward);
+        elbowSetPoint = angle;
     }
 
     public void setPosition(Translation2d armLocation) {
@@ -122,5 +126,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         loggerInputs.elbowAngle = getElbowJointAngle();
         loggerInputs.shoulderMotorPower = shoulderMainMotor.getMotorOutputPercent();
         loggerInputs.elbowMotorPower = elbowMainMotor.getMotorOutputPercent();
+        loggerInputs.shoulderSetPoint = shoulderSetPoint;
+        loggerInputs.elbowSetPoint = elbowSetPoint;
     }
 }

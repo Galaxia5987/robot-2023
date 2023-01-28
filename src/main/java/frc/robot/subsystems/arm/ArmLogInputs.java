@@ -8,6 +8,8 @@ public class ArmLogInputs implements LoggableInputs {
     public double shoulderAngle = 8;
     public double elbowMotorPower = 0;
     public double shoulderMotorPower = 0;
+    public double shoulderSetPoint = 0;
+    public double elbowSetPoint = 0;
 
     public ArmLogInputs() {
     }
@@ -17,12 +19,16 @@ public class ArmLogInputs implements LoggableInputs {
         table.put("shoulderAngle", shoulderAngle);
         table.put("elbowMotorPower", elbowMotorPower);
         table.put("shoulderMotorPower", shoulderMotorPower);
+        table.put("shoulderSetPoint", shoulderSetPoint);
+        table.put("elbowSetPoint", elbowSetPoint);
     }
 
     public void fromLog(LogTable table) {
-        elbowAngle = table.getDouble("elbowAngle", elbowAngle);
         shoulderAngle = table.getDouble("shoulderAngle", shoulderAngle);
-        elbowMotorPower = table.getDouble("elbowMotorPower", elbowMotorPower);
+        elbowAngle = table.getDouble("elbowAngle", elbowAngle);
         shoulderMotorPower = table.getDouble("shoulderMotorPower", shoulderMotorPower);
+        elbowMotorPower = table.getDouble("elbowMotorPower", elbowMotorPower);
+        shoulderSetPoint = table.getDouble("shoulderSetPoint", shoulderSetPoint);
+        elbowSetPoint = table.getDouble("elbowSetPoint", elbowSetPoint);
     }
 }

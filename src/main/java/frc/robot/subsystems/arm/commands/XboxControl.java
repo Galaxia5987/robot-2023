@@ -16,7 +16,7 @@ public class XboxControl extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setShoulderJointPower(xboxController.getLeftY());
-        arm.setElbowJointPower(xboxController.getRightY());
+        arm.setShoulderJointPower(-xboxController.getLeftY());
+        arm.setElbowJointPower(-xboxController.getRightY());
     }
 }

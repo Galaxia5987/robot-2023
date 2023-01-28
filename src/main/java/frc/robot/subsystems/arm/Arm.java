@@ -106,7 +106,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     }
 
     public String getSubsystemName() {
-        return "PrototypeArm";
+        return "Arm";
     }
 
     public void periodic() {

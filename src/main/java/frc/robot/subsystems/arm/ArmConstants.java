@@ -1,11 +1,15 @@
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+
 public class ArmConstants {
 
     // Arm constants
-    public static final double VOLT_COMP_Saturation = 10; //[V]
+    public static final double VOLT_COMP_SATURATION = 10; //[V]
     public static final boolean ENABLE_VOLT_COMPENSATION = true;
-    public static final boolean clockWise = true;
+    public static final double MOTION_ACCELERATION = 0;
+    public static final double MOTION_CRUISE_VELOCITY = 0;
+    public static final TalonFXInvertType CLOCKWISE = TalonFXInvertType.Clockwise;
 
     public static final double shoulderP = 0.1;
     public static final double shoulderI = 0.0;
@@ -14,7 +18,8 @@ public class ArmConstants {
     public static final double elbowI = 0.0;
     public static final double elbowD = 0.0;
 
-    public static final double DEADBAND = 0.05;
+    public static final double DEADBAND = 0.05; // [%]
+    public static final double SETPOINT_DEADBAND = 0; // [
     public static final double TICKS_PER_RADIAN = 1024 / (Math.PI * 2);
 
     public static final double SHOULDER_GEARING = 0; // Arbitrary units

@@ -34,11 +34,12 @@ public class ArmKinematics {
     /**
      * Inverse kinematics for the arm.
      *
-     * @param x the x coordinate of the end effector. [m]
-     * @param y the y coordinate of the end effector. [m]
+     * @param translation the translation of the end effector. [m]
      * @return the angles of the shoulder and elbow joints. ([rad, rad])
      */
-    public InverseKinematicsSolution inverseKinematics(double x, double y) {
+    public InverseKinematicsSolution inverseKinematics(Translation2d translation) {
+        double x = translation.getX();
+        double y = translation.getY();
         double c2 = (x * x + y * y - length1 * length1 - length2 * length2) / (2 * length1 * length2);
         double s2 = Math.sqrt(1 - c2 * c2);
         double shoulderAngle = Math.acos(c2);

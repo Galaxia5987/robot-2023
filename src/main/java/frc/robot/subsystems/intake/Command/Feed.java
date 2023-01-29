@@ -4,8 +4,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.intake.Intake;
 
 public class Feed extends CommandBase {
-    private Intake intake = Intake.getINSTANCE();
+    private Intake intake = Intake.getInstance();
     private double power;
+    private double angle;
+
 
     public Feed(Intake intake, double power) {
         addRequirements(intake);
@@ -17,7 +19,7 @@ public class Feed extends CommandBase {
      */
     @Override
     public void initialize() {
-        intake.openRetractor();
+        intake.setAngle(angle);
     }
 
     /**
@@ -30,7 +32,7 @@ public class Feed extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        intake.closeRetractor();
+        intake.setAngle(angle);
         intake.setPower(0);
     }
 }

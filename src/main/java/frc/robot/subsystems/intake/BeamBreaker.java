@@ -13,16 +13,21 @@ public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
         super(inputs);
     }
 
+    /**
+     * @return whether the beam breaker is blocked.
+     */
 
     public boolean isBeamBlocked() {
-        if(beam.get()== false){
+        if (beam.get() == false) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
+    /**
+     * update the logger variables.
+     */
     @Override
     public void updateInputs() {
         loggerInputs.beamBreakerState = isBeamBlocked();

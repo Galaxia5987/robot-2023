@@ -16,6 +16,9 @@ public class IntakeLoggedInputs implements LoggableInputs {
         table.put("angle motor power", angleMotorAngle);
     }
 
+    /**
+     * update the variables value from the logger
+     */
     @Override
     public void fromLog(LogTable table) {
         motorPower = table.getDouble("motor power", motorPower);

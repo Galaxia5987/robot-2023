@@ -48,10 +48,16 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         return motor.get();
     }
 
+    /**
+     * sets the angles position
+     */
     public void setAngle(double angle) {
         pidController.setReference(unitModel.toTicks(Math.toRadians(angle)), CANSparkMax.ControlType.kPosition);
     }
 
+    /**
+     * @return the motor's position
+     */
     public double getAngle() {
         return Math.toDegrees(unitModel.toUnits(encoder.getPosition()));
     }

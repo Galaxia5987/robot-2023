@@ -92,6 +92,7 @@ dependencies {
     implementation 'com.sparkjava:spark-template-velocity:2.7.1'
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:2.1.0"
 }
 
 configurations.all {

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.arm;
 
 
-public class ArmAccelerationCalculation {
+public class AccelerationCalculation {
     private double currentVelocity;
     private double prevVelocity;
     private double currentTime;

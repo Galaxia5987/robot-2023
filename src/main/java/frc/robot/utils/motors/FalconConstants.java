@@ -9,3 +9,4 @@ public class FalconConstants {
     public static final double Kv = FREE_SPEED / NOMINAL_VOLTAGE; // [rad/s/V]
     public static final double R = NOMINAL_VOLTAGE / STALL_CURRENT; // [Ohm]
 }
+

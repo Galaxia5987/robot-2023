@@ -23,9 +23,14 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
     private double shoulderFeedforward;
     private double prevElbowVelocity;
     private double elbowFeedForward;
-    private double Time2;
+    private double time;
+    private double time2;
+    private double shoulderVelocity;
+    private double elbowVelocity;
+    private double shoulderAcceleration;
+    private double elbowAcceleration;
 
-    public PrototypeArm() {
+    private PrototypeArm() {
         super(new PrototypeArmLogInputs());
         timer.reset();
         timer.start();
@@ -34,7 +39,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
 //        elbowMotor.configFactoryDefault();
 
         shoulderMotor.configVoltageCompSaturation(ArmConstants.CONFIG_VOLT_COMP);
-        shoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPANSATION);
+        shoulderMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         shoulderMotor.setNeutralMode(NeutralMode.Brake);
         shoulderMotor.setInverted(ArmConstants.clockWise);
         shoulderMotor.config_kP(0, ArmConstants.shoulderP);
@@ -52,6 +57,8 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowMotor.config_kP(0, ArmConstants.elbowP);
         elbowMotor.config_kI(0, ArmConstants.elbowI);
         elbowMotor.config_kD(0, ArmConstants.elbowD);
+        elbowMotor.configNeutralDeadband(0.05);
+    }
 
         elbowMotor.configMotionAcceleration(unitModel.toTicks100ms(Math.PI / 5));
         elbowMotor.configMotionCruiseVelocity(unitModel.toTicks100ms(Math.PI / 5));
@@ -73,7 +80,7 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         elbowMotor.set(ControlMode.Velocity, velocity);
     }
 
-    public double getShoulderJointPosition() {
+    public double getShoulderJointAngle() {
         return Math.toDegrees(unitModel.toUnits(shoulderMotor.getSelectedSensorPosition()));
     }
 
@@ -129,17 +136,17 @@ public class PrototypeArm extends LoggedSubsystem<PrototypeArmLogInputs> {
         double elbowAcceleration = (elbowVelocity - prevElbowVelocity) / Math.abs(Time - Time2);
         prevShoulderVelocity = shoulderVelocity;
         prevElbowVelocity = elbowVelocity;
-        Time2 = timer.get();
+        time2 = timer.get();
 
-        ArmSystemModel.ArmFeedForward tempFeedforward = systemModel.calculateFeedForward(Math.toDegrees(unitModel.toUnits(getShoulderJointPosition())), Math.toDegrees(unitModel.toUnits(getElbowJointPosition())), getShoulderMotorVelocity(), getElbowMotorVelocity(), shoulderAcceleration, elbowAcceleration);
+        ArmSystemModel.ArmFeedForward tempFeedforward = systemModel.calculateFeedForward(Math.toDegrees(unitModel.toUnits(getShoulderJointAngle())), Math.toDegrees(unitModel.toUnits(getElbowJointAngle())), getShoulderMotorVelocity(), getElbowMotorVelocity(), shoulderAcceleration, elbowAcceleration);
         shoulderFeedforward = tempFeedforward.shoulderFeedForward;
         elbowFeedForward = tempFeedforward.elbowFeedForward;
     }
 
     @Override
     public void updateInputs() {
-        loggerInputs.elbowAngle = getElbowJointPosition();
-        loggerInputs.shoulderAngle = getShoulderJointPosition();
+        loggerInputs.elbowAngle = getElbowJointAngle();
+        loggerInputs.shoulderAngle = getShoulderJointAngle();
         loggerInputs.elbowMotorPower = getElbowMotorPower();
         loggerInputs.shoulderMotorPower = getShoulderMotorPower();
         loggerInputs.shoulderP = ArmConstants.shoulderP;

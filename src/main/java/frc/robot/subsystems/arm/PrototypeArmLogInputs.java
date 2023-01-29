@@ -25,7 +25,7 @@ public class PrototypeArmLogInputs implements LoggableInputs {
         table.put("shoulderMotorPower", shoulderMotorPower);
         table.put("shoulderP", shoulderP);
         table.put("shoulderI", shoulderI);
-        table.put("elbowD", elbowD);
+        table.put("shoulderD", shoulderD);
         table.put("elbowP", elbowP);
         table.put("elbowI", elbowI);
         table.put("elbowD", elbowD);

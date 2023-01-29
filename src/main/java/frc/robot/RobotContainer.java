@@ -21,7 +21,7 @@ public class RobotContainer {
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
 
-    private final PrototypeArm arm = new PrototypeArm();
+    private static final PrototypeArm arm = PrototypeArm.getInstance();
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.

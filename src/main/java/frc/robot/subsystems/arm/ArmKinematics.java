@@ -4,17 +4,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  * This class contains the kinematics for the arm.
- * All the calculations are carefully documented in the following page:
- * https://www.societyofrobots.com/robot_arm_tutorial.shtml#inverse_kinematics
- * There is a table of contents containing the kinematics section, and the inverse kinematics section.
  */
 public class ArmKinematics {
-    private final double l1;
-    private final double l2;
+    private final double shoulderLength;
+    private final double elbowLength;
 
-    public ArmKinematics(double l1, double l2) {
-        this.l1 = l1;
-        this.l2 = l2;
+    public ArmKinematics(double shoulderLength, double elbowLength) {
+        this.shoulderLength = shoulderLength;
+        this.elbowLength = elbowLength;
     }
 
     /**
@@ -26,8 +23,8 @@ public class ArmKinematics {
      */
     public Translation2d forwardKinematics(double shoulderAngle, double elbowAngle) {
         double theta = elbowAngle + shoulderAngle - Math.PI / 2;
-        double x = l1 * Math.cos(shoulderAngle) + l2 * Math.sin(theta);
-        double y = l1 * Math.sin(shoulderAngle) + l2 * Math.cos(theta);
+        double x = shoulderLength * Math.cos(shoulderAngle) + elbowLength * Math.sin(theta);
+        double y = shoulderLength * Math.sin(shoulderAngle) + elbowLength * Math.cos(theta);
         return new Translation2d(x, y);
     }
 
@@ -39,13 +36,21 @@ public class ArmKinematics {
      * @return the angles of the shoulder and elbow joints. ([rad, rad])
      */
     public InverseKinematicsSolution inverseKinematics(double x, double y) {
-        double c2 = (x * x + y * y - l1 * l1 - l2 * l2) / (2 * l1 * l2);
+        if (x > 0) {
+            y = -y;
+        }
+        double c2 = (x * x + y * y - shoulderLength * shoulderLength - elbowLength * elbowLength) / (2 * shoulderLength * elbowLength);
         double s2 = Math.sqrt(1 - c2 * c2);
-        double shoulderAngle = Math.acos(c2);
-        double theta = Math.acos((y * (l1 + l2 * c2) - x * l2 * s2) / (x * x + y * y));
-        double elbowAngle = theta - shoulderAngle + Math.PI / 2;
-
-        return new InverseKinematicsSolution(shoulderAngle, elbowAngle);
+        double k1 = shoulderLength + elbowLength * c2;
+        double k2 = elbowLength * s2;
+        double psi = Math.atan2(y, x) - Math.atan2(k2, k1);
+        double theta = Math.atan2(s2, c2);
+        theta = theta + psi;
+        if (x > 0) {
+            psi = -psi;
+            theta = -theta;
+        }
+        return new InverseKinematicsSolution(psi, theta);
     }
 
     /**

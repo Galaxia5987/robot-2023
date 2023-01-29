@@ -6,10 +6,10 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.units.UnitModel;
-import edu.wpi.first.wpilibj.Timer;
 
 public class Arm extends LoggedSubsystem<ArmLogInputs> {
     private static Arm INSTANCE = null;

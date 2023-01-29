@@ -21,7 +21,7 @@ public class SetArmsPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (arm.getEndPosition()==position){
+        if (arm.getEndPosition() == position) {
             return true;
         }
         return false;

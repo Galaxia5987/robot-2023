@@ -20,7 +20,7 @@ public class SetElbowAngle extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (arm.getElbowJointAngle()==angle){
+        if (arm.getElbowJointAngle() == angle) {
             return true;
         }
         return false;

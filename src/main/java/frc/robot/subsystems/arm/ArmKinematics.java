@@ -21,7 +21,7 @@ public class ArmKinematics {
      * Forward kinematics for the arm.
      *
      * @param shoulderAngle the angle of the shoulder joint. [rad]
-     * @param elbowAngle the angle of the elbow joint. [rad]
+     * @param elbowAngle    the angle of the elbow joint. [rad]
      * @return the position of the end effector. ([m, [m])
      */
     public Translation2d forwardKinematics(double shoulderAngle, double elbowAngle) {

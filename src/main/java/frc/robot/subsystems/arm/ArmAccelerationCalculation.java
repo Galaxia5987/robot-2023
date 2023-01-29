@@ -7,7 +7,7 @@ public class ArmAccelerationCalculation {
     private double currentTime;
     private double prevTime;
 
-    public void addVelocity(double sVelocity, double time){
+    public void addVelocity(double sVelocity, double time) {
         prevVelocity = currentVelocity;
         currentVelocity = sVelocity;
 
@@ -15,7 +15,7 @@ public class ArmAccelerationCalculation {
         currentTime = time;
     }
 
-    public double getAcceleration(){
-        return (currentVelocity - prevVelocity)/(prevTime - currentTime);
+    public double getAcceleration() {
+        return (currentVelocity - prevVelocity) / (prevTime - currentTime);
     }
 }

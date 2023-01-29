@@ -8,7 +8,7 @@ import org.ejml.simple.SimpleMatrix;
  * This class is used to calculate the feedforward for the arm.
  * Notice that this class does not calculate velocities or accelerations,
  * and relies on the user to do so (in the subsystem class).
- *
+ * <p>
  * Documentation for the math used in this class can be found here:
  * https://www.chiefdelphi.com/t/whitepaper-two-jointed-arm-dynamics/423060?u=dan
  */
@@ -78,7 +78,7 @@ public class ArmSystemModel {
     /**
      * Calculates the C matrix.
      *
-     * @param theta2 the angle of the elbow joint. [rad]
+     * @param theta2    the angle of the elbow joint. [rad]
      * @param theta1Dot the angular velocity of the shoulder joint. [rad/s]
      * @param theta2Dot the angular velocity of the elbow joint. [rad/s]
      */
@@ -108,10 +108,10 @@ public class ArmSystemModel {
     /**
      * Calculates the voltage feedforward required to move the arm in a certain state.
      *
-     * @param theta1 the angle of the shoulder joint. [rad]
-     * @param theta2 the angle of the elbow joint. [rad]
-     * @param theta1Dot the angular velocity of the shoulder joint. [rad/s]
-     * @param theta2Dot the angular velocity of the elbow joint. [rad/s]
+     * @param theta1       the angle of the shoulder joint. [rad]
+     * @param theta2       the angle of the elbow joint. [rad]
+     * @param theta1Dot    the angular velocity of the shoulder joint. [rad/s]
+     * @param theta2Dot    the angular velocity of the elbow joint. [rad/s]
      * @param theta1DotDot the angular acceleration of the shoulder joint. [rad/s^2]
      * @param theta2DotDot the angular acceleration of the elbow joint. [rad/s^2]
      * @return the voltage feedforward required to move the arm in the given state. [V]
@@ -150,7 +150,7 @@ public class ArmSystemModel {
          * Constructor.
          *
          * @param shoulderFeedForward the voltage feedforward required to move the shoulder joint. [V]
-         * @param elbowFeedForward the voltage feedforward required to move the elbow joint. [V]
+         * @param elbowFeedForward    the voltage feedforward required to move the elbow joint. [V]
          */
         public ArmFeedForward(double shoulderFeedForward, double elbowFeedForward) {
             this.shoulderFeedForward = shoulderFeedForward;

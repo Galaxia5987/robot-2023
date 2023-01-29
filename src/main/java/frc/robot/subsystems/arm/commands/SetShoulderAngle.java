@@ -20,7 +20,7 @@ public class SetShoulderAngle extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (arm.getShoulderJointAngle()==angle){
+        if (arm.getShoulderJointAngle() == angle) {
             return true;
         }
         return false;

@@ -18,7 +18,7 @@ public class ArmAccelerationCalculation {
     private double elbowAcceleration;
     private double[] accelerations = new double[2];
 
-    public double[] getArmAcceleration() {
+    public double getArmAcceleration(boolean type) {
         timer.reset();
         timer.start();
         shoulderVelocity = arm.getShoulderMotorVelocity();
@@ -30,8 +30,9 @@ public class ArmAccelerationCalculation {
         prevElbowVelocity = elbowVelocity;
         time2 = timer.get();
 
-        accelerations[0] = shoulderAcceleration;
-        accelerations[2] = elbowAcceleration;
-        return accelerations;
+        if (type){
+            return shoulderAcceleration;
+        }
+        return elbowAcceleration;
     }
 }

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.commands.SetShoulderAngle;
-import frc.robot.subsystems.arm.commands.XboxControl;
+import frc.robot.subsystems.arm.commands.ArmXboxControl;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
@@ -36,7 +36,7 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        arm.setDefaultCommand(new XboxControl(arm, xboxController));
+        arm.setDefaultCommand(new ArmXboxControl(arm, xboxController));
     }
 
     private void configureButtonBindings() {

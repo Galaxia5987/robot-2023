@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 
-public class XboxControl extends CommandBase {
+public class ArmXboxControl extends CommandBase {
     private final Arm arm;
     private final XboxController xboxController;
 
-    public XboxControl(Arm arm, XboxController xboxController) {
-        this.arm = arm;
+    public ArmXboxControl(XboxController xboxController) {
+        this.arm = Arm.getInstance();
         this.xboxController = xboxController;
         addRequirements(arm);
     }
@@ -18,5 +18,10 @@ public class XboxControl extends CommandBase {
     public void execute() {
         arm.setShoulderJointPower(-xboxController.getLeftY());
         arm.setElbowJointPower(-xboxController.getRightY());
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        arm.stop();
     }
 }

@@ -11,13 +11,13 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.units.UnitModel;
 
-public class Arm extends LoggedSubsystem<ArmLogInputs> {
+public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     private static Arm INSTANCE = null;
 
     private final ArmKinematics kinematics = new ArmKinematics(ArmConstants.SHOULDER_ARM_LENGTH, ArmConstants.ELBOW_ARM_LENGTH);
     private final ArmSystemModel systemModel = new ArmSystemModel(ArmConstants.ARM_CONSTANTS);
-    private final ArmAccelerationCalculation shoulderAccelerationCalculation = new ArmAccelerationCalculation();
-    private final ArmAccelerationCalculation elbowAccelerationCalculation = new ArmAccelerationCalculation();
+    private final AccelerationCalculation shoulderAccelerationCalculation = new AccelerationCalculation();
+    private final AccelerationCalculation elbowAccelerationCalculation = new AccelerationCalculation();
 
     private final TalonFX shoulderMainMotor = new TalonFX(Ports.ArmPorts.SHOULDER_MAIN_MOTOR);
     private final TalonFX shoulderAuxMotor = new TalonFX(Ports.ArmPorts.SHOULDER_AUX_MOTOR);
@@ -30,11 +30,11 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     private final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
     private double shoulderFeedforward;
     private double elbowFeedForward;
-    private double shoulderSetPoint;
-    private double elbowSetPoint;
+    private double shoulderSetpoint;
+    private double elbowSetpoint;
 
     private Arm() {
-        super(new ArmLogInputs());
+        super(new ArmInputsAutoLogged());
         configureMainMotor(shoulderMainMotor, ArmConstants.shoulderP, ArmConstants.shoulderI, ArmConstants.shoulderD, shoulderEncoder);
         configureAuxMotor(shoulderAuxMotor, shoulderMainMotor);
 
@@ -42,6 +42,10 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         configureAuxMotor(elbowAuxMotor, elbowMainMotor);
     }
 
+    /**
+     * Get the instance of the arm subsystem.
+     * @return Arm instance
+     */
     public static Arm getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Arm();
@@ -49,69 +53,134 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         return INSTANCE;
     }
 
+    /**
+     * Configures the aux motors
+     * @param shoulderAuxMotor
+     * @param shoulderMainMotor
+     */
     private void configureAuxMotor(TalonFX shoulderAuxMotor, TalonFX shoulderMainMotor) {
         shoulderAuxMotor.follow(shoulderMainMotor);
         shoulderAuxMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
-        shoulderAuxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
+        shoulderAuxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_SATURATION);
         shoulderAuxMotor.setNeutralMode(NeutralMode.Brake);
     }
 
-    private void configureMainMotor(TalonFX shoulderMainMotor, double shoulderP, double shoulderI, double shoulderD, CANCoder shoulderEncoder) {
-        shoulderMainMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
-        shoulderMainMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_Saturation);
-        shoulderMainMotor.setNeutralMode(NeutralMode.Brake);
-        shoulderMainMotor.setInverted(ArmConstants.clockWise);
-        shoulderMainMotor.config_kP(0, shoulderP);
-        shoulderMainMotor.config_kI(0, shoulderI);
-        shoulderMainMotor.config_kD(0, shoulderD);
-        shoulderMainMotor.configNeutralDeadband(ArmConstants.DEADBAND);
-        shoulderMainMotor.setSelectedSensorPosition(unitModel.toTicks(shoulderEncoder.getAbsolutePosition()));
+    /**
+     * Configures the main motors
+     * @param mainMotor
+     * @param kP
+     * @param kI
+     * @param kD
+     * @param encoder
+     */
+    private void configureMainMotor(TalonFX mainMotor, double kP, double kI, double kD, CANCoder encoder) {
+        mainMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
+        mainMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_SATURATION);
+        mainMotor.setNeutralMode(NeutralMode.Brake);
+        mainMotor.setInverted(ArmConstants.CLOCKWISE);
+
+        mainMotor.config_kP(0, kP);
+        mainMotor.config_kI(0, kI);
+        mainMotor.config_kD(0, kD);
+
+        mainMotor.configNeutralDeadband(ArmConstants.DEADBAND);
+        mainMotor.setSelectedSensorPosition(unitModel.toTicks(encoder.getAbsolutePosition()));
+        mainMotor.configMotionAcceleration(ArmConstants.MOTION_ACCELERATION);
+        mainMotor.configMotionCruiseVelocity(ArmConstants.MOTION_CRUISE_VELOCITY);
     }
 
+    /**
+     * Sets the power of the shoulder motors
+     * @param power desired power
+     */
     public void setShoulderJointPower(double power) {
         shoulderMainMotor.set(TalonFXControlMode.PercentOutput, power);
     }
 
+    /**
+     * Sets the power of the elbow motors
+     * @param power desired power
+     */
     public void setElbowJointPower(double power) {
         elbowMainMotor.set(TalonFXControlMode.PercentOutput, power);
     }
 
+    /**
+     * Gets the angle of the shoulder joint
+     * @return angle of the shoulder joint [rad]
+     */
     public double getShoulderJointAngle() {
         return unitModel.toUnits(shoulderMainMotor.getSelectedSensorPosition());
     }
 
+    /**
+     * Sets the angle of the shoulder joint
+     * @param angle desired angle [degrees]
+     */
     public void setShoulderJointAngle(double angle) {
         shoulderMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)),
                 DemandType.ArbitraryFeedForward, shoulderFeedforward);
-        shoulderSetPoint = angle;
+        shoulderSetpoint = angle;
     }
 
+    /**
+     * Gets the angle of the elbow joint
+     * @return elbow joint angle [rad]
+     */
     public double getElbowJointAngle() {
         return unitModel.toUnits(elbowMainMotor.getSelectedSensorPosition());
     }
 
+    /**
+     * Sets the angle of the elbow joint
+     * @param angle desired angle [degrees]
+     */
     public void setElbowJointAngle(double angle) {
         elbowMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)),
                 DemandType.ArbitraryFeedForward, elbowFeedForward);
-        elbowSetPoint = angle;
+        elbowSetpoint = angle;
     }
 
+    /**
+     * Calculates the position of the end of the arm
+     * @return Translation2d of the position
+     */
     public Translation2d getEndPosition() {
         return kinematics.forwardKinematics(getShoulderJointAngle(), getElbowJointAngle());
     }
 
+    /**
+     * Sets the position of the end of the arm
+     * @param armLocation Translation2d of the desired location
+     */
     public void setEndPosition(Translation2d armLocation) {
-        var angles = kinematics.inverseKinematics(armLocation.getX(), armLocation.getY());
+        var angles = kinematics.inverseKinematics(armLocation);
         setShoulderJointAngle(angles.shoulderAngle);
         setElbowJointAngle(angles.elbowAngle);
     }
 
+    /**
+     * Gets the velocity of the shoulder motors
+     * @return shoulder motors velocity
+     */
     public double getShoulderMotorVelocity() {
         return unitModel.toVelocity(shoulderMainMotor.getSelectedSensorVelocity());
     }
 
+    /**
+     * Gets the velocity of the elbow motors
+     * @return elbow motor velocity
+     */
     public double getElbowMotorVelocity() {
         return unitModel.toVelocity(elbowMainMotor.getSelectedSensorVelocity());
+    }
+
+    /**
+     * Stops the motors
+     */
+    public void stop() {
+        shoulderMainMotor.neutralOutput();
+        elbowMainMotor.neutralOutput();
     }
 
     @Override
@@ -122,14 +191,15 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
     @Override
     public void periodic() {
         shoulderAccelerationCalculation.addVelocity(getShoulderMotorVelocity(), Timer.getFPGATimestamp());
-        double shoulderAcceleration = shoulderAccelerationCalculation.getAcceleration();
-        elbowAccelerationCalculation.addVelocity(getElbowMotorVelocity(), Timer.getFPGATimestamp());
-        double elbowAcceleration = elbowAccelerationCalculation.getAcceleration();
+        double shoulderAcceleration = shoulderAccelerationCalculation.getAcceleration(); // rad/sec^2
 
-        ArmSystemModel.ArmFeedForward tempFeedforward = systemModel.calculateFeedForward(
-                unitModel.toUnits(getShoulderJointAngle()),
-                Math.toDegrees(unitModel.toUnits(getElbowJointAngle())), getShoulderMotorVelocity(),
-                getElbowMotorVelocity(), shoulderAcceleration, elbowAcceleration
+        elbowAccelerationCalculation.addVelocity(getElbowMotorVelocity(), Timer.getFPGATimestamp());
+        double elbowAcceleration = elbowAccelerationCalculation.getAcceleration(); // rad/sec^2
+
+        var tempFeedforward = systemModel.calculateFeedForward(
+                getShoulderJointAngle(), getElbowJointAngle(),
+                getShoulderMotorVelocity(), getElbowMotorVelocity(),
+                shoulderAcceleration, elbowAcceleration
         );
         shoulderFeedforward = tempFeedforward.shoulderFeedForward;
         elbowFeedForward = tempFeedforward.elbowFeedForward;
@@ -141,18 +211,7 @@ public class Arm extends LoggedSubsystem<ArmLogInputs> {
         loggerInputs.elbowAngle = getElbowJointAngle();
         loggerInputs.shoulderMotorPower = shoulderMainMotor.getMotorOutputPercent();
         loggerInputs.elbowMotorPower = elbowMainMotor.getMotorOutputPercent();
-        loggerInputs.shoulderSetPoint = shoulderSetPoint;
-        loggerInputs.elbowSetPoint = elbowSetPoint;
-    }
-
-    public enum JointType {
-        SHOULDER(true),
-        ELBOW(false);
-
-        public final boolean value;
-
-        JointType(boolean value) {
-            this.value = value;
-        }
+        loggerInputs.shoulderSetpoint = shoulderSetpoint;
+        loggerInputs.shoulderSetpoint = elbowSetpoint;
     }
 }

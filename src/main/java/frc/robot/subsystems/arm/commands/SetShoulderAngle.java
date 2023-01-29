@@ -19,8 +19,10 @@ public class SetShoulderAngle extends CommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        arm.setShoulderJointPower(0);
-        arm.setElbowJointPower(0);
+    public boolean isFinished() {
+        if (arm.getShoulderJointAngle()==angle){
+            return true;
+        }
+        return false;
     }
 }

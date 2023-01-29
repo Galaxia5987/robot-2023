@@ -20,12 +20,6 @@ public class SetArmsPosition extends CommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        arm.setShoulderJointPower(0);
-        arm.setElbowJointPower(0);
-    }
-
-    @Override
     public boolean isFinished() {
         if (arm.getPosition()==position){
             return true;

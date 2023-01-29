@@ -3,15 +3,17 @@ package frc.robot.subsystems.arm.commands;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
+import         edu.wpi.first.math.MathUtil;
+import frc.robot.subsystems.arm.ArmConstants;
 
 public class SetArmsPosition extends CommandBase {
     private final Arm arm;
     private final Translation2d position;
 
-    public SetArmsPosition(Arm arm, Translation2d position) {
-        this.arm = arm;
+    public SetArmsPosition(Translation2d position) {
+        this.arm = Arm.getInstance();
         this.position = position;
-        addRequirements();
+        addRequirements(arm);
     }
 
     @Override
@@ -21,9 +23,6 @@ public class SetArmsPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (arm.getEndPosition() == position) {
-            return true;
-        }
-        return false;
+       return MathUtil.applyDeadband(position.getNorm(), ArmConstants.SETPOINT_DEADBAND) == arm.getEndPosition().getNorm();
     }
 }

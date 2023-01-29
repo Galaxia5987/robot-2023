@@ -1,14 +1,16 @@
 package frc.robot.subsystems.arm.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 
 public class SetElbowAngle extends CommandBase {
     private final Arm arm;
     private final double angle;
 
-    public SetElbowAngle(Arm arm, double angle) {
-        this.arm = arm;
+    public SetElbowAngle(double angle) {
+        this.arm = Arm.getInstance();
         this.angle = angle;
         addRequirements(arm);
     }
@@ -20,9 +22,6 @@ public class SetElbowAngle extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (arm.getElbowJointAngle() == angle) {
-            return true;
-        }
-        return false;
+        return MathUtil.applyDeadband(angle, ArmConstants.SETPOINT_DEADBAND) == arm.getEndPosition().getNorm();
     }
 }

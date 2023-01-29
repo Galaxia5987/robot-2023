@@ -6,18 +6,23 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
 public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
-    private final Solenoid solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID_1);
-    private final Solenoid solenoid2 = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID_2);
+    private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID);
 
     public static Gripper INSTANCE;
 
+    /**
+     * @return the instance of the subsystem
+     */
     public static Gripper getInstance() {
-        if (INSTANCE == null){
+        if (INSTANCE == null) {
             INSTANCE = new Gripper(new GripperLoggedInputs());
         }
         return INSTANCE;
     }
 
+    /**
+     * constructor
+     */
     private Gripper(GripperLoggedInputs inputs) {
         super(new GripperLoggedInputs());
     }
@@ -27,8 +32,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      */
 
     public void open() {
-        solenoid1.set(true);
-        solenoid2.set(true);
+        solenoid.set(true);
 
     }
 
@@ -36,8 +40,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      * close the Gripper
      */
     public void close() {
-        solenoid1.set(false);
-        solenoid2.set(false);
+        solenoid.set(false);
 
     }
 
@@ -46,20 +49,16 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      */
 
     public void toggle() {
-        solenoid1.toggle();
-        solenoid2.toggle();
+        solenoid.toggle();
 
     }
 
     /**
      * return the current state of the solenoids
      */
-    public boolean getSolenoid2() {
-        return solenoid2.get();
-    }
 
-    public boolean getSolenoid1() {
-        return solenoid1.get();
+    public boolean getSolenoid() {
+        return solenoid.get();
     }
 
     /**
@@ -68,10 +67,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
     @Override
     public void updateInputs() {
-        loggerInputs.firstSolenoidState = solenoid1.get();
-
-        loggerInputs.secondSolenoidState = solenoid2.get();
-
+        loggerInputs.SolenoidState = solenoid.get();
     }
 
     @Override

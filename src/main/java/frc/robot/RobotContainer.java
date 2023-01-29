@@ -3,8 +3,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.arm.PrototypeArm;
+import frc.robot.subsystems.arm.commands.SetElbowAngle;
 import frc.robot.subsystems.arm.commands.SetShoulderAngle;
 import frc.robot.subsystems.arm.commands.XboxControl;
 
@@ -14,6 +17,7 @@ public class RobotContainer {
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
+    private final JoystickButton b = new JoystickButton(xboxController, XboxController.Button.kB.value);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
 
@@ -36,12 +40,15 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
+//        arm.setDefaultCommand(new RunCommand(() -> System.out.println(xboxController.getLeftX()), arm));
         arm.setDefaultCommand(new XboxControl(arm, xboxController));
     }
 
     private void configureButtonBindings() {
-        a.onTrue(new SetShoulderAngle(arm, 30));
+        a.onTrue(new SetElbowAngle(arm, 70));
+        b.onTrue(new SetElbowAngle(arm, 0));
     }
+
 
 
     /**

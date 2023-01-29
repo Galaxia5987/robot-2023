@@ -14,8 +14,13 @@ public class SetElbowAngle extends CommandBase {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         prototypeArm.setElbowJointPosition(angle);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return prototypeArm.getElbowJointPosition() <= angle + 1 && prototypeArm.getElbowJointPosition() >= -1;
     }
 
     @Override

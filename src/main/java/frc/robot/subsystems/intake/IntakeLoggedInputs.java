@@ -5,23 +5,20 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class IntakeLoggedInputs implements LoggableInputs {
     public double motorPower;
-    public boolean leftSolenoidState;
-    public boolean rightSolenoidState;
+    public double angleMotorAngle;
 
     /**
      * implement the variables inside the table
      */
     @Override
     public void toLog(LogTable table) {
-        table.put("superiorMAX", motorPower);
-        table.put("left solenoid", leftSolenoidState);
-        table.put("right solenoid", rightSolenoidState);
+        table.put("motor power", motorPower);
+        table.put("angle motor power", angleMotorAngle);
     }
 
     @Override
     public void fromLog(LogTable table) {
         motorPower = table.getDouble("motor power", motorPower);
-        leftSolenoidState = table.getBoolean("left solenoid", leftSolenoidState);
-        rightSolenoidState = table.getBoolean("right solenoid", rightSolenoidState);
+        angleMotorAngle = table.getDouble("angle motor power", angleMotorAngle);
     }
 }

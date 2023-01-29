@@ -7,7 +7,7 @@ public class BeamBreakerLoggedInputs implements LoggableInputs {
     public boolean beamBreakerState;
 
     /**
-     * implement the variables into the logger
+     * Implement the variables into the logger.
      */
     @Override
     public void toLog(LogTable table) {
@@ -15,7 +15,7 @@ public class BeamBreakerLoggedInputs implements LoggableInputs {
     }
 
     /**
-     * update the variables value from the logger
+     * Update the variables value from the logger.
      */
     @Override
     public void fromLog(LogTable table) {

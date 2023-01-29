@@ -26,7 +26,7 @@ public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
     }
 
     /**
-     * update the logger variables.
+     * Update the logger variables.
      */
     @Override
     public void updateInputs() {

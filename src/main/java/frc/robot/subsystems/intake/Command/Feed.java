@@ -4,14 +4,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.intake.Intake;
 
 public class Feed extends CommandBase {
-    private Intake intake = Intake.getInstance();
-    private double power;
-    private double angle;
+    private final Intake intake;
+    private final double power;
+    private final double angle;
 
-
-    public Feed(Intake intake, double power) {
-        addRequirements(intake);
+    public Feed(double power, double angle) {
+        this.intake = Intake.getInstance();
         this.power = power;
+        this.angle = angle;
+        addRequirements(intake);
     }
 
     /**

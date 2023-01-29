@@ -8,7 +8,7 @@ public class IntakeLoggedInputs implements LoggableInputs {
     public double angleMotorAngle;
 
     /**
-     * implement the variables inside the table
+     * Implement the variables inside the table.
      */
     @Override
     public void toLog(LogTable table) {
@@ -17,7 +17,7 @@ public class IntakeLoggedInputs implements LoggableInputs {
     }
 
     /**
-     * update the variables value from the logger
+     * Update the variables value from the logger.
      */
     @Override
     public void fromLog(LogTable table) {

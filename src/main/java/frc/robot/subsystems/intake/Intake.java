@@ -1,30 +1,33 @@
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import com.revrobotics.*;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.utils.units.UnitModel;
 
 
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
-    public static Intake INSTANCE;
+    private static Intake INSTANCE;
     private final CANSparkMax motor = new CANSparkMax(Ports.Intake.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final Solenoid leftSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Intake.LEFT_SOLENOID);
-    private final Solenoid rightSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Intake.RIGHT_SOLENOID);
+    private final UnitModel unitModel = new UnitModel(ConstantsIntake.TICKS_PER_RADIAN);
+    private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final RelativeEncoder encoder = motor.getEncoder();
+    private final SparkMaxPIDController pidController = angleMotor.getPIDController();
 
 
     private Intake() {
         super(new IntakeLoggedInputs());
         motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        pidController.setP(ConstantsIntake.kP);
+        pidController.setI(ConstantsIntake.kI);
+        pidController.setD(ConstantsIntake.kD);
         motor.burnFlash();
     }
 
     /**
      * @return the INSTANCE of the Intake
      */
-    public static Intake getINSTANCE() {
+    public static Intake getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Intake();
         }
@@ -45,54 +48,22 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         return motor.get();
     }
 
-    /**
-     * @return the relative output of the lower motor.
-     */
-
-    /**
-     * set the wanted state for the retractor's solenoid.
-     */
-    public void openRetractor() {
-        leftSolenoid.set(true);
-        rightSolenoid.set(true);
+    public void setAngle(double angle) {
+        pidController.setReference(unitModel.toTicks(Math.toRadians(angle)), CANSparkMax.ControlType.kPosition);
     }
 
-    public void closeRetractor() {
-        leftSolenoid.set(false);
-        rightSolenoid.set(false);
+    public double getAngle() {
+        return Math.toDegrees(unitModel.toUnits(encoder.getPosition()));
     }
 
-    /**
-     * toggle the Solenoid
-     */
-    public void toggleRetractor() {
-        leftSolenoid.toggle();
-    }
-
-    /**
-     * @return the Solenoid's current state
-     */
-    public boolean getLeftSolenoidState() {
-        return leftSolenoid.get();
-    }
-
-    public boolean getRightSolenoidState() {
-        return rightSolenoid.get();
-    }
-
-
-    /**
-     * this function is supposed to return whether a cube has passed through the intake( I have no idea if that's correct or not so please don't publicly execute me :) )
-     */
 
     /**
      * update the logger inputs' value
      */
     @Override
     public void updateInputs() {
-        loggerInputs.leftSolenoidState = getLeftSolenoidState();
-        loggerInputs.rightSolenoidState = getRightSolenoidState();
         loggerInputs.motorPower = getPower();
+        loggerInputs.angleMotorAngle = getAngle();
     }
 
     @Override

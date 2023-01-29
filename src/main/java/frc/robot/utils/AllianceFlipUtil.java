@@ -1,8 +1,7 @@
 package frc.robot.utils;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -42,6 +41,26 @@ public class AllianceFlipUtil {
                     new Rotation2d(-pose.getRotation().getCos(), pose.getRotation().getSin()));
         } else {
             return pose;
+        }
+    }
+
+    /**
+     * Flips a pose to the correct side of the field based on the current alliance color.
+     */
+    public static Pose3d apply(Pose3d pose) {
+        var pose2d = apply(pose.toPose2d());
+        return new Pose3d(new Translation3d(pose2d.getX(), pose2d.getY(), pose.getZ()), pose.getRotation());
+    }
+
+    public static ChassisSpeeds apply(ChassisSpeeds speeds) {
+        if (shouldFlip()) {
+            return new ChassisSpeeds(
+                    -speeds.vxMetersPerSecond,
+                    speeds.vyMetersPerSecond,
+                    speeds.omegaRadiansPerSecond
+            );
+        } else {
+            return speeds;
         }
     }
 

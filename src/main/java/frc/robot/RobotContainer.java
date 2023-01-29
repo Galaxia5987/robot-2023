@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autonomous.FollowPath;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
@@ -45,7 +46,6 @@ public class RobotContainer {
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
     private final JoystickButton rightTrigger = new JoystickButton(rightJoystick, 1);
 
-    private PathPlannerTrajectory trajectory = PathPlanner.loadPath("Onward", 2, 1);
     private Command teleopTargetAdjustCommand;
 
     /**
@@ -74,43 +74,9 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        rightTrigger.whileTrue(new InstantCommand(() -> {
-            var aprilTag = limelight.getAprilTagTarget();
-            var botPose = limelight.getBotPose();
-            var currVelocity = swerveSubsystem.getSpeeds();
-            if (aprilTag.isPresent() && botPose.isPresent()) {
-                gyroscope.resetYaw(botPose.get().getRotation());
-                var pStart = new PathPoint(
-                        botPose.get().getTranslation(),
-                        new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond),
-                        botPose.get().getRotation(),
-                        Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
-                var pEnd = new PathPoint(
-                        aprilTag.get().getTranslation().toTranslation2d(),
-                        aprilTag.get().getRotation().toRotation2d(),
-                        aprilTag.get().getRotation().toRotation2d(),
-                        0);
-                trajectory = PathPlanner.generatePath(new PathConstraints(5, 3), false,
-                        pStart, pEnd);
-            } else {
-                trajectory = new PathPlannerTrajectory();
-            }
-            int direction = limelight.getTagId() < 5 ? -1 : 1;
-            teleopTargetAdjustCommand = new PPSwerveControllerCommand(
-                    trajectory,
-                    swerveSubsystem::getPose,
-                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                    new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-                    (speeds) -> swerveSubsystem.drive(new DriveSignal(
-                            speeds.vxMetersPerSecond * direction,
-                            speeds.vyMetersPerSecond * direction,
-                            speeds.omegaRadiansPerSecond,
-                            new Translation2d(), false)),
-                    true,
-                    swerveSubsystem
-            );
-        }).andThen(new ProxyCommand(() -> teleopTargetAdjustCommand)));
+        rightTrigger.whileTrue(new ProxyCommand(() -> FollowPath.generatePathToAprilTag(
+                swerveSubsystem, limelight, gyroscope
+        )));
 //        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
 //        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(90))));
         leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
@@ -124,8 +90,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         var trajectory = PathPlanner.loadPath("Onward", 5, 3);
-        PathPlannerServer.sendActivePath(trajectory.getStates());
-        return new PPSwerveControllerCommand(
+        return new FollowPath(
                 trajectory,
                 swerveSubsystem::getPose,
                 swerveSubsystem.getKinematics(),

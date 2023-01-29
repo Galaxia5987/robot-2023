@@ -6,72 +6,59 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
 public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
+    private static Gripper INSTANCE;
+
     private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID);
 
-    public static Gripper INSTANCE;
-
     /**
-     * @return the instance of the subsystem
+     * @return the instance of the subsystem.
      */
     public static Gripper getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new Gripper(new GripperLoggedInputs());
+            INSTANCE = new Gripper();
         }
         return INSTANCE;
     }
 
-    /**
-     * constructor
-     */
-    private Gripper(GripperLoggedInputs inputs) {
+    private Gripper() {
         super(new GripperLoggedInputs());
     }
 
     /**
-     * open the Gripper
+     * Open the Gripper.
      */
-
     public void open() {
         solenoid.set(true);
-
     }
 
     /**
-     * close the Gripper
+     * Close the Gripper.
      */
     public void close() {
         solenoid.set(false);
-
     }
 
     /**
-     * changes the current state to the other state
+     * Changes the current state to the other state.
      */
-
     public void toggle() {
         solenoid.toggle();
-
     }
 
     /**
-     * return the current state of the solenoids
+     * @return the current state of the solenoids.
      */
-
-    public boolean getSolenoid() {
+    public boolean isOpen() {
         return solenoid.get();
-    }
-
-    /**
-     * update the logger inputs
-     */
-
-    @Override
-    public void updateInputs() {
-        loggerInputs.SolenoidState = solenoid.get();
     }
 
     @Override
     public String getSubsystemName() {
         return "Gripper";
+    }
+
+    @Override
+    public void updateInputs() {
+        loggerInputs.solenoidState = isOpen();
     }
 }

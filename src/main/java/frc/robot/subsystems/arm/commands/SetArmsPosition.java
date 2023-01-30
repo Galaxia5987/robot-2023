@@ -23,6 +23,6 @@ public class SetArmsPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-       return MathUtil.applyDeadband(position.getX(), ArmConstants.SETPOINT_DEADBAND) == arm.getEndPosition().getX() && MathUtil.applyDeadband(position.getY(), ArmConstants.SETPOINT_DEADBAND) == arm.getEndPosition().getY();
+       return MathUtil.applyDeadband(position.getX() - arm.getEndPosition().getX(), ArmConstants.SETPOINT_DEADBAND) == 0 && MathUtil.applyDeadband(position.getY() - arm.getEndPosition().getY(), ArmConstants.SETPOINT_DEADBAND) == 0;
     }
 }

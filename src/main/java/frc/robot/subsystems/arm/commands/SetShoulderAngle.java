@@ -22,7 +22,7 @@ public class SetShoulderAngle extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return MathUtil.applyDeadband(angle, ArmConstants.SETPOINT_DEADBAND) == arm.getShoulderJointAngle();
+        return MathUtil.applyDeadband(angle - arm.getShoulderJointAngle(), ArmConstants.SETPOINT_DEADBAND) == 0;
     }
 
     @Override

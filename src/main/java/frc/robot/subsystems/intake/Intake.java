@@ -62,7 +62,6 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     /**
      * @return the motor's position [degrees].
      */
-    //TODO: something doesn't look right here....
 
     public double getAngle() {
         return unitModel.toUnits(encoder.getPosition());

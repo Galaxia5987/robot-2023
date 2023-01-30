@@ -48,7 +48,6 @@ public class RobotContainer {
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
-    private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
     private final JoystickButton rightTrigger = new JoystickButton(rightJoystick, 1);
 
@@ -73,13 +72,7 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        arm.setDefaultCommand(new ArmXboxControl(arm, xboxController));
-        swerveSubsystem.setDefaultCommand(
-                new HolonomicDrive(
-                        swerveSubsystem,
-                        new JoystickMap(leftJoystick, rightJoystick)
-                )
-        );
+
     }
 
     private void configureButtonBindings() {
@@ -89,7 +82,6 @@ public class RobotContainer {
 //        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
 //        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(90))));
         leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
-        a.onTrue(new SetShoulderAngle(arm, 30));
     }
 
 

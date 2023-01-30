@@ -2,6 +2,15 @@ package frc.robot;
 
 public final class Ports {
 
+    public static class ArmPorts {
+        public static final int SHOULDER_MAIN_MOTOR = 0;
+        public static final int SHOULDER_AUX_MOTOR = 0;
+        public static final int ELBOW_MAIN_MOTOR = 0;
+        public static final int ELBOW_AUX_MOTOR = 0;
+        public static final int SHOULDER_ENCODER = 0;
+        public static final int ELBOW_ENCODER = 0;
+    }
+
     public static final class SwerveDrive {
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR_ID = 7;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR_ID = 8;

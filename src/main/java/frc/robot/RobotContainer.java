@@ -29,6 +29,9 @@ import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.ui.JoystickMap;
 import frc.robot.subsystems.gripper.Gripper;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.commands.SetShoulderAngle;
+import frc.robot.subsystems.arm.commands.ArmXboxControl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -43,12 +46,15 @@ public class RobotContainer {
     private final Limelight limelight = Limelight.getInstance();
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
+    private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
     private final JoystickButton rightTrigger = new JoystickButton(rightJoystick, 1);
 
     private Command teleopTargetAdjustCommand;
+
+    private static final Arm arm = Arm.getInstance();
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -67,6 +73,7 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
+        arm.setDefaultCommand(new ArmXboxControl(arm, xboxController));
         swerveSubsystem.setDefaultCommand(
                 new HolonomicDrive(
                         swerveSubsystem,
@@ -82,6 +89,7 @@ public class RobotContainer {
 //        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
 //        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(90))));
         leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        a.onTrue(new SetShoulderAngle(arm, 30));
     }
 
 

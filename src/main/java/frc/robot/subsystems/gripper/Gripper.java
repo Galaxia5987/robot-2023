@@ -8,7 +8,7 @@ import frc.robot.subsystems.LoggedSubsystem;
 public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     private static Gripper INSTANCE;
 
-    private final Solenoid solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID);
+    private final Solenoid gripperSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID);
 
     /**
      * @return the instance of the subsystem.
@@ -28,28 +28,28 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
      * Open the Gripper.
      */
     public void open() {
-        solenoid.set(true);
+        gripperSolenoid.set(true);
     }
 
     /**
      * Close the Gripper.
      */
     public void close() {
-        solenoid.set(false);
+        gripperSolenoid.set(false);
     }
 
     /**
      * Changes the current state to the other state.
      */
     public void toggle() {
-        solenoid.toggle();
+        gripperSolenoid.toggle();
     }
 
     /**
      * @return the current state of the solenoids.
      */
     public boolean isOpen() {
-        return solenoid.get();
+        return gripperSolenoid.get();
     }
 
     @Override
@@ -59,6 +59,6 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
     @Override
     public void updateInputs() {
-        loggerInputs.solenoidState = isOpen();
+        loggerInputs.isOpen = isOpen();
     }
 }

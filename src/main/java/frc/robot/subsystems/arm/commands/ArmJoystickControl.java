@@ -6,18 +6,20 @@ import frc.robot.subsystems.arm.Arm;
 
 public class ArmJoystickControl extends CommandBase {
     private final Arm arm;
-    private final Joystick joystick;
+    private final Joystick shoulderJoystick;
+    private final Joystick elbowJoystick;
 
-    public ArmJoystickControl(Joystick joystick) {
+    public ArmJoystickControl(Joystick shoulderJoystick, Joystick elbowJoystick) {
         this.arm = Arm.getInstance();
-        this.joystick = joystick;
+        this.shoulderJoystick = shoulderJoystick;
+        this.elbowJoystick = elbowJoystick;
         addRequirements(arm);
     }
 
     @Override
     public void execute() {
-        arm.setShoulderJointPower(-joystick.getY());
-        arm.setElbowJointPower(-joystick.getY());
+        arm.setShoulderJointPower(-shoulderJoystick.getY());
+        arm.setElbowJointPower(-elbowJoystick.getY());
     }
 
     @Override

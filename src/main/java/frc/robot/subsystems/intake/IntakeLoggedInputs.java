@@ -4,16 +4,16 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class IntakeLoggedInputs implements LoggableInputs {
-    public double motorPower;
-    public double angleMotorAngle;
+    public double power;
+    public double angle;
 
     /**
      * Implement the variables inside the table.
      */
     @Override
     public void toLog(LogTable table) {
-        table.put("motor power", motorPower);
-        table.put("angle motor power", angleMotorAngle);
+        table.put("power", power);
+        table.put("angle", angle);
     }
 
     /**
@@ -21,7 +21,7 @@ public class IntakeLoggedInputs implements LoggableInputs {
      */
     @Override
     public void fromLog(LogTable table) {
-        motorPower = table.getDouble("motor power", motorPower);
-        angleMotorAngle = table.getDouble("angle motor power", angleMotorAngle);
+        power = table.getDouble("power", power);
+        angle = table.getDouble("angle", angle);
     }
 }

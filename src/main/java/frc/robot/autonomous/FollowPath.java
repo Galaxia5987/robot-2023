@@ -343,13 +343,9 @@ public class FollowPath extends CommandBase {
         PathPlannerTrajectory trajectory;
         var aprilTag = limelight.getAprilTagTarget();
         var botPose = limelight.getBotPose();
-        var currVelocity = swerveDrive.getSpeeds();
+        var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
 
         if (aprilTag.isPresent() && botPose.isPresent()) {
-            aprilTag = Optional.of(AllianceFlipUtil.apply(aprilTag.get()));
-            botPose = Optional.of(AllianceFlipUtil.apply(botPose.get()));
-            currVelocity = AllianceFlipUtil.apply(currVelocity);
-
             gyroscope.resetYaw(botPose.get().getRotation());
 
             var pStart = new PathPoint(
@@ -365,6 +361,7 @@ public class FollowPath extends CommandBase {
 
             trajectory = PathPlanner.generatePath(new PathConstraints(5, 3), false,
                     pStart, pEnd);
+            trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
         } else {
             trajectory = null;
         }

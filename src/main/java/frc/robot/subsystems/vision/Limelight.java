@@ -8,8 +8,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.utils.AllianceFlipUtil;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -124,12 +126,30 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return aprilTagFieldLayout.getTagPose((int) getTagId());
     }
 
+    public Optional<Pose3d> getAprilTagTarget(DriverStation.Alliance alliance) {
+        var target = getAprilTagTarget();
+        if (target.isPresent()) {
+            var pose = AllianceFlipUtil.apply(alliance, target.get());
+            return Optional.of(pose);
+        }
+        return Optional.empty();
+    }
+
     public Optional<Pose2d> getBotPose() {
         int id = (int) getTagId();
         if (id > 0 && id < 9) {
             return Optional.of(
                     new Pose2d(botPose.get()[0], botPose.get()[1], Rotation2d.fromDegrees(botPose.get()[5]))
             );
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Pose2d> getBotPose(DriverStation.Alliance alliance) {
+        var botPose = getBotPose();
+        if (botPose.isPresent()) {
+            var pose = AllianceFlipUtil.apply(alliance, botPose.get());
+            return Optional.of(pose);
         }
         return Optional.empty();
     }

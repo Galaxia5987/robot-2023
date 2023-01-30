@@ -55,14 +55,14 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Configures the aux motors
-     * @param shoulderAuxMotor
-     * @param shoulderMainMotor
+     * @param auxMotor
+     * @param mainMotor
      */
-    private void configureAuxMotor(TalonFX shoulderAuxMotor, TalonFX shoulderMainMotor) {
-        shoulderAuxMotor.follow(shoulderMainMotor);
-        shoulderAuxMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
-        shoulderAuxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_SATURATION);
-        shoulderAuxMotor.setNeutralMode(NeutralMode.Brake);
+    private void configureAuxMotor(TalonFX auxMotor, TalonFX mainMotor) {
+        auxMotor.follow(shoulderMainMotor);
+        auxMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
+        auxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_SATURATION);
+        auxMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     /**

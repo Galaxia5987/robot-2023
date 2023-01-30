@@ -7,7 +7,6 @@ import frc.robot.subsystems.LoggedSubsystem;
 
 public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
     private final DigitalInput beam = new DigitalInput(Ports.Intake.BEAM_BREAKER_SENSOR);
-    boolean isBlocking;
 
     public BeamBreaker(BeamBreakerLoggedInputs inputs) {
         super(inputs);
@@ -18,11 +17,7 @@ public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
      */
 
     public boolean isBeamBlocked() {
-        if (beam.get() == false) {
-            return true;
-        } else {
-            return false;
-        }
+        return !beam.get();
     }
 
     /**

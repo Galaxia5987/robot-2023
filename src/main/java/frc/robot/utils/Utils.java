@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants;
 
 public class Utils {
     public static final double EPSILON = 1e-9;
@@ -56,5 +55,27 @@ public class Utils {
             states[i] = new SwerveModuleState(positions[i].distanceMeters, positions[i].angle);
         }
         return states;
+    }
+
+    /**
+     * Converts the relative angles to pitch relative to the coordinate system of the field,
+     * aka the absolute pitch. This value can be used to balance on the charge station.
+     * <p>
+     * The calculations were made by multiplying the rotation matrices of yaw pitch and roll
+     * in that order by the x unit vector (1, 0, 0).
+     * See {@link <a href="https://www.tu-chemnitz.de/informatik/service/ib/pdf/CSR-21-01.pdf">...</a>} at page 11,
+     * where the coordinate system of a UAV is described.
+     * <p>
+     * The robot coordinate system is in the opposite direction in all axes. Hence, the angles were multiplied by -1.
+     *
+     * @param yaw   the yaw angle from the gyro. [rad]
+     * @param pitch the pitch angle from the gyro. [rad]
+     * @param roll  the roll angle from the gyro. [rad]
+     * @return the absolute pitch angle. [rad]
+     */
+    public static double relativeAnglesToAbsolutePitch(double yaw, double pitch, double roll) {
+        return Math.atan(
+                (Math.sin(roll) * Math.sin(yaw) + Math.cos(roll) * Math.sin(pitch) * Math.cos(yaw)) / (Math.cos(pitch) * Math.cos(yaw))
+        );
     }
 }

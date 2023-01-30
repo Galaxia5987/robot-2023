@@ -33,7 +33,7 @@ public class PIDFController extends PIDController {
     @Override
     public double calculate(double measurement) {
         double val = super.calculate(measurement);
-        val += Math.signum(val) * kF;
+        val += Math.copySign(kF, val);
         return val;
     }
 }

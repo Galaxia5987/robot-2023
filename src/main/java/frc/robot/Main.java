@@ -4,9 +4,19 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 
-import static spark.Spark.port;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what
@@ -23,8 +33,6 @@ public final class Main {
      * <p>If you change your main robot class, change the parameter type.
      */
     public static void main(String... args) {
-        port(5802);
-
         RobotBase.startRobot(Robot::new);
     }
 }

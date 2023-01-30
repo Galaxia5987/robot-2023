@@ -11,7 +11,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final SparkMaxPIDController pidController = angleMotor.getPIDController();
     private final RelativeEncoder encoder = angleMotor.getEncoder();
-    private final UnitModel unitModel = new UnitModel(ConstantsIntake.TICKS_PER_RADIAN);
+    private final UnitModel unitModel = new UnitModel(ConstantsIntake.TICKS_PER_DEGREE);
 
     private Intake() {
         super(new IntakeLoggedInputs());
@@ -56,23 +56,24 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      * @param angle is the angle of the retractor [degrees].
      */
     public void setAngle(double angle) {
-        pidController.setReference(unitModel.toTicks(Math.toRadians(angle)), CANSparkMax.ControlType.kPosition);
+        pidController.setReference(unitModel.toTicks(angle), CANSparkMax.ControlType.kPosition);
     }
 
     /**
      * @return the motor's position [degrees].
      */
-    public double getAngle() {
-        return Math.toDegrees(unitModel.toUnits(encoder.getPosition()));
-    }
+    //TODO: something doesn't look right here....
 
+    public double getAngle() {
+        return unitModel.toUnits(encoder.getPosition());
+    }
     /**
      * Update the logger inputs' value.
      */
     @Override
     public void updateInputs() {
-        loggerInputs.motorPower = getPower();
-        loggerInputs.angleMotorAngle = getAngle();
+        loggerInputs.power = getPower();
+        loggerInputs.angle = getAngle();
     }
 
     @Override

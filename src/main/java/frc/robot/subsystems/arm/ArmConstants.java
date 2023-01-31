@@ -1,16 +1,21 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import edu.wpi.first.math.geometry.Translation2d;
 
-public class ArmConstants {
+public class ArmConstants { //TODO: find all constant values
 
-    // Arm constants
+    // motor configuration
     public static final double VOLT_COMP_SATURATION = 10; //[V]
     public static final boolean ENABLE_VOLT_COMPENSATION = true;
     public static final double MOTION_ACCELERATION = 0;
     public static final double MOTION_CRUISE_VELOCITY = 0;
+    public static final double DEADBAND = 0.05; // [%]
+    public static final double SETPOINT_DEADBAND = 0;
+    public static final double TICKS_PER_RADIAN = 1024 / (Math.PI * 2);
     public static final TalonFXInvertType CLOCKWISE = TalonFXInvertType.Clockwise;
 
+    //PID
     public static final double shoulderP = 0.1;
     public static final double shoulderI = 0.0;
     public static final double shoulderD = 0.0;
@@ -18,10 +23,17 @@ public class ArmConstants {
     public static final double elbowI = 0.0;
     public static final double elbowD = 0.0;
 
-    public static final double DEADBAND = 0.05; // [%]
-    public static final double SETPOINT_DEADBAND = 0; // [
-    public static final double TICKS_PER_RADIAN = 1024 / (Math.PI * 2);
+    //arm positions
+    public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
+    public static final Translation2d FEEDER_POSITION = new Translation2d();
+    public static final Translation2d RETRACTED_POSITION = new Translation2d();
+    public static final Translation2d UPPER_CONE_SCORING = new Translation2d();
+    public static final Translation2d MIDDLE_CONE_SCORING = new Translation2d();
+    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d();
+    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d();
+    public static final Translation2d FLOOR_SCORING = new Translation2d();
 
+    //shoulder physics
     public static final double SHOULDER_GEARING = 0; // Arbitrary units
     public static final double SHOULDER_MASS = 0; // [kg]
     public static final double SHOULDER_LENGTH = 0; // [m]
@@ -30,6 +42,7 @@ public class ArmConstants {
     public static final int SHOULDER_NUMBER_OF_MOTORS = 2; // Arbitrary units
     public static final double SHOULDER_ARM_LENGTH = 0; //[m]
 
+    //elbow physics
     public static final double ELBOW_GEARING = 0; // Arbitrary units
     public static final double ELBOW_MASS = 0; // [kg]
     public static final double ELBOW_LENGTH = 0; // [m]

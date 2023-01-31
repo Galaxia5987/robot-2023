@@ -20,6 +20,7 @@ public class UpperScoring extends SequentialCommandGroup {
                         new AprilTagCommandGroup(),
                         () -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE
                 ),
+                new SetArmsPosition(() -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE ? ArmConstants.UPPER_CONE_SCORING : ArmConstants.UPPER_CUBE_SCORING),
                 new InstantCommand(gripper::open),
                 new SetArmsPosition(ArmConstants.RETRACTED_POSITION)
         );

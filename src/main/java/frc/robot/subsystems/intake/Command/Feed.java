@@ -31,6 +31,7 @@ public class Feed extends CommandBase {
         intake.setPower(power);
     }
 
+
     @Override
     public void end(boolean interrupted) {
         intake.setAngle(angle);

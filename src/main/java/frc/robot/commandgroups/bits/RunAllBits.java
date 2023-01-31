@@ -9,7 +9,7 @@ import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
 
 public class RunAllBits extends SequentialCommandGroup {
-    public RunAllBits(SwerveDrive swerveDrive, Intake intake, Gripper gripper, Arm arm, BeamBreaker beamBreaker) {
+    public RunAllBits(SwerveDrive swerveDrive, Gripper gripper, Arm arm) {
         addCommands(
                 new CheckIntakeFlow( gripper),
                 new CheckArmPositions(arm),

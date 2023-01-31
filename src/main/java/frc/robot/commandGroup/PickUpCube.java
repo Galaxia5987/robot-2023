@@ -1,4 +1,4 @@
-package frc.robot.subsystems.commandGroup;
+package frc.robot.commandGroup;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,7 +13,7 @@ public class PickUpCube extends SequentialCommandGroup {
                 // Feeds the cube into the Intake until the BeamBreaker sends a false signal
                 new Feed(intakePower, 0),
                 //Sets the arm position into the inside space of the Robot and meanwhile opens the gripper
-                new SetArmsPosition(armPosition).andThen(() -> gripper.open()),
+                new SetArmsPosition(armPosition).alongWith(new InstantCommand(()-> gripper.open())),
                 //Closes the Gripper after it is set on the position of the cube.
                 new InstantCommand(() -> gripper.close())
         );

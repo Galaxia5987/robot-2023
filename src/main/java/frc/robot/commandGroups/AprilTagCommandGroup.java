@@ -11,8 +11,7 @@ import frc.robot.subsystems.vision.Limelight;
 public class AprilTagCommandGroup extends SequentialCommandGroup {
     public AprilTagCommandGroup() {
         addCommands(
-                FollowPath.generatePathToAprilTag(new SwerveDrive(), Limelight.getInstance(), new Gyroscope()),
-                new SetArmsPosition(ArmConstants.UPPER_CUBE_SCORING)
+                FollowPath.generatePathToAprilTag(new SwerveDrive(), Limelight.getInstance(), new Gyroscope())
         );
     }
 }

@@ -8,7 +8,6 @@ public class TapeCommandGroup extends SequentialCommandGroup {
     public TapeCommandGroup() {
         addCommands(
                 //TODO: add following path to reflective tape target - thank you Eitan!
-                new SetArmsPosition(ArmConstants.UPPER_CONE_SCORING)
         );
     }
 }

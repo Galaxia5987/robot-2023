@@ -12,7 +12,7 @@ import frc.robot.subsystems.intake.ConstantsIntake;
 import frc.robot.subsystems.intake.Intake;
 
 public class CheckIntakeFlow extends SequentialCommandGroup {
-    public CheckIntakeFlow(Intake intake, BeamBreaker beamBreaker, Gripper gripper) {
+    public CheckIntakeFlow( Gripper gripper) {
         addCommands(
                 new Feed(0.5, ConstantsIntake.ANGLE_DOWN).withTimeout(3),
                 new WaitCommand(1),

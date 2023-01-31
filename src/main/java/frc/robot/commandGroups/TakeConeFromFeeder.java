@@ -14,7 +14,8 @@ import frc.robot.subsystems.vision.Limelight;
 public class TakeConeFromFeeder extends SequentialCommandGroup {
     private final Gripper gripper = Gripper.getInstance();
     private final Arm arm = Arm.getInstance();
-    public TakeConeFromFeeder(){
+
+    public TakeConeFromFeeder() {
         addCommands(
                 FollowPath.generatePathToAprilTag(new SwerveDrive(), Limelight.getInstance(), new Gyroscope())
                         .alongWith(new InstantCommand(gripper::open)),

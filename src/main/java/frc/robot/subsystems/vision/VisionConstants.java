@@ -1,6 +1,8 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class VisionConstants {
     public static final double CAMERA_HEIGHT = 0.76; //[m]
@@ -13,6 +15,9 @@ public class VisionConstants {
     public static final Pose3d UPPER_CONE_LEFT_GRID_TARGET = new Pose3d(16.178, 4.99, 1.17, new Rotation3d());
     public static final Translation2d TARGET_ADJUST_OFFSET = new Translation2d(1.0, 0);
     public static final Translation2d DOUBLE_SUBSTATION_ADJUST_OFFSET = new Translation2d(1.0, 0);
+
+    public static final int APRIL_TAG_PIPELINE = 0; //TODO: check real value
+    public static final int REFLECTIVE_TAPE_PIPELINE = 0;
 
     // Red april tag targets
 //    public static final Translation2d CUBE_ID1_POSE = CENTER_POSE.plus(new Translation2d(5.8, -2.93659));

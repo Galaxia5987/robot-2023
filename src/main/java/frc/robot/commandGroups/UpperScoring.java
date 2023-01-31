@@ -9,11 +9,11 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.vision.VisionConstants;
 
-public class UpperConeScoring extends SequentialCommandGroup {
+public class UpperScoring extends SequentialCommandGroup {
     private final Limelight limelight = Limelight.getInstance();
     private final Gripper gripper = Gripper.getInstance();
 
-    public UpperConeScoring() {
+    public UpperScoring() {
         addCommands(
                 new ConditionalCommand(
                         new TapeCommandGroup(),

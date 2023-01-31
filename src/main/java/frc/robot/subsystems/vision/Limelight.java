@@ -9,12 +9,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.AllianceFlipUtil;
 
-import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -27,6 +24,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final IntegerSubscriber tv = table.getIntegerTopic("tv").subscribe(0);
     private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
+    private final IntegerSubscriber getpipe = table.getIntegerTopic("getpipe").subscribe(0); //TODO: check vision pipelines
     private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
 
     private final AprilTagFieldLayout aprilTagFieldLayout;
@@ -55,6 +53,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
             INSTANCE = new Limelight();
         }
         return INSTANCE;
+    }
+
+    public long getPipeline() {
+        return getpipe.get();
     }
 
     /**

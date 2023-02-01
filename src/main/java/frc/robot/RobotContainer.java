@@ -32,6 +32,7 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.commands.SetShoulderAngle;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
+import subsystems.leds.Leds;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -41,13 +42,15 @@ public class RobotContainer {
     public static Gyroscope gyroscope = new Gyroscope();
     public static SwerveDrive swerveSubsystem = new SwerveDrive();
     private static RobotContainer INSTANCE = null;
-    private final Gripper gripper = Gripper.getInstance();
+
+private static final Leds led = Leds.getInstance();
     private final XboxController xboxController = new XboxController(0);
     private final Limelight limelight = Limelight.getInstance();
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
+    private final JoystickButton lb = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
     private final JoystickButton rightTrigger = new JoystickButton(rightJoystick, 1);
 
@@ -74,6 +77,7 @@ public class RobotContainer {
     private void configureDefaultCommands() {
 
     }
+    private void configureButtonBindings() {
 
     private void configureButtonBindings() {
         rightTrigger.whileTrue(new ProxyCommand(() -> FollowPath.generatePathToAprilTag(

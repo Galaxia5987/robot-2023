@@ -42,4 +42,8 @@ public final class Ports {
         public static final int ANGLE_MOTOR = 0;
         public static final int BEAM_BREAKER_SENSOR = 0;
     }
+
+    public static class Leds {
+            public static final int LED = 0;
+    }
 }

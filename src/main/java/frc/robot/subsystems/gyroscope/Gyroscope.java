@@ -1,10 +1,10 @@
-package subsystems.gyroscope;
+package frc.robot.subsystems.gyroscope;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.SPI;
-import subsystems.LoggedSubsystem;
+import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.math.AngleUtil;
 
 public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {

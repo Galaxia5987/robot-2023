@@ -1,42 +1,20 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.utils.ui.JoystickMap;
-import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.commands.SetShoulderAngle;
-import frc.robot.subsystems.arm.commands.ArmXboxControl;
-import subsystems.leds.Leds;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
+import frc.robot.subsystems.leds.Leds;
 
 public class RobotContainer {
     public static Gyroscope gyroscope = new Gyroscope();
@@ -77,8 +55,6 @@ private static final Leds led = Leds.getInstance();
     private void configureDefaultCommands() {
 
     }
-    private void configureButtonBindings() {
-
     private void configureButtonBindings() {
         rightTrigger.whileTrue(new ProxyCommand(() -> FollowPath.generatePathToAprilTag(
                 swerveSubsystem, limelight, gyroscope

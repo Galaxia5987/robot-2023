@@ -46,8 +46,8 @@ public class AdjustToTape extends CommandBase {
 
         if (yaw.isPresent()) {
             Rotation2d absoluteYaw = yaw.get().plus(robotAngle);
-            speeds.vyMetersPerSecond = yController.calculate(absoluteYaw.getCos(), 0);
-            speeds.omegaRadiansPerSecond = rotationController.calculate(absoluteYaw.getRadians(), 0);
+            speeds.vyMetersPerSecond = yController.calculate(absoluteYaw.getSin(), 0);
+            speeds.omegaRadiansPerSecond = rotationController.calculate(yaw.get().getRadians(), 0);
         } else {
             speeds = lastSpeeds;
         }

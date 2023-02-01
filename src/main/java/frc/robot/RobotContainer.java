@@ -12,11 +12,11 @@ import frc.robot.autonomous.FollowPath;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
+import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
+import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.utils.ui.XboxMap;
 
 public class RobotContainer {
     private static final Leds led = Leds.getInstance();
@@ -52,11 +52,11 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
+//        swerveSubsystem.setDefaultCommand(
+//                new JoystickDrive(swerveSubsystem, leftJoystick, rightJoystick)
+//        );
         swerveSubsystem.setDefaultCommand(
-                new HolonomicDrive(
-                        swerveSubsystem,
-                        new XboxMap(xboxController)
-                )
+                new XboxDrive(swerveSubsystem, xboxController)
         );
     }
 

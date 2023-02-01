@@ -10,7 +10,10 @@ import frc.robot.subsystems.intake.Command.Feed;
 import frc.robot.subsystems.intake.Intake;
 
 public class PickUpCube extends SequentialCommandGroup {
-    public PickUpCube(Gripper gripper, double intakePower, Translation2d armPosition, Intake intake, BeamBreaker beamBreaker) {
+    Gripper gripper = Gripper.getInstance();
+    Intake intake = Intake.getInstance();
+
+    public PickUpCube( double intakePower, Translation2d armPosition, BeamBreaker beamBreaker) {
         addCommands(
                 // Feeds the cube into the Intake until the BeamBreaker sends a false signal
                 new Feed(intakePower, intake, beamBreaker),

@@ -190,29 +190,4 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
         getAprilTagTarget().ifPresent((value) -> loggerInputs.aprilTagTarget = value);
     }
-
-    public static class AprilTagTarget {
-        public Translation2d currentTranslation;
-        public Translation2d desiredTranslation;
-        public Rotation2d targetHeading;
-        public Rotation2d zeroHeading;
-        public Rotation2d targetYaw;
-
-        public AprilTagTarget(Translation2d currentTranslation, Translation2d desiredTranslation, Rotation2d targetHeading, Rotation2d zeroHeading, Rotation2d targetYaw) {
-            this.currentTranslation = currentTranslation;
-            this.desiredTranslation = desiredTranslation;
-            this.targetHeading = targetHeading;
-            this.zeroHeading = zeroHeading;
-            this.targetYaw = targetYaw;
-        }
-
-        public static AprilTagTarget of(int id, Translation2d currentTranslation) {
-            Rotation2d zeroHeading = new Rotation2d();
-            Rotation2d targetHeading = Rotation2d.fromDegrees(180);
-            Translation2d desiredTranslation;
-            desiredTranslation = VisionConstants.getTargetDesiredTranslation(id);
-
-            return new AprilTagTarget(currentTranslation, desiredTranslation, targetHeading, zeroHeading, targetHeading);
-        }
-    }
 }

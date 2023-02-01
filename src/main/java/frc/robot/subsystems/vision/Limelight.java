@@ -93,11 +93,11 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * @return robot yaw
      */
-    public OptionalDouble getYaw() {
+    public Optional<Rotation2d> getYaw() {
         if (hasTargets()) {
-            return OptionalDouble.of(ts.get());
+            return Optional.of(Rotation2d.fromDegrees(ts.get()));
         }
-        return OptionalDouble.empty();
+        return Optional.empty();
     }
 
     /**
@@ -110,7 +110,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         if (!hasTargets()) {
             return Optional.empty();
         }
-        double absoluteAngle = robotAngle.getRadians() + getYaw().orElse(0);
+        double absoluteAngle = robotAngle.getRadians() + getYaw().orElse(Rotation2d.fromDegrees(0)).getRadians();
         double xTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.sin(absoluteAngle);
         double yTargetDistance = getTargetDistance(target.getZ()).orElse(0) * Math.cos(absoluteAngle);
         double xDistance = xTargetDistance - target.getX();
@@ -184,7 +184,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      */
     public void updateInputs() {
         loggerInputs.hasTargets = hasTargets();
-        getYaw().ifPresent((value) -> loggerInputs.yaw = value);
+        getYaw().ifPresent((value) -> loggerInputs.yaw = value.getDegrees());
         loggerInputs.tagId = getTagId();
         getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
         getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);

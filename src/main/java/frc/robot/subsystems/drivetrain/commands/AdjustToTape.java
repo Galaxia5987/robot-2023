@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drivetrain.commands;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,10 +17,9 @@ public class AdjustToTape extends CommandBase {
     private final SwerveDrive swerveDrive;
     private final Gyroscope gyroscope;
     private final Limelight limelight;
-
-    private ChassisSpeeds lastSpeeds = new ChassisSpeeds();
     private final PIDController yController;
     private final ProfiledPIDController rotationController;
+    private ChassisSpeeds lastSpeeds = new ChassisSpeeds();
 
     public AdjustToTape(SwerveDrive swerveDrive, Gyroscope gyroscope, Limelight limelight) {
         this.swerveDrive = swerveDrive;

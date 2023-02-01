@@ -44,6 +44,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Get the instance of the arm subsystem.
+     *
      * @return Arm instance
      */
     public static Arm getInstance() {
@@ -55,6 +56,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Configures the aux motors
+     *
      * @param auxMotor
      * @param mainMotor
      */
@@ -69,6 +71,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Configures the main motors
+     *
      * @param mainMotor
      * @param kP
      * @param kI
@@ -93,6 +96,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Sets the power of the shoulder motors
+     *
      * @param power desired power
      */
     public void setShoulderJointPower(double power) {
@@ -101,6 +105,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Sets the power of the elbow motors
+     *
      * @param power desired power
      */
     public void setElbowJointPower(double power) {
@@ -109,6 +114,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Gets the angle of the shoulder joint
+     *
      * @return angle of the shoulder joint [rad]
      */
     public double getShoulderJointAngle() {
@@ -117,6 +123,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Sets the angle of the shoulder joint
+     *
      * @param angle desired angle [degrees]
      */
     public void setShoulderJointAngle(double angle) {
@@ -127,6 +134,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Gets the angle of the elbow joint
+     *
      * @return elbow joint angle [rad]
      */
     public double getElbowJointAngle() {
@@ -135,6 +143,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Sets the angle of the elbow joint
+     *
      * @param angle desired angle [degrees]
      */
     public void setElbowJointAngle(double angle) {
@@ -145,6 +154,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Calculates the position of the end of the arm
+     *
      * @return Translation2d of the position
      */
     public Translation2d getEndPosition() {
@@ -153,6 +163,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Sets the position of the end of the arm
+     *
      * @param armLocation Translation2d of the desired location
      */
     public void setEndPosition(Translation2d armLocation) {
@@ -163,6 +174,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Gets the velocity of the shoulder motors
+     *
      * @return shoulder motors velocity
      */
     public double getShoulderMotorVelocity() {
@@ -171,6 +183,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     /**
      * Gets the velocity of the elbow motors
+     *
      * @return elbow motor velocity
      */
     public double getElbowMotorVelocity() {

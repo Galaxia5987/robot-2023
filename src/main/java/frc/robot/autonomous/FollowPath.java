@@ -5,7 +5,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.PathPoint;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
@@ -16,11 +15,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.subsystems.drivetrain.DriveSignal;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
@@ -29,16 +29,20 @@ import frc.robot.utils.AllianceFlipUtil;
 import frc.robot.utils.Utils;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * Custom PathPlanner version of SwerveControllerCommand
  */
 public class FollowPath extends CommandBase {
+    private static final FollowPathLogAutoLogged log = new FollowPathLogAutoLogged();
+    private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
+    private static Consumer<Pose2d> logTargetPose = null;
+    private static Consumer<ChassisSpeeds> logSetpoint = null;
+    private static BiConsumer<Translation2d, Rotation2d> logError =
+            FollowPath::defaultLogError;
     private final Timer timer = new Timer();
     private final PathPlannerTrajectory trajectory;
     private final Supplier<Pose2d> poseSupplier;
@@ -48,16 +52,7 @@ public class FollowPath extends CommandBase {
     private final Consumer<ChassisSpeeds> outputChassisSpeeds;
     private final boolean useKinematics;
     private final boolean useAllianceColor;
-
     private PathPlannerTrajectory transformedTrajectory;
-
-    private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
-    private static Consumer<Pose2d> logTargetPose = null;
-    private static Consumer<ChassisSpeeds> logSetpoint = null;
-    private static BiConsumer<Translation2d, Rotation2d> logError =
-            FollowPath::defaultLogError;
-
-    private static final FollowPathLogAutoLogged log = new FollowPathLogAutoLogged();
 
     /**
      * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
@@ -234,6 +229,81 @@ public class FollowPath extends CommandBase {
                 requirements);
     }
 
+    private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
+        SmartDashboard.putNumber("PPSwerveControllerCommand/xErrorMeters", translationError.getX());
+        SmartDashboard.putNumber("PPSwerveControllerCommand/yErrorMeters", translationError.getY());
+        SmartDashboard.putNumber(
+                "PPSwerveControllerCommand/rotationErrorDegrees", rotationError.getDegrees());
+    }
+
+    /**
+     * Set custom logging callbacks for this command to use instead of the default configuration of
+     * pushing values to SmartDashboard
+     *
+     * @param logActiveTrajectory Consumer that accepts a PathPlannerTrajectory representing the
+     *                            active path. This will be called whenever a PPSwerveControllerCommand starts
+     * @param logTargetPose       Consumer that accepts a Pose2d representing the target pose while path
+     *                            following
+     * @param logSetpoint         Consumer that accepts a ChassisSpeeds object representing the setpoint
+     *                            speeds
+     * @param logError            BiConsumer that accepts a Translation2d and Rotation2d representing the error
+     *                            while path following
+     */
+    public static void setLoggingCallbacks(
+            Consumer<PathPlannerTrajectory> logActiveTrajectory,
+            Consumer<Pose2d> logTargetPose,
+            Consumer<ChassisSpeeds> logSetpoint,
+            BiConsumer<Translation2d, Rotation2d> logError) {
+        FollowPath.logActiveTrajectory = logActiveTrajectory;
+        FollowPath.logTargetPose = logTargetPose;
+        FollowPath.logSetpoint = logSetpoint;
+        FollowPath.logError = logError;
+    }
+
+    public static Command generatePathToAprilTag(SwerveDrive swerveDrive, Limelight limelight, Gyroscope gyroscope) {
+        PathPlannerTrajectory trajectory;
+        var aprilTag = limelight.getAprilTagTarget();
+        var botPose = limelight.getBotPose();
+        var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
+
+        if (aprilTag.isPresent() && botPose.isPresent()) {
+            var relativePose = AllianceFlipUtil.apply(DriverStation.getAlliance(), botPose.get());
+            log.relativePose = Utils.pose2dToArray(relativePose);
+            log.aprilTag = Utils.pose2dToArray(aprilTag.get());
+            log.botPose = Utils.pose2dToArray(botPose.get());
+            swerveDrive.resetOdometry(relativePose);
+            gyroscope.resetYaw(relativePose.getRotation());
+
+            var pStart = new PathPoint(
+                    botPose.get().getTranslation(),
+                    new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond),
+                    botPose.get().getRotation(),
+                    Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
+            var pEnd = new PathPoint(
+                    aprilTag.get().getTranslation(),
+                    aprilTag.get().getRotation(),
+                    aprilTag.get().getRotation(),
+                    0);
+
+            trajectory = PathPlanner.generatePath(new PathConstraints(5, 3), false,
+                    pStart, pEnd);
+            trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
+
+            return new FollowPath(
+                    trajectory,
+                    swerveDrive::getPose,
+                    swerveDrive.getKinematics(),
+                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                    new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
+                    swerveDrive::setStates,
+                    swerveDrive
+            );
+        }
+        return new RunCommand(() -> {
+        });
+    }
+
     @Override
     public void initialize() {
         if (useAllianceColor && trajectory.fromGUI) {
@@ -314,79 +384,5 @@ public class FollowPath extends CommandBase {
     public boolean isFinished() {
         return this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds())
                 || (trajectory == null);
-    }
-
-    private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
-        SmartDashboard.putNumber("PPSwerveControllerCommand/xErrorMeters", translationError.getX());
-        SmartDashboard.putNumber("PPSwerveControllerCommand/yErrorMeters", translationError.getY());
-        SmartDashboard.putNumber(
-                "PPSwerveControllerCommand/rotationErrorDegrees", rotationError.getDegrees());
-    }
-
-    /**
-     * Set custom logging callbacks for this command to use instead of the default configuration of
-     * pushing values to SmartDashboard
-     *
-     * @param logActiveTrajectory Consumer that accepts a PathPlannerTrajectory representing the
-     *                            active path. This will be called whenever a PPSwerveControllerCommand starts
-     * @param logTargetPose       Consumer that accepts a Pose2d representing the target pose while path
-     *                            following
-     * @param logSetpoint         Consumer that accepts a ChassisSpeeds object representing the setpoint
-     *                            speeds
-     * @param logError            BiConsumer that accepts a Translation2d and Rotation2d representing the error
-     *                            while path following
-     */
-    public static void setLoggingCallbacks(
-            Consumer<PathPlannerTrajectory> logActiveTrajectory,
-            Consumer<Pose2d> logTargetPose,
-            Consumer<ChassisSpeeds> logSetpoint,
-            BiConsumer<Translation2d, Rotation2d> logError) {
-        FollowPath.logActiveTrajectory = logActiveTrajectory;
-        FollowPath.logTargetPose = logTargetPose;
-        FollowPath.logSetpoint = logSetpoint;
-        FollowPath.logError = logError;
-    }
-
-    public static Command generatePathToAprilTag(SwerveDrive swerveDrive, Limelight limelight, Gyroscope gyroscope) {
-        PathPlannerTrajectory trajectory;
-        var aprilTag = limelight.getAprilTagTarget();
-        var botPose = limelight.getBotPose();
-        var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
-
-        if (aprilTag.isPresent() && botPose.isPresent()) {
-            var relativePose = AllianceFlipUtil.apply(DriverStation.getAlliance(), botPose.get());
-            log.relativePose = Utils.pose2dToArray(relativePose);
-            log.aprilTag = Utils.pose2dToArray(aprilTag.get());
-            log.botPose = Utils.pose2dToArray(botPose.get());
-            swerveDrive.resetOdometry(relativePose);
-            gyroscope.resetYaw(relativePose.getRotation());
-
-            var pStart = new PathPoint(
-                    botPose.get().getTranslation(),
-                    new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond),
-                    botPose.get().getRotation(),
-                    Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
-            var pEnd = new PathPoint(
-                    aprilTag.get().getTranslation(),
-                    aprilTag.get().getRotation(),
-                    aprilTag.get().getRotation(),
-                    0);
-
-            trajectory = PathPlanner.generatePath(new PathConstraints(5, 3), false,
-                    pStart, pEnd);
-            trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
-
-            return new FollowPath(
-                    trajectory,
-                    swerveDrive::getPose,
-                    swerveDrive.getKinematics(),
-                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                    new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-                    swerveDrive::setStates,
-                    swerveDrive
-            );
-        }
-        return new RunCommand(() -> {});
     }
 }

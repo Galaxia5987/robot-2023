@@ -6,12 +6,9 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.AllianceFlipUtil;
 
-import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.util.Optional;
 import java.util.OptionalDouble;
 

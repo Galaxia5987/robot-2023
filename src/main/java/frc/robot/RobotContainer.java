@@ -9,21 +9,21 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.subsystems.vision.Limelight;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.utils.ui.JoystickMap;
-import frc.robot.utils.ui.XboxMap;
-import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.vision.Limelight;
+import frc.robot.utils.ui.XboxMap;
 
 public class RobotContainer {
+    private static final Leds led = Leds.getInstance();
+    private static final Arm arm = Arm.getInstance();
     public static Gyroscope gyroscope = new Gyroscope();
     public static SwerveDrive swerveSubsystem = new SwerveDrive();
     private static RobotContainer INSTANCE = null;
-
-private static final Leds led = Leds.getInstance();
     private final XboxController xboxController = new XboxController(0);
     private final Limelight limelight = Limelight.getInstance();
     private final Joystick leftJoystick = new Joystick(1);
@@ -33,10 +33,7 @@ private static final Leds led = Leds.getInstance();
     private final JoystickButton lb = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
     private final JoystickButton rightTrigger = new JoystickButton(rightJoystick, 1);
-
     private Command teleopTargetAdjustCommand;
-
-    private static final Arm arm = Arm.getInstance();
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -63,7 +60,6 @@ private static final Leds led = Leds.getInstance();
         );
     }
 
-    }
     private void configureButtonBindings() {
 //        rightTrigger.onTrue(new InstantCommand(() -> teleopTargetAdjustCommand = FollowPath.generatePathToAprilTag(
 //                swerveSubsystem, limelight, gyroscope

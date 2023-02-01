@@ -10,6 +10,10 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
 
     private final Solenoid gripperSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID);
 
+    private Gripper() {
+        super(new GripperLoggedInputs());
+    }
+
     /**
      * @return the instance of the subsystem.
      */
@@ -18,10 +22,6 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
             INSTANCE = new Gripper();
         }
         return INSTANCE;
-    }
-
-    private Gripper() {
-        super(new GripperLoggedInputs());
     }
 
     /**

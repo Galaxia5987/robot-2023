@@ -1,5 +1,6 @@
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,7 +20,7 @@ public class LimelightLogInputs implements LoggableInputs {
     public double yaw = 0;
     public boolean hasTargets = false;
     public float tagId = 0;
-    public Pose3d aprilTagTarget = new Pose3d();
+    public Pose2d aprilTagTarget = new Pose2d();
 
     public LimelightLogInputs() {
     }

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -143,15 +144,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         swerveModuleStates = mKinematics.toSwerveModuleStates(speeds, driveSignal.centerOfRotation);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_VELOCITY_METERS_PER_SECOND);
-
-        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.FL.number].angle);
-        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.FR.number].angle);
-        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.RL.number].angle);
-        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.RR.number].angle);
     }
 
     /**
@@ -160,16 +152,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @param states are the states to set.
      */
     public void setStates(SwerveModuleState[] states) {
-        swerveModuleStates = Arrays.copyOf(states, states.length);
-
-        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.FL.number].angle);
-        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.FR.number].angle);
-        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.RL.number].angle);
-        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
-                swerveModuleStates[Module.RR.number].angle);
+        swerveModuleStates = states;
     }
 
     /**
@@ -226,6 +209,15 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         };
 
         mOdometry.update(RobotContainer.gyroscope.getYaw(), swerveModulePositions);
+
+//        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+//                swerveModuleStates[Module.FL.number].angle);
+//        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+//                swerveModuleStates[Module.FR.number].angle);
+//        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+//                swerveModuleStates[Module.RL.number].angle);
+//        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
+//                swerveModuleStates[Module.RR.number].angle);
 
         SmartDashboard.putString("Encoder Positions", "{" +
                 mFrontLeft.getEncoderTicks() + ", " +

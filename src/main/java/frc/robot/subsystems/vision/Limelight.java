@@ -2,10 +2,7 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -122,11 +119,33 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.of(new Pose2d(translation2d, robotAngle));
     }
 
-    public Optional<Pose3d> getAprilTagTarget() {
-        return aprilTagFieldLayout.getTagPose((int) getTagId());
+    public Optional<Pose2d> getAprilTagTarget() {
+        int id = (int) getTagId();
+        var pose3d = aprilTagFieldLayout.getTagPose(id);
+        if (pose3d.isPresent()) {
+            var pose2d = pose3d.get().toPose2d();
+            Translation2d withOffset;
+
+            if (id < 5) {
+                if (id == 4) {
+                    withOffset = pose2d.getTranslation().minus(VisionConstants.DOUBLE_SUBSTATION_ADJUST_OFFSET);
+                } else {
+                    withOffset = pose2d.getTranslation().minus(VisionConstants.TARGET_ADJUST_OFFSET);
+                }
+            } else {
+                if (id == 8) {
+                    withOffset = pose2d.getTranslation().plus(VisionConstants.DOUBLE_SUBSTATION_ADJUST_OFFSET);
+                } else {
+                    withOffset = pose2d.getTranslation().plus(VisionConstants.TARGET_ADJUST_OFFSET);
+                }
+            }
+
+            return Optional.of(new Pose2d(withOffset, pose2d.getRotation().plus(Rotation2d.fromDegrees(180))));
+        }
+        return Optional.empty();
     }
 
-    public Optional<Pose3d> getAprilTagTarget(DriverStation.Alliance alliance) {
+    public Optional<Pose2d> getAprilTagTarget(DriverStation.Alliance alliance) {
         var target = getAprilTagTarget();
         if (target.isPresent()) {
             var pose = AllianceFlipUtil.apply(alliance, target.get());
@@ -139,7 +158,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         int id = (int) getTagId();
         if (id > 0 && id < 9) {
             return Optional.of(
-                    new Pose2d(botPose.get()[0], botPose.get()[1], Rotation2d.fromDegrees(botPose.get()[5]))
+                    VisionConstants.CENTER_POSE.plus(
+                            new Transform2d(new Translation2d(botPose.get()[0], botPose.get()[1]), Rotation2d.fromDegrees(botPose.get()[5])))
             );
         }
         return Optional.empty();

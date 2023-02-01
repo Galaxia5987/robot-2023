@@ -87,6 +87,7 @@ dependencies {
     simulationRelease wpi.sim.enableRelease()
 
     testImplementation 'junit:junit:4.13.2'
+    annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:2.1.1"
 }
 
 configurations.all {

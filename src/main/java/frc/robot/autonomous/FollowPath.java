@@ -26,10 +26,13 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
+import frc.robot.utils.Utils;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -53,6 +56,8 @@ public class FollowPath extends CommandBase {
     private static Consumer<ChassisSpeeds> logSetpoint = null;
     private static BiConsumer<Translation2d, Rotation2d> logError =
             FollowPath::defaultLogError;
+
+    private static final FollowPathLogAutoLogged log = new FollowPathLogAutoLogged();
 
     /**
      * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
@@ -253,6 +258,7 @@ public class FollowPath extends CommandBase {
     public void execute() {
         double currentTime = this.timer.get();
         PathPlannerState desiredState = (PathPlannerState) transformedTrajectory.sample(currentTime);
+        log.desiredState = Utils.pose2dToArray(desiredState.poseMeters);
 
         Pose2d currentPose = this.poseSupplier.get();
 
@@ -285,6 +291,8 @@ public class FollowPath extends CommandBase {
         if (logSetpoint != null) {
             logSetpoint.accept(targetChassisSpeeds);
         }
+
+        Logger.getInstance().processInputs("FollowPath", log);
     }
 
     @Override
@@ -346,7 +354,12 @@ public class FollowPath extends CommandBase {
         var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
 
         if (aprilTag.isPresent() && botPose.isPresent()) {
-            gyroscope.resetYaw(botPose.get().getRotation());
+            var relativePose = AllianceFlipUtil.apply(DriverStation.getAlliance(), botPose.get());
+            log.relativePose = Utils.pose2dToArray(relativePose);
+            log.aprilTag = Utils.pose2dToArray(aprilTag.get());
+            log.botPose = Utils.pose2dToArray(botPose.get());
+            swerveDrive.resetOdometry(relativePose);
+            gyroscope.resetYaw(relativePose.getRotation());
 
             var pStart = new PathPoint(
                     botPose.get().getTranslation(),
@@ -354,27 +367,26 @@ public class FollowPath extends CommandBase {
                     botPose.get().getRotation(),
                     Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
             var pEnd = new PathPoint(
-                    aprilTag.get().getTranslation().toTranslation2d(),
-                    aprilTag.get().getRotation().toRotation2d(),
-                    aprilTag.get().getRotation().toRotation2d(),
+                    aprilTag.get().getTranslation(),
+                    aprilTag.get().getRotation(),
+                    aprilTag.get().getRotation(),
                     0);
 
             trajectory = PathPlanner.generatePath(new PathConstraints(5, 3), false,
                     pStart, pEnd);
             trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
-        } else {
-            trajectory = null;
-        }
 
-        return new FollowPath(
-                trajectory,
-                swerveDrive::getPose,
-                swerveDrive.getKinematics(),
-                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-                swerveDrive::setStates,
-                swerveDrive
-        );
+            return new FollowPath(
+                    trajectory,
+                    swerveDrive::getPose,
+                    swerveDrive.getKinematics(),
+                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                    new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
+                    swerveDrive::setStates,
+                    swerveDrive
+            );
+        }
+        return new RunCommand(() -> {});
     }
 }

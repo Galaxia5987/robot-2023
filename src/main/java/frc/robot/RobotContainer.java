@@ -28,6 +28,7 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.ui.JoystickMap;
+import frc.robot.utils.ui.XboxMap;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -68,18 +69,22 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(
                 new HolonomicDrive(
                         swerveSubsystem,
-                        new JoystickMap(leftJoystick, rightJoystick)
+                        new XboxMap(xboxController)
                 )
         );
     }
 
     private void configureButtonBindings() {
-        rightTrigger.whileTrue(new ProxyCommand(() -> FollowPath.generatePathToAprilTag(
+//        rightTrigger.onTrue(new InstantCommand(() -> teleopTargetAdjustCommand = FollowPath.generatePathToAprilTag(
+//                swerveSubsystem, limelight, gyroscope
+//        )));
+//        rightTrigger.whileTrue(new ProxyCommand(() -> teleopTargetAdjustCommand));
+//        leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        a.onTrue(new InstantCommand(() -> teleopTargetAdjustCommand = FollowPath.generatePathToAprilTag(
                 swerveSubsystem, limelight, gyroscope
         )));
-//        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
-//        leftTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(90))));
-        leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        a.whileTrue(new ProxyCommand(() -> teleopTargetAdjustCommand));
+        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 
 

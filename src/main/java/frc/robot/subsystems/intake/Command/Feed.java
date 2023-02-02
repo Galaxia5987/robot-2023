@@ -40,6 +40,11 @@ public class Feed extends CommandBase {
     }
 
     @Override
+    public boolean isFinished() {
+        return beamBreaker.isBeamBlocked();
+    }
+
+    @Override
     public void end(boolean interrupted) {
         intake.setAngle(ConstantsIntake.INTAKE_CLOSED_POSITION);
         intake.setPower(0);

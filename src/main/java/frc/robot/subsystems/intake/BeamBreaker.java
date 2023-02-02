@@ -8,13 +8,14 @@ import frc.robot.subsystems.LoggedSubsystem;
 public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
     private static BeamBreaker INSTANCE;
     private final DigitalInput beam = new DigitalInput(Ports.Intake.BEAM_BREAKER_SENSOR);
+    private static BeamBreaker INSTANCE;
 
     public BeamBreaker(BeamBreakerLoggedInputs inputs) {
         super(inputs);
     }
 
     public static BeamBreaker getInstance() {
-        if (INSTANCE == null) {
+        if(INSTANCE == null){
             INSTANCE = new BeamBreaker(new BeamBreakerLoggedInputs());
         }
         return INSTANCE;

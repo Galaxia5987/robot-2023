@@ -9,9 +9,9 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.vision.VisionConstants;
 
-public class MidScoring extends SequentialCommandGroup {
+public class MiddleScoring extends SequentialCommandGroup {
 
-    public MidScoring() {
+    public MiddleScoring() {
         Limelight limelight = Limelight.getInstance();
         Gripper gripper = Gripper.getInstance();
         addCommands(

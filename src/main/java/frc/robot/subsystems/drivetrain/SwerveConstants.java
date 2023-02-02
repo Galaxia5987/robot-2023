@@ -83,4 +83,6 @@ public class SwerveConstants {
     public static double CHARGING_STATION_BALANCE_ACCELERATION = 0.25;
     public static TrapezoidProfile.Constraints CHARGING_STATION_BALANCE_CONSTRAINTS = new TrapezoidProfile.Constraints(
             CHARGING_STATION_BALANCE_VELOCITY, CHARGING_STATION_BALANCE_ACCELERATION);
+
+
 }

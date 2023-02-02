@@ -5,7 +5,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.PathPoint;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
@@ -16,18 +15,20 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.subsystems.drivetrain.DriveSignal;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
+import frc.robot.utils.Utils;
+import org.littletonrobotics.junction.Logger;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -36,6 +37,12 @@ import java.util.function.Supplier;
  * Custom PathPlanner version of SwerveControllerCommand
  */
 public class FollowPath extends CommandBase {
+    private static final FollowPathLogAutoLogged log = new FollowPathLogAutoLogged();
+    private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
+    private static Consumer<Pose2d> logTargetPose = null;
+    private static Consumer<ChassisSpeeds> logSetpoint = null;
+    private static BiConsumer<Translation2d, Rotation2d> logError =
+            FollowPath::defaultLogError;
     private final Timer timer = new Timer();
     private final PathPlannerTrajectory trajectory;
     private final Supplier<Pose2d> poseSupplier;
@@ -45,14 +52,7 @@ public class FollowPath extends CommandBase {
     private final Consumer<ChassisSpeeds> outputChassisSpeeds;
     private final boolean useKinematics;
     private final boolean useAllianceColor;
-
     private PathPlannerTrajectory transformedTrajectory;
-
-    private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
-    private static Consumer<Pose2d> logTargetPose = null;
-    private static Consumer<ChassisSpeeds> logSetpoint = null;
-    private static BiConsumer<Translation2d, Rotation2d> logError =
-            FollowPath::defaultLogError;
 
     /**
      * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
@@ -229,85 +229,6 @@ public class FollowPath extends CommandBase {
                 requirements);
     }
 
-    @Override
-    public void initialize() {
-        if (useAllianceColor && trajectory.fromGUI) {
-            transformedTrajectory =
-                    PathPlannerTrajectory.transformTrajectoryForAlliance(
-                            trajectory, DriverStation.getAlliance());
-        } else {
-            transformedTrajectory = trajectory;
-        }
-
-        if (logActiveTrajectory != null) {
-            logActiveTrajectory.accept(transformedTrajectory);
-        }
-
-        timer.reset();
-        timer.start();
-
-        PathPlannerServer.sendActivePath(transformedTrajectory.getStates());
-    }
-
-    @Override
-    public void execute() {
-        double currentTime = this.timer.get();
-        PathPlannerState desiredState = (PathPlannerState) transformedTrajectory.sample(currentTime);
-
-        Pose2d currentPose = this.poseSupplier.get();
-
-        PathPlannerServer.sendPathFollowingData(
-                new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation),
-                currentPose);
-
-        ChassisSpeeds targetChassisSpeeds = this.controller.calculate(currentPose, desiredState);
-
-        if (this.useKinematics) {
-            SwerveModuleState[] targetModuleStates =
-                    this.kinematics.toSwerveModuleStates(targetChassisSpeeds);
-
-            this.outputModuleStates.accept(targetModuleStates);
-        } else {
-            this.outputChassisSpeeds.accept(targetChassisSpeeds);
-        }
-
-        if (logTargetPose != null) {
-            logTargetPose.accept(
-                    new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation));
-        }
-
-        if (logError != null) {
-            logError.accept(
-                    currentPose.getTranslation().minus(desiredState.poseMeters.getTranslation()),
-                    currentPose.getRotation().minus(desiredState.holonomicRotation));
-        }
-
-        if (logSetpoint != null) {
-            logSetpoint.accept(targetChassisSpeeds);
-        }
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        this.timer.stop();
-
-        if (interrupted
-                || Math.abs(transformedTrajectory.getEndState().velocityMetersPerSecond) < 0.1) {
-            if (useKinematics) {
-                this.outputModuleStates.accept(
-                        this.kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0)));
-            } else {
-                this.outputChassisSpeeds.accept(new ChassisSpeeds());
-            }
-        }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds())
-                || (trajectory == null);
-    }
-
     private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
         SmartDashboard.putNumber("PPSwerveControllerCommand/xErrorMeters", translationError.getX());
         SmartDashboard.putNumber("PPSwerveControllerCommand/yErrorMeters", translationError.getY());
@@ -346,7 +267,12 @@ public class FollowPath extends CommandBase {
         var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
 
         if (aprilTag.isPresent() && botPose.isPresent()) {
-            gyroscope.resetYaw(botPose.get().getRotation());
+            var relativePose = AllianceFlipUtil.apply(DriverStation.getAlliance(), botPose.get());
+            log.relativePose = Utils.pose2dToArray(relativePose);
+            log.aprilTag = Utils.pose2dToArray(aprilTag.get());
+            log.botPose = Utils.pose2dToArray(botPose.get());
+            swerveDrive.resetOdometry(relativePose);
+            gyroscope.resetYaw(relativePose.getRotation());
 
             var pStart = new PathPoint(
                     botPose.get().getTranslation(),
@@ -354,27 +280,109 @@ public class FollowPath extends CommandBase {
                     botPose.get().getRotation(),
                     Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
             var pEnd = new PathPoint(
-                    aprilTag.get().getTranslation().toTranslation2d(),
-                    aprilTag.get().getRotation().toRotation2d(),
-                    aprilTag.get().getRotation().toRotation2d(),
+                    aprilTag.get().getTranslation(),
+                    aprilTag.get().getRotation(),
+                    aprilTag.get().getRotation(),
                     0);
 
             trajectory = PathPlanner.generatePath(new PathConstraints(5, 3), false,
                     pStart, pEnd);
             trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
+
+            return new FollowPath(
+                    trajectory,
+                    swerveDrive::getPose,
+                    swerveDrive.getKinematics(),
+                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                    new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
+                    swerveDrive::setStates,
+                    swerveDrive
+            );
+        }
+        return new RunCommand(() -> {
+        });
+    }
+
+    @Override
+    public void initialize() {
+        if (useAllianceColor && trajectory.fromGUI) {
+            transformedTrajectory =
+                    PathPlannerTrajectory.transformTrajectoryForAlliance(
+                            trajectory, DriverStation.getAlliance());
         } else {
-            trajectory = null;
+            transformedTrajectory = trajectory;
         }
 
-        return new FollowPath(
-                trajectory,
-                swerveDrive::getPose,
-                swerveDrive.getKinematics(),
-                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-                swerveDrive::setStates,
-                swerveDrive
-        );
+        if (logActiveTrajectory != null) {
+            logActiveTrajectory.accept(transformedTrajectory);
+        }
+
+        timer.reset();
+        timer.start();
+
+        PathPlannerServer.sendActivePath(transformedTrajectory.getStates());
+    }
+
+    @Override
+    public void execute() {
+        double currentTime = this.timer.get();
+        PathPlannerState desiredState = (PathPlannerState) transformedTrajectory.sample(currentTime);
+        log.desiredState = Utils.pose2dToArray(desiredState.poseMeters);
+
+        Pose2d currentPose = this.poseSupplier.get();
+
+        PathPlannerServer.sendPathFollowingData(
+                new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation),
+                currentPose);
+
+        ChassisSpeeds targetChassisSpeeds = this.controller.calculate(currentPose, desiredState);
+
+        if (this.useKinematics) {
+            SwerveModuleState[] targetModuleStates =
+                    this.kinematics.toSwerveModuleStates(targetChassisSpeeds);
+
+            this.outputModuleStates.accept(targetModuleStates);
+        } else {
+            this.outputChassisSpeeds.accept(targetChassisSpeeds);
+        }
+
+        if (logTargetPose != null) {
+            logTargetPose.accept(
+                    new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation));
+        }
+
+        if (logError != null) {
+            logError.accept(
+                    currentPose.getTranslation().minus(desiredState.poseMeters.getTranslation()),
+                    currentPose.getRotation().minus(desiredState.holonomicRotation));
+        }
+
+        if (logSetpoint != null) {
+            logSetpoint.accept(targetChassisSpeeds);
+        }
+
+        Logger.getInstance().processInputs("FollowPath", log);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        this.timer.stop();
+
+        if (interrupted
+                || Math.abs(transformedTrajectory.getEndState().velocityMetersPerSecond) < 0.1) {
+            if (useKinematics) {
+                this.outputModuleStates.accept(
+                        this.kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0)));
+            } else {
+                this.outputChassisSpeeds.accept(new ChassisSpeeds());
+            }
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds())
+                || (trajectory == null);
     }
 }

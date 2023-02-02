@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
-import frc.robot.utils.Utils;
 
 public class XboxMap implements ButtonMap {
     private final XboxController xboxController;

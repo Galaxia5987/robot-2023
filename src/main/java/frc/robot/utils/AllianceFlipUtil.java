@@ -37,7 +37,7 @@ public class AllianceFlipUtil {
             return new Pose2d(
                     VisionConstants.FIELD_LENGTH - pose.getX(),
                     pose.getY(),
-                    new Rotation2d(-pose.getRotation().getCos(), pose.getRotation().getSin()));
+                    apply(alliance, pose.getRotation()));
         } else {
             return pose;
         }

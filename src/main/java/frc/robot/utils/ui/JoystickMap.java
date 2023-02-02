@@ -3,7 +3,6 @@ package frc.robot.utils.ui;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;

@@ -11,7 +11,7 @@ import frc.robot.subsystems.vision.VisionConstants;
 
 public class MidScoring extends SequentialCommandGroup {
 
-    public MidScoring(){
+    public MidScoring() {
         Limelight limelight = Limelight.getInstance();
         Gripper gripper = Gripper.getInstance();
         addCommands(

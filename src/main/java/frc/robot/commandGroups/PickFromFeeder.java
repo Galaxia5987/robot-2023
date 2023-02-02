@@ -8,7 +8,7 @@ import frc.robot.subsystems.gripper.Gripper;
 
 
 public class PickFromFeeder extends SequentialCommandGroup {
-    public PickFromFeeder(Translation2d armStartPosition, Translation2d armEndPosition){
+    public PickFromFeeder(Translation2d armStartPosition, Translation2d armEndPosition) {
         Gripper gripper = Gripper.getInstance();
         addCommands(
                 new SetArmsPosition(armStartPosition).alongWith(new InstantCommand(gripper::open, gripper)),

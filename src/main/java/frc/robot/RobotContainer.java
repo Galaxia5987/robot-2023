@@ -12,6 +12,7 @@ import frc.robot.autonomous.FollowPath;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
@@ -58,6 +59,7 @@ public class RobotContainer {
                 )
         );
     }
+
     private void configureButtonBindings() {
         rightTrigger.whileTrue(new ProxyCommand(() -> FollowPath.generatePathToAprilTag(
                 swerveSubsystem, limelight, gyroscope

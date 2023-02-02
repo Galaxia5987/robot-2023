@@ -11,7 +11,7 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.units.UnitModel;
 
-public class Arm extends LoggedSubsystem<ArmInputs> {
+public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     private static Arm INSTANCE = null;
 
     private final ArmKinematics kinematics = new ArmKinematics(ArmConstants.SHOULDER_ARM_LENGTH, ArmConstants.ELBOW_ARM_LENGTH);
@@ -34,7 +34,7 @@ public class Arm extends LoggedSubsystem<ArmInputs> {
     private double elbowSetpoint;
 
     private Arm() {
-        super(new ArmInputs());
+        super(new ArmInputsAutoLogged());
         configureMainMotor(shoulderMainMotor, ArmConstants.shoulderP, ArmConstants.shoulderI, ArmConstants.shoulderD, shoulderEncoder);
         configureAuxMotor(shoulderAuxMotor, shoulderMainMotor);
 
@@ -190,7 +190,7 @@ public class Arm extends LoggedSubsystem<ArmInputs> {
         return unitModel.toVelocity(elbowMainMotor.getSelectedSensorVelocity());
     }
 
-    public void resetArmEncoders(){
+    public void resetArmEncoders() {
         shoulderEncoder.setPosition(90);
         elbowEncoder.setPosition(180); //TODO: check this value
     }

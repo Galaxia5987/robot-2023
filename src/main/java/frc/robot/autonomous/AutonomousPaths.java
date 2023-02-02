@@ -22,9 +22,9 @@ public class AutonomousPaths {
         this.followPath = followPath;
     }
 
-    protected CommandBase placeUpperCone11FollowPathAndPickUpCube(String path){
+    protected CommandBase placeUpperCone11FollowPathAndPickUpCube(String path) {
         return new SequentialCommandGroup(
-                
-        )
+
+        );
     }
 }

@@ -11,7 +11,7 @@ import frc.robot.subsystems.vision.VisionConstants;
 
 public class FloorScoring extends SequentialCommandGroup {
 
-    public FloorScoring(){
+    public FloorScoring() {
         Limelight limelight = Limelight.getInstance();
         Gripper gripper = Gripper.getInstance();
         addCommands(

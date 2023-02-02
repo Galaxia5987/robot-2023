@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
-    public static Limelight INSTANCE = null;
+     private static Limelight INSTANCE = null;
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);

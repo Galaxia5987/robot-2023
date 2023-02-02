@@ -12,7 +12,7 @@ public class CheckSwerve extends SequentialCommandGroup {
     public CheckSwerve(SwerveDrive swerveDrive) {
         addCommands(
                 new InstantCommand(swerveDrive::vroom).withTimeout(8),
-                new ZeroPositionSwerve(swerveDrive)
+                new ZeroPositionSwerve(swerveDrive).withTimeout(2)
         );
     }
 }

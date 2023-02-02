@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class ArmConstants {
 
@@ -37,6 +38,8 @@ public class ArmConstants {
     public static final double ELBOW_CENTER_OF_MASS_RADIUS = 0; // [m]
     public static final int ELBOW_NUMBER_OF_MOTORS = 2; // Arbitrary units
     public static final double ELBOW_ARM_LENGTH = 0; //[m]
+
+    public static final Translation2d ARM_DEFAULT_POSITION = new Translation2d(0, 0);
 
     public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CENTER_OF_MASS_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);

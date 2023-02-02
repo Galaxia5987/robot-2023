@@ -39,7 +39,6 @@ public final class Ports {
         public static final int LED = 0;
     }
 
-    public class Gripper {
         public static final int SOLENOID = 0;
     }
 

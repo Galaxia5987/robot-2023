@@ -33,6 +33,7 @@ public class Feed extends CommandBase {
         intake.setPower(power);
     }
 
+
     @Override
     public boolean isFinished() {
         return beamBreaker.isBeamBlocked();

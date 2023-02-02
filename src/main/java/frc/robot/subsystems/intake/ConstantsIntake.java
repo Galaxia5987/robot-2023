@@ -6,6 +6,8 @@ public class ConstantsIntake {
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double INTAKE_OPENED_POSITION = 0;
-    public static final double INTAKE_CLOSED_POSITION = 0;
+
+    public static final double ANGLE_UP = 0;
+    public static final double ANGLE_DOWN = 0;
+
 }

@@ -2,6 +2,7 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commandGroups.UpperScoring;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
@@ -24,7 +25,8 @@ public class AutonomousPaths {
 
     protected CommandBase placeUpperCone11FollowPathAndPickUpCube(String path) {
         return new SequentialCommandGroup(
-
+                new UpperScoring(),
+                FollowPath.loadTrajectory(".pathplanner/1n11b1 blue 1", swerveDrive)
         );
     }
 }

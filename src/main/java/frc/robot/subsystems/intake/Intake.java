@@ -10,7 +10,7 @@ import frc.robot.utils.units.UnitModel;
 
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private static Intake INSTANCE;
-    private final CANSparkMax motor = new CANSparkMax(Ports.Intake.MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax motor = new CANSparkMax(Ports.Intake.INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final SparkMaxPIDController pidController = angleMotor.getPIDController();
     private final RelativeEncoder encoder = angleMotor.getEncoder();

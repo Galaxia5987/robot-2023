@@ -1,9 +1,8 @@
-package frc.robot.commandgroups.bits;
+package frc.robot.commandGroups.bits;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 
 import java.util.Arrays;

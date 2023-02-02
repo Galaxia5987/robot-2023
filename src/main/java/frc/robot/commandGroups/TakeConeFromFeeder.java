@@ -12,12 +12,14 @@ import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
 
 public class TakeConeFromFeeder extends SequentialCommandGroup {
-    private final Gripper gripper = Gripper.getInstance();
-    private final Arm arm = Arm.getInstance();
 
     public TakeConeFromFeeder() {
+        SwerveDrive swerveDrive = SwerveDrive.getInstance();
+        Gripper gripper = Gripper.getInstance();
+        Limelight limelight = Limelight.getInstance();
+        Gyroscope gyroscope = Gyroscope.getInstance();
         addCommands(
-                FollowPath.generatePathToAprilTag(new SwerveDrive(), Limelight.getInstance(), new Gyroscope())
+                FollowPath.generatePathToAprilTag(swerveDrive, limelight, gyroscope)
                         .alongWith(new InstantCommand(gripper::open)),
                 new SetArmsPosition(ArmConstants.FEEDER_POSITION),
                 new InstantCommand(gripper::close),

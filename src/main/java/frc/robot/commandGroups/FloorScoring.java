@@ -10,9 +10,10 @@ import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.vision.VisionConstants;
 
 public class FloorScoring extends SequentialCommandGroup {
-    private final Limelight limelight = Limelight.getInstance();
-    private final Gripper gripper = Gripper.getInstance();
+
     public FloorScoring(){
+        Limelight limelight = Limelight.getInstance();
+        Gripper gripper = Gripper.getInstance();
         addCommands(
                 new ConditionalCommand(
                         new TapeCommandGroup(),
@@ -20,7 +21,7 @@ public class FloorScoring extends SequentialCommandGroup {
                         () -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE
                 ),
                 new SetArmsPosition(ArmConstants.FLOOR_SCORING),
-                new InstantCommand(gripper::open),
+                new InstantCommand(gripper::open, gripper),
                 new SetArmsPosition(ArmConstants.RETRACTED_POSITION)
         );
     }

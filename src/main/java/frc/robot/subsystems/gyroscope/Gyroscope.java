@@ -8,6 +8,7 @@ import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.math.AngleUtil;
 
 public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
+    private static Gyroscope INSTANCE;
     private final AHRS navx;
     private double zeroPitch;
     private double zeroRoll;
@@ -49,6 +50,12 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
         navx.reset();
     }
 
+    public static Gyroscope getInstance(){
+        if (INSTANCE == null){
+            INSTANCE = new Gyroscope();
+        }
+        return INSTANCE;
+    }
     /**
      * Resets the yaw of the navx to the current yaw.
      *

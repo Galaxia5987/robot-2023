@@ -23,6 +23,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
             // Rear right
             new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
+    private static SwerveDrive INSTANCE;
     private final SwerveModule mFrontLeft;
     private final SwerveModule mFrontRight;
     private final SwerveModule mRearLeft;
@@ -86,6 +87,13 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 REAR_RIGHT_ANGLE_INVERTED,
                 REAR_RIGHT_ANGLE_SENSOR_PHASE,
                 REAR_RIGHT_MOTION_MAGIC_CONFIGS);
+    }
+
+    public static SwerveDrive getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new SwerveDrive();
+        }
+        return INSTANCE;
     }
 
     /**

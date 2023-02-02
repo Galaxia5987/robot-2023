@@ -6,11 +6,10 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 
 public class SetElbowAngle extends CommandBase {
-    private final Arm arm;
+    private final Arm arm = Arm.getInstance();
     private final double angle;
 
     public SetElbowAngle(double angle) {
-        this.arm = Arm.getInstance();
         this.angle = angle;
         addRequirements(arm);
     }

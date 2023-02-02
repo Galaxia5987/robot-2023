@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.Arm;
 
 public class RunAllBits extends SequentialCommandGroup {
-    public RunAllBits(Arm arm) {
+    public RunAllBits() {
         addCommands(
                 new CheckIntakeFlow(),
                 new CheckArmPositions(),

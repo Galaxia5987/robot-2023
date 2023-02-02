@@ -54,7 +54,6 @@ public class RobotContainer {
     private void configureDefaultCommands() {
         swerveSubsystem.setDefaultCommand(
                 new HolonomicDrive(
-                        swerveSubsystem,
                         new XboxMap(xboxController)
                 )
         );

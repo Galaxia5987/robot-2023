@@ -171,7 +171,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
      */
     public void vroom() {
         driveMotor.set(ControlMode.PercentOutput, 1);
-        angleMotor.set(ControlMode.PercentOutput, 0.5);
+        angleMotor.set(ControlMode.PercentOutput, 0.2);
     }
 
     /**

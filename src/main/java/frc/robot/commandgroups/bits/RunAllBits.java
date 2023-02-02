@@ -13,7 +13,6 @@ public class RunAllBits extends SequentialCommandGroup {
         addCommands(
                 new CheckIntakeFlow( gripper),
                 new CheckArmPositions(arm),
-                new ZeroPositionSwerve(swerveDrive),
                 new CheckSwerve(swerveDrive)
         );
     }

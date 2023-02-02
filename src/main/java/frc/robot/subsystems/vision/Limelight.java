@@ -21,6 +21,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final IntegerSubscriber tv = table.getIntegerTopic("tv").subscribe(0);
     private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
+    private final IntegerSubscriber getpipe = table.getIntegerTopic("getpipe").subscribe(0); //TODO: check vision pipelines
     private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
 
     private final AprilTagFieldLayout aprilTagFieldLayout;
@@ -49,6 +50,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
             INSTANCE = new Limelight();
         }
         return INSTANCE;
+    }
+
+    public long getPipeline() {
+        return getpipe.get();
     }
 
     /**

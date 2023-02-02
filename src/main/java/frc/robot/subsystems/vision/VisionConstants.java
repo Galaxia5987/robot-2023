@@ -1,6 +1,8 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class VisionConstants {
     public static final double CAMERA_HEIGHT = 0.76; //[m]
@@ -14,11 +16,17 @@ public class VisionConstants {
     // Red april tag targets
     public static final Translation2d TARGET_ADJUST_OFFSET = new Translation2d(1.0, 0);
     public static final Translation2d DOUBLE_SUBSTATION_ADJUST_OFFSET = new Translation2d(1.0, 0);
-    //    public static final Translation2d CUBE_ID1_POSE = CENTER_POSE.plus(new Translation2d(5.8, -2.93659));
-    public static final Translation2d CUBE_ID1_POSE = CENTER_TRANSLATION.plus(new Translation2d(7.24310, -2.93659)).minus(TARGET_ADJUST_OFFSET);
-    public static final Translation2d CUBE_ID2_POSE = CENTER_TRANSLATION.plus(new Translation2d(7.24310, -1.26019)).minus(TARGET_ADJUST_OFFSET);
-    public static final Translation2d CUBE_ID3_POSE = CENTER_TRANSLATION.plus(new Translation2d(7.24310, 0.41621)).minus(TARGET_ADJUST_OFFSET);
-    public static final Translation2d DOUBLE_SUBSTATION_ID4_POSE = CENTER_TRANSLATION.plus(new Translation2d(7.90832, 2.74161)).minus(DOUBLE_SUBSTATION_ADJUST_OFFSET);
+
+    public static final int APRIL_TAG_PIPELINE = 0; //TODO: check real value
+    public static final int REFLECTIVE_TAPE_PIPELINE = 0;
+
+    // Red april tag targets
+//    public static final Translation2d CUBE_ID1_POSE = CENTER_POSE.plus(new Translation2d(5.8, -2.93659));
+    public static final Translation2d CUBE_ID1_POSE = CENTER_POSE.plus(new Translation2d(7.24310, -2.93659)).minus(TARGET_ADJUST_OFFSET);
+    public static final Translation2d CUBE_ID2_POSE = CENTER_POSE.plus(new Translation2d(7.24310, -1.26019)).minus(TARGET_ADJUST_OFFSET);
+    public static final Translation2d CUBE_ID3_POSE = CENTER_POSE.plus(new Translation2d(7.24310, 0.41621)).minus(TARGET_ADJUST_OFFSET);
+    public static final Translation2d DOUBLE_SUBSTATION_ID4_POSE = CENTER_POSE.plus(new Translation2d(7.90832, 2.74161)).minus(DOUBLE_SUBSTATION_ADJUST_OFFSET);
+
     // Blue april tag targets
     public static final Translation2d CUBE_ID5_POSE = CENTER_TRANSLATION.plus(new Translation2d(-7.24310, 2.93659)).plus(TARGET_ADJUST_OFFSET);
     public static final Translation2d CUBE_ID6_POSE = CENTER_TRANSLATION.plus(new Translation2d(-7.24310, 1.26019)).plus(TARGET_ADJUST_OFFSET);

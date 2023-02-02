@@ -8,12 +8,11 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import java.util.Arrays;
 
 public class ZeroPositionSwerve extends CommandBase {
-    private final SwerveDrive swerve;
+    private final SwerveDrive swerve = SwerveDrive.getInstance();
     private final Timer timer = new Timer();
     private final SwerveModuleState[] zeroStates = new SwerveModuleState[4];
 
-    public ZeroPositionSwerve(SwerveDrive swerve) {
-        this.swerve = swerve;
+    public ZeroPositionSwerve() {
         addRequirements(swerve);
     }
 

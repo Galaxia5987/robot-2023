@@ -9,8 +9,8 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 
 public class BalanceOnStation extends CommandBase {
-    private final SwerveDrive swerveDrive;
-    private final Gyroscope gyroscope;
+    private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
+    private final Gyroscope gyroscope = Gyroscope.getInstance();
 
     private final ProfiledPIDController controller = new ProfiledPIDController(
             SwerveConstants.CHARGING_STATION_BALANCE_Kp,
@@ -19,10 +19,8 @@ public class BalanceOnStation extends CommandBase {
             SwerveConstants.CHARGING_STATION_BALANCE_CONSTRAINTS
     );
 
-    public BalanceOnStation(SwerveDrive swerveDrive, Gyroscope gyroscope) {
-        this.swerveDrive = swerveDrive;
-        this.gyroscope = gyroscope;
-        addRequirements(swerveDrive);
+    public BalanceOnStation() {
+        addRequirements(swerveDrive, gyroscope);
     }
 
     @Override

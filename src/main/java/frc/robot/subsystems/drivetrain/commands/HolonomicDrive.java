@@ -9,7 +9,7 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.utils.ui.ButtonMap;
 
 public class HolonomicDrive extends CommandBase {
-    private final SwerveDrive swerveDrive;
+    private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final ButtonMap buttonMap;
 
     private final SlewRateLimiter forwardLimiter = new SlewRateLimiter(SwerveConstants.XY_SLEW_RATE_LIMIT);
@@ -17,8 +17,7 @@ public class HolonomicDrive extends CommandBase {
     private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(SwerveConstants.ROTATION_SLEW_RATE_LIMIT);
     private final DriveSignal signal = new DriveSignal(0, 0, 0, new Translation2d(), true);
 
-    public HolonomicDrive(SwerveDrive swerveDrive, ButtonMap buttonMap) {
-        this.swerveDrive = swerveDrive;
+    public HolonomicDrive(ButtonMap buttonMap) {
         this.buttonMap = buttonMap;
         addRequirements(swerveDrive);
     }

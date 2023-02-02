@@ -14,17 +14,14 @@ import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
 
 public class AdjustToTape extends CommandBase {
-    private final SwerveDrive swerveDrive;
-    private final Gyroscope gyroscope;
-    private final Limelight limelight;
+    private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
+    private final Gyroscope gyroscope = Gyroscope.getInstance();
+    private final Limelight limelight = Limelight.getInstance();
     private final PIDController yController;
     private final ProfiledPIDController rotationController;
     private ChassisSpeeds lastSpeeds = new ChassisSpeeds();
 
-    public AdjustToTape(SwerveDrive swerveDrive, Gyroscope gyroscope, Limelight limelight) {
-        this.swerveDrive = swerveDrive;
-        this.gyroscope = gyroscope;
-        this.limelight = limelight;
+    public AdjustToTape() {
         yController = new PIDController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd);
         rotationController = new ProfiledPIDController(
                 SwerveConstants.TARGET_ROTATION_Kp,

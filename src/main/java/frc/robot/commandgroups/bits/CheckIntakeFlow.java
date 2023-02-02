@@ -10,17 +10,15 @@ import frc.robot.subsystems.intake.Intake;
 
 public class CheckIntakeFlow extends SequentialCommandGroup {
     public CheckIntakeFlow() {
-        Intake intake = Intake.getInstance();
-        BeamBreaker beamBreaker = BeamBreaker.getInstance();
         Gripper gripper = Gripper.getInstance();
         addCommands(
-                new Feed(0.5, intake, beamBreaker).withTimeout(3),
+                new Feed(0.5).withTimeout(3),
                 new WaitCommand(1),
-                new Feed(0.5, intake, beamBreaker).withTimeout(3),
+                new Feed(0.5).withTimeout(3),
                 new WaitCommand(1),
-                new Feed(0.5, intake, beamBreaker).withTimeout(3),
+                new Feed(0.5).withTimeout(3),
                 new WaitCommand(1),
-                new Feed(0.5, intake, beamBreaker).withTimeout(3),
+                new Feed(0.5).withTimeout(3),
                 new WaitCommand(1),
                 new InstantCommand(gripper::open, gripper),
                 new WaitCommand(1),

@@ -5,7 +5,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 
 public class RunAllBits extends SequentialCommandGroup {
-    public RunAllBits(Arm arm) {
+    public RunAllBits() {
         addCommands(
                 new CheckIntakeFlow(),
                 new CheckArmPositions(),

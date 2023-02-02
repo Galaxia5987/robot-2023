@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class SetArmsPosition extends CommandBase {
-    private final Arm arm;
+    private final Arm arm = Arm.getInstance();
     private final Supplier<Translation2d> position;
 
     public SetArmsPosition(Translation2d position) {
@@ -18,7 +18,6 @@ public class SetArmsPosition extends CommandBase {
     }
 
     public SetArmsPosition(Supplier<Translation2d> position) {
-        this.arm = Arm.getInstance();
         this.position = position;
         addRequirements(arm);
     }

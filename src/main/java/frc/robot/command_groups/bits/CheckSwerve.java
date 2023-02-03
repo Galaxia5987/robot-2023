@@ -1,4 +1,4 @@
-package frc.robot.commandGroups.bits;
+package frc.robot.command_groups.bits;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;

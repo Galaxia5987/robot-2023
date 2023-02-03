@@ -1,8 +1,6 @@
-package frc.robot.commandGroups.bits;
+package frc.robot.command_groups.bits;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.drivetrain.SwerveDrive;
 
 public class RunAllBits extends SequentialCommandGroup {
     public RunAllBits() {

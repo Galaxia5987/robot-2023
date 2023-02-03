@@ -1,4 +1,4 @@
-package frc.robot.commandGroups;
+package frc.robot.command_groups;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -9,9 +9,9 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.vision.VisionConstants;
 
-public class MidScoring extends SequentialCommandGroup {
+public class FloorScoring extends SequentialCommandGroup {
 
-    public MidScoring(){
+    public FloorScoring(){
         Limelight limelight = Limelight.getInstance();
         Gripper gripper = Gripper.getInstance();
         addCommands(
@@ -20,8 +20,8 @@ public class MidScoring extends SequentialCommandGroup {
                         new AprilTagCommandGroup(),
                         () -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE
                 ),
-                new SetArmsPosition(() -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE ? ArmConstants.MIDDLE_CONE_SCORING : ArmConstants.MIDDLE_CUBE_SCORING),
-                new InstantCommand(gripper::open),
+                new SetArmsPosition(ArmConstants.FLOOR_SCORING),
+                new InstantCommand(gripper::open, gripper),
                 new SetArmsPosition(ArmConstants.RETRACTED_POSITION)
         );
     }

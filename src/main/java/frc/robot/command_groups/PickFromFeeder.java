@@ -1,4 +1,4 @@
-package frc.robot.commandGroups;
+package frc.robot.command_groups;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;

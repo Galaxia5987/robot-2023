@@ -5,11 +5,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 
 public class ArmXboxControl extends CommandBase {
-    private final Arm arm;
+    private final Arm arm = Arm.getInstance();
     private final XboxController xboxController;
 
     public ArmXboxControl(XboxController xboxController) {
-        this.arm = Arm.getInstance();
         this.xboxController = xboxController;
         addRequirements(arm);
     }

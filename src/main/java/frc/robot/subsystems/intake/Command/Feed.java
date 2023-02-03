@@ -6,13 +6,11 @@ import frc.robot.subsystems.intake.ConstantsIntake;
 import frc.robot.subsystems.intake.Intake;
 
 public class Feed extends CommandBase {
-    private final Intake intake;
-    private final BeamBreaker beamBreaker;
+    private final Intake intake = Intake.getInstance();
+    private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
     private final double power;
 
-    public Feed(double power, Intake intake, BeamBreaker beamBreaker) {
-        this.intake = intake;
-        this.beamBreaker = beamBreaker;
+    public Feed(double power) {
         this.power = power;
         addRequirements(intake);
     }
@@ -22,7 +20,7 @@ public class Feed extends CommandBase {
      */
     @Override
     public void initialize() {
-        intake.setAngle(ConstantsIntake.INTAKE_OPENED_POSITION);
+        intake.setAngle(ConstantsIntake.ANGLE_DOWN);
     }
 
     /**
@@ -33,6 +31,7 @@ public class Feed extends CommandBase {
         intake.setPower(power);
     }
 
+
     @Override
     public boolean isFinished() {
         return beamBreaker.isBeamBlocked();
@@ -40,7 +39,7 @@ public class Feed extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        intake.setAngle(ConstantsIntake.INTAKE_CLOSED_POSITION);
+        intake.setAngle(ConstantsIntake.ANGLE_UP);
         intake.setPower(0);
     }
 }

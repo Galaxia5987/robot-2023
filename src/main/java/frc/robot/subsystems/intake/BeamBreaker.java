@@ -14,7 +14,7 @@ public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
     }
 
     public static BeamBreaker getInstance() {
-        if (INSTANCE == null) {
+        if(INSTANCE == null){
             INSTANCE = new BeamBreaker(new BeamBreakerLoggedInputs());
         }
         return INSTANCE;

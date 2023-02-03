@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
-    public static Limelight INSTANCE = null;
+     private static Limelight INSTANCE = null;
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
@@ -21,6 +21,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final IntegerSubscriber tv = table.getIntegerTopic("tv").subscribe(0);
     private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
+    private final IntegerSubscriber getpipe = table.getIntegerTopic("getpipe").subscribe(0); //TODO: check vision pipelines
     private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
 
     private final AprilTagFieldLayout aprilTagFieldLayout;
@@ -49,6 +50,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
             INSTANCE = new Limelight();
         }
         return INSTANCE;
+    }
+
+    public long getPipeline() {
+        return getpipe.get();
     }
 
     /**

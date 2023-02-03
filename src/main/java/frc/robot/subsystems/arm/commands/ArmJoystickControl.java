@@ -5,12 +5,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 
 public class ArmJoystickControl extends CommandBase {
-    private final Arm arm;
+    private final Arm arm = Arm.getInstance();
     private final Joystick shoulderJoystick;
     private final Joystick elbowJoystick;
 
     public ArmJoystickControl(Joystick shoulderJoystick, Joystick elbowJoystick) {
-        this.arm = Arm.getInstance();
         this.shoulderJoystick = shoulderJoystick;
         this.elbowJoystick = elbowJoystick;
         addRequirements(arm);

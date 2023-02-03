@@ -13,13 +13,13 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
-     private static Limelight INSTANCE = null;
+    private static Limelight INSTANCE = null;
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
     private final DoubleSubscriber ty = table.getDoubleTopic("ty").subscribe(0.0);
     private final IntegerSubscriber tv = table.getIntegerTopic("tv").subscribe(0);
-    private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
+    private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0); // TODO: Check this value
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
     private final IntegerSubscriber getpipe = table.getIntegerTopic("getpipe").subscribe(0); //TODO: check vision pipelines
     private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
@@ -36,7 +36,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
                     AprilTagFields.k2023ChargedUp.m_resourceFile
             );
         } catch (Throwable t) {
-            throw new RuntimeException();
+            throw new RuntimeException(t);
         }
     }
 
@@ -72,7 +72,6 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return tid.get();
     }
 
-
     /**
      * @return pitch from camera to target
      */
@@ -89,7 +88,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         }
         double totalPitch = VisionConstants.CAMERA_PITCH + getPitch().getRadians();
         double error = VisionConstants.CAMERA_HEIGHT - targetHeight;
-        return OptionalDouble.of(Math.abs(error * Math.tan(totalPitch)));
+        return OptionalDouble.of(Math.abs(error / Math.tan(totalPitch)));
     }
 
     /**
@@ -157,7 +156,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     public Optional<Pose2d> getBotPose() {
-        int id = (int) getTagId();
+        long id = getTagId();
         if (id > 0 && id < 9) {
             return Optional.of(
                     VisionConstants.CENTER_POSE.plus(
@@ -184,12 +183,13 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * Updates the limelight log inputs.
      */
+    @Override
     public void updateInputs() {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value.getDegrees());
         loggerInputs.tagId = getTagId();
-        getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
-        getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.highTargetDistance = value);
+        getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.lowTargetDistance = value);
         getAprilTagTarget().ifPresent((value) -> loggerInputs.aprilTagTarget = value);
     }
 }

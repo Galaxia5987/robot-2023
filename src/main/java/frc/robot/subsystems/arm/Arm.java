@@ -233,8 +233,6 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         loggerInputs.elbowMotorPower = elbowMainMotor.getMotorOutputPercent();
         loggerInputs.shoulderSetpoint = shoulderSetpoint;
         loggerInputs.shoulderSetpoint = elbowSetpoint;
-        loggerInputs.shoulderMotorOffset = 90;
-        loggerInputs.elbowMotorOffset = 180;
         loggerInputs.shoulderEncoderPosition = shoulderEncoder.getPosition();
         loggerInputs.elbowEncoderPosition = elbowEncoder.getPosition();
     }

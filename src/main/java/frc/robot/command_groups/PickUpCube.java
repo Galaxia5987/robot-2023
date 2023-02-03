@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.commands.SetArmsPosition;
 import frc.robot.subsystems.gripper.Gripper;
-import frc.robot.subsystems.intake.Command.Feed;
+import frc.robot.subsystems.intake.commands.Feed;
 
 public class PickUpCube extends SequentialCommandGroup {
 

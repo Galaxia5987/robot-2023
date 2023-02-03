@@ -121,7 +121,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.of(new Pose2d(translation2d, robotAngle));
     }
 
-    public Optional<Pose2d> getAprilTagTarget() {
+    public Optional<Pose2d> getAprilTagTarget(boolean rightSide, boolean useHorizontalOffset) {
         int id = (int) getTagId();
         var pose3d = aprilTagFieldLayout.getTagPose(id);
         if (pose3d.isPresent()) {
@@ -131,12 +131,22 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
             if (id < 5) {
                 if (id == 4) {
                     withOffset = pose2d.getTranslation().minus(VisionConstants.DOUBLE_SUBSTATION_ADJUST_OFFSET);
+                    if (rightSide && useHorizontalOffset) {
+                        withOffset = withOffset.plus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    } else if (useHorizontalOffset) {
+                        withOffset = withOffset.minus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    }
                 } else {
                     withOffset = pose2d.getTranslation().minus(VisionConstants.TARGET_ADJUST_OFFSET);
                 }
             } else {
                 if (id == 8) {
                     withOffset = pose2d.getTranslation().plus(VisionConstants.DOUBLE_SUBSTATION_ADJUST_OFFSET);
+                    if (rightSide && useHorizontalOffset) {
+                        withOffset = withOffset.plus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    } else if (useHorizontalOffset) {
+                        withOffset = withOffset.minus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    }
                 } else {
                     withOffset = pose2d.getTranslation().plus(VisionConstants.TARGET_ADJUST_OFFSET);
                 }
@@ -145,6 +155,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
             return Optional.of(new Pose2d(withOffset, pose2d.getRotation().plus(Rotation2d.fromDegrees(180))));
         }
         return Optional.empty();
+    }
+
+    public Optional<Pose2d> getAprilTagTarget() {
+        return getAprilTagTarget(true, false);
     }
 
     public Optional<Pose2d> getAprilTagTarget(DriverStation.Alliance alliance) {

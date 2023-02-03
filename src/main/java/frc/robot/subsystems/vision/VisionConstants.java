@@ -19,6 +19,7 @@ public class VisionConstants {
     // Red april tag targets
     public static final Translation2d TARGET_ADJUST_OFFSET = new Translation2d(1.0, 0);
     public static final Translation2d DOUBLE_SUBSTATION_ADJUST_OFFSET = new Translation2d(1.0, 0);
+    public static final Translation2d DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET = new Translation2d(1.0, 0);
 
     // Red april tag targets
 //    public static final Translation2d CUBE_ID1_POSE = CENTER_POSE.plus(new Translation2d(5.8, -2.93659));

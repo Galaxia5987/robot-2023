@@ -260,9 +260,9 @@ public class FollowPath extends CommandBase {
         FollowPath.logError = logError;
     }
 
-    public static Command generatePathToAprilTag(SwerveDrive swerveDrive, Limelight limelight, Gyroscope gyroscope) {
+    public static Command generatePathToAprilTag(SwerveDrive swerveDrive, Limelight limelight, Gyroscope gyroscope, boolean rightSide, boolean useHorizontalOffset) {
         PathPlannerTrajectory trajectory;
-        var aprilTag = limelight.getAprilTagTarget();
+        var aprilTag = limelight.getAprilTagTarget(rightSide, useHorizontalOffset);
         var botPose = limelight.getBotPose();
         var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
 

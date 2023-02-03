@@ -13,7 +13,7 @@ public class MidScoring extends SequentialCommandGroup {
         Limelight limelight = Limelight.getInstance();
         Gripper gripper = Gripper.getInstance();
         addCommands(
-                new AdjustToTarget(),
+                new AdjustToTarget(true, false),
                 new SetArmsPosition(() -> limelight.getPipeline() == Limelight.Pipeline.REFLECTIVE_TAPE_PIPELINE ?
                         ArmConstants.MIDDLE_CONE_SCORING :
                         ArmConstants.MIDDLE_CUBE_SCORING),

@@ -14,7 +14,7 @@ public class FloorScoring extends SequentialCommandGroup {
     public FloorScoring(){
         Gripper gripper = Gripper.getInstance();
         addCommands(
-                new AdjustToTarget(),
+                new AdjustToTarget(true, false),
                 new SetArmsPosition(ArmConstants.FLOOR_SCORING),
                 new InstantCommand(gripper::open, gripper),
                 new SetArmsPosition(ArmConstants.RETRACTED_POSITION)

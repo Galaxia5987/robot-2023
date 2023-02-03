@@ -8,12 +8,12 @@ import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
 
 public class AdjustToAprilTag extends SequentialCommandGroup {
-    public AdjustToAprilTag() {
+    public AdjustToAprilTag(boolean rightSide, boolean useHorizontalOffset) {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Limelight limelight = Limelight.getInstance();
         Gyroscope gyroscope = Gyroscope.getInstance();
         addCommands(
-                new ProxyCommand(() -> FollowPath.generatePathToAprilTag(swerveDrive, limelight, gyroscope))
+                new ProxyCommand(() -> FollowPath.generatePathToAprilTag(swerveDrive, limelight, gyroscope, rightSide, useHorizontalOffset))
         );
     }
 }

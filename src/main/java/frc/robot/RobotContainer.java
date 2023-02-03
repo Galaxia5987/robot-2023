@@ -69,7 +69,7 @@ public class RobotContainer {
 //        rightTrigger.whileTrue(new ProxyCommand(() -> teleopTargetAdjustCommand));
 //        leftTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
         a.onTrue(new InstantCommand(() -> teleopTargetAdjustCommand = FollowPath.generatePathToAprilTag(
-                swerveSubsystem, limelight, gyroscope
+                swerveSubsystem, limelight, gyroscope, true, false
         )));
         a.whileTrue(new ProxyCommand(() -> teleopTargetAdjustCommand));
         rb.onTrue(new InstantCommand(gyroscope::resetYaw));

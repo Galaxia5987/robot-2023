@@ -5,13 +5,13 @@ import frc.robot.subsystems.vision.Limelight;
 
 public class AdjustToTarget extends SequentialCommandGroup {
 
-    public AdjustToTarget() {
+    public AdjustToTarget(boolean rightSide, boolean useHorizontalOffset) {
         var limelight = Limelight.getInstance();
 
         addCommands(
                 new ConditionalCommand(
                         new AdjustToTape(),
-                        new AdjustToAprilTag(),
+                        new AdjustToAprilTag(rightSide, useHorizontalOffset),
                         () -> limelight.getPipeline() == Limelight.Pipeline.REFLECTIVE_TAPE_PIPELINE
                 )
         );

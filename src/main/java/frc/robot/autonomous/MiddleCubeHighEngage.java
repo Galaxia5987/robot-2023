@@ -5,16 +5,16 @@ import frc.robot.commandGroups.UpperScoring;
 import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 
 /**
- * This class contains al the parts for the path 2nb2g.
+ * This class contains al the parts for the path MiddleCubeHighEngage.
  *
  * In this path the robot places a cube in the middle grid
  * in the upper part and goes to the charge station.
  */
-public class Path2b2gBlue extends SequentialCommandGroup {
-    public Path2b2gBlue() {
+public class MiddleCubeHighEngage extends SequentialCommandGroup {
+    public MiddleCubeHighEngage() {
         addCommands(
                 new UpperScoring(),
-                FollowPath.loadTrajectory(".pathplanne/2nb2g blue"),
+                FollowPath.loadTrajectory(".pathplanne/MiddleCubeHighEngage blue"),
                 new BalanceOnStation()
         );
     }

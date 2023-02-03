@@ -10,4 +10,6 @@ public class ConstantsIntake {
     public static final double ANGLE_UP = 0;
     public static final double ANGLE_DOWN = 0;
 
+    public static final double INTAKE_POWER = 0;
+
 }

@@ -20,8 +20,6 @@ import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 
 public class RobotContainer {
-//    private static final Leds led = Leds.getInstance();
-//    private static final Arm arm = Arm.getInstance();
     public static Gyroscope gyroscope = new Gyroscope();
     public static SwerveDrive swerveSubsystem = new SwerveDrive();
     private static RobotContainer INSTANCE = null;

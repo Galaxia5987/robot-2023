@@ -13,6 +13,7 @@ public class Leds extends SubsystemBase {
     private final Color Purple = new Color(51, 1, 176);
     public AddressableLED leds = new AddressableLED(Ports.Leds.LED);
     public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(Constants.LED_LENGTH);
+
     public Leds() {
         leds.setLength(ledBuffer.getLength());
     }

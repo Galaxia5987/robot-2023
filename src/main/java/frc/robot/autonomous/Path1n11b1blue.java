@@ -9,7 +9,13 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.intake.ConstantsIntake;
 
-public class Path1n11b1blue extends AutonomousPaths{
+/**
+ * This class contains all parts of the path 1n11b1.
+ *
+ * In this path the robot places a cone in the grid that is closest to the feeder,
+ * goes to take a cube (the one closest to the feeder) and returns to place it.
+ */
+public class Path1n11b1blue {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
 
     public CommandBase placeUpperCone11FollowPathAndPickUpCube() {

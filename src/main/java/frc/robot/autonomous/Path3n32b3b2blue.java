@@ -8,9 +8,17 @@ import frc.robot.commandGroups.UpperScoring;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.intake.ConstantsIntake;
-import org.ejml.dense.row.CommonOps_MT_DDRM;
 
-public class Path3n32b3b2blue extends AutonomousPaths{
+/**
+ * This class contains all the parts to the path 3n32b3b2.
+ *
+ * In this path the robot places a cone in the grid that is the furthest away from the feeder,
+ * goes to pick up a cube (the one that's furthest from the feeder),
+ * returns to place it in the same grid,
+ * goes to pick up a second cube (the one next to the last one)
+ * and goes to place it in the middle grid.
+ */
+public class Path3n32b3b2blue {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
 
     public CommandBase placeUpperCone32FollowPathAndPickUpCube() {

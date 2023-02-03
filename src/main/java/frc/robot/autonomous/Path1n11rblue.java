@@ -6,7 +6,13 @@ import frc.robot.commandGroups.MiddleScoring;
 import frc.robot.commandGroups.UpperScoring;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 
-public class Path1n11rblue extends AutonomousPaths{
+/**
+ * This class contains all the parts of the path 1n11r.
+ *
+ * In this path the robot places a cone in the grid that is closest to the feeder
+ * and goes to park in the opposite alliance's loading zone.
+ */
+public class Path1n11rblue {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
 
     public CommandBase placeUpperCone11AndRun() {

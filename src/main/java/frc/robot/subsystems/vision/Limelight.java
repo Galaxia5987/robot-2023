@@ -188,8 +188,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value.getDegrees());
         loggerInputs.tagId = getTagId();
-        getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
-        getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.highTargetDistance = value);
+        getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.lowTargetDistance = value);
         getAprilTagTarget().ifPresent((value) -> loggerInputs.aprilTagTarget = value);
     }
 

@@ -3,6 +3,7 @@ package frc.robot.commandGroups;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.SetArmsPosition;
 import frc.robot.subsystems.gripper.Gripper;
@@ -21,7 +22,9 @@ public class UpperScoring extends SequentialCommandGroup {
                         () -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE
                 ),
                 new SetArmsPosition(() -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE ? ArmConstants.UPPER_CONE_SCORING : ArmConstants.UPPER_CUBE_SCORING),
+                new WaitCommand(3),
                 new InstantCommand(gripper::open),
+                new WaitCommand(3),
                 new SetArmsPosition(ArmConstants.RETRACTED_POSITION)
         );
     }

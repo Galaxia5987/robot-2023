@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
 
 import static frc.robot.Ports.SwerveDrive.*;
@@ -225,7 +226,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearRight.getPosition()
         };
 
-        mOdometry.update(RobotContainer.gyroscope.getYaw(), swerveModulePositions);
+        mOdometry.update(Gyroscope.getInstance().getYaw(), swerveModulePositions);
 
         SmartDashboard.putString("Encoder Positions", "{" +
                 mFrontLeft.getEncoderTicks() + ", " +

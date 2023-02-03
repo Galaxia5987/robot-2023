@@ -55,7 +55,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.FL.number],
                 FRONT_LEFT_DRIVE_INVERTED,
                 FRONT_LEFT_ANGLE_INVERTED,
-                FRONT_LEFT_ANGLE_SENSOR_PHASE,
                 FRONT_LEFT_MOTION_MAGIC_CONFIGS);
         mFrontRight = new SwerveModule(
                 Module.FR,
@@ -65,7 +64,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.FR.number],
                 FRONT_RIGHT_DRIVE_INVERTED,
                 FRONT_RIGHT_ANGLE_INVERTED,
-                FRONT_RIGHT_ANGLE_SENSOR_PHASE,
                 FRONT_RIGHT_MOTION_MAGIC_CONFIGS);
         mRearLeft = new SwerveModule(
                 Module.RL,
@@ -75,7 +73,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.RL.number],
                 REAR_LEFT_DRIVE_INVERTED,
                 REAR_LEFT_ANGLE_INVERTED,
-                REAR_LEFT_ANGLE_SENSOR_PHASE,
                 REAR_LEFT_MOTION_MAGIC_CONFIGS);
         mRearRight = new SwerveModule(
                 Module.RR,
@@ -85,7 +82,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.RR.number],
                 REAR_RIGHT_DRIVE_INVERTED,
                 REAR_RIGHT_ANGLE_INVERTED,
-                REAR_RIGHT_ANGLE_SENSOR_PHASE,
                 REAR_RIGHT_MOTION_MAGIC_CONFIGS);
     }
 

@@ -11,12 +11,12 @@ import frc.robot.subsystems.leds.Leds;
 
 
 public class PickFromFeeder extends SequentialCommandGroup {
-    public PickFromFeeder(boolean cone) {
+    public PickFromFeeder(boolean cone, boolean rightSide) {
         Gripper gripper = Gripper.getInstance();
         Leds leds = Leds.getInstance();
         addCommands(
                 new InstantCommand(cone ? leds::setYellow : leds::setPurple, leds),
-                new InstantCommand(gripper::open, gripper),
+                new AdjustToTarget(rightSide, true).alongWith(new InstantCommand(gripper::open, gripper)),
                 new SetArmsPosition(ArmConstants.FEEDER_POSITION),
                 new InstantCommand(gripper::close, gripper),
                 new SetArmsPosition(ArmConstants.ABOVE_GAME_PIECE)

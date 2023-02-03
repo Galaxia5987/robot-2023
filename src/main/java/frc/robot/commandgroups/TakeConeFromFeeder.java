@@ -12,7 +12,7 @@ public class TakeConeFromFeeder extends SequentialCommandGroup {
     public TakeConeFromFeeder(boolean rightSide) {
         Gripper gripper = Gripper.getInstance();
         addCommands(
-                new AdjustToAprilTag(rightSide, true)
+                new AdjustToTarget(rightSide, true)
                         .alongWith(new InstantCommand(gripper::open)),
                 new SetArmsPosition(ArmConstants.FEEDER_POSITION),
                 new InstantCommand(gripper::close),

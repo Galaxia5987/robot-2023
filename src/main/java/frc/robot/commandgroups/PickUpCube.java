@@ -12,7 +12,7 @@ import frc.robot.subsystems.leds.Leds;
 
 public class PickUpCube extends SequentialCommandGroup {
 
-    public PickUpCube(boolean cone) {
+    public PickUpCube(boolean cone, boolean rightSide) {
         Gripper gripper = Gripper.getInstance();
         Leds leds = Leds.getInstance();
 
@@ -20,7 +20,7 @@ public class PickUpCube extends SequentialCommandGroup {
                 new InstantCommand(cone ? leds::setYellow : leds::setPurple, leds),
                 new Feed(ConstantsIntake.INTAKE_POWER),
                 new InstantCommand(gripper::open, gripper),
-                new SetArmsPosition(ArmConstants.FEEDER_POSITION),
+                new SetArmsPosition(ArmConstants.ABOVE_GAME_PIECE),
                 new InstantCommand(gripper::close, gripper)
         );
     }

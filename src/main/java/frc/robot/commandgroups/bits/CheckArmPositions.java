@@ -14,6 +14,6 @@ public class CheckArmPositions extends SequentialCommandGroup {
         new WaitCommand(1);
         new SetArmsPosition(new Translation2d(0, 0));
         new WaitCommand(1);
-        new SetArmsPosition(ArmConstants.ARM_DEFAULT_POSITION);
+        new SetArmsPosition(ArmConstants.ABOVE_GAME_PIECE);
     }
 }

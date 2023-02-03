@@ -21,11 +21,11 @@ public class RightConeCubeHighMiddleCubeHigh extends SequentialCommandGroup {
         addCommands(
                 new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 1"),
-                new PickUpCube(ConstantsIntake.INTAKE_POWER, ArmConstants.ABOVE_GAME_PIECE),
+                new PickUpCube(),
                 FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 2"),
                 new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 3"),
-                new PickUpCube(ConstantsIntake.INTAKE_POWER, ArmConstants.ABOVE_GAME_PIECE),
+                new PickUpCube(),
                 FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 4"),
                 new UpperScoring()
         );

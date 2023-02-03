@@ -18,7 +18,7 @@ public class LeftConeCubeHigh extends SequentialCommandGroup {
         addCommands(
                 new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanner/LeftConeCubeHigh blue 1"),
-                new PickUpCube(ConstantsIntake.INTAKE_POWER, ArmConstants.ABOVE_GAME_PIECE),
+                new PickUpCube(),
                 FollowPath.loadTrajectory(".pathplanner/LeftConeCubeHigh blue 2"),
                 new UpperScoring()
         );

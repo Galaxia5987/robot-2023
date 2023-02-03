@@ -16,11 +16,12 @@ import frc.robot.subsystems.intake.ConstantsIntake;
  * and places it in the middle part of the same grid.
  */
 public class LeftCubeHighCubeLow extends SequentialCommandGroup {
+
     public LeftCubeHighCubeLow() {
         addCommands(
                 new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanner/LeftCubeHighCubeLow blue 1"),
-                new PickUpCube(ConstantsIntake.INTAKE_POWER, ArmConstants.ABOVE_GAME_PIECE),
+                new PickUpCube(),
                 FollowPath.loadTrajectory(".pathplanner/LeftCubeHighCubeLow blue 2"),
                 new MiddleScoring()
         );

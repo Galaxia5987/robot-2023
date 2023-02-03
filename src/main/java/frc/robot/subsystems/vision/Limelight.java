@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 
 public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
-     private static Limelight INSTANCE = null;
+    private static Limelight INSTANCE = null;
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
@@ -36,7 +36,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
                     AprilTagFields.k2023ChargedUp.m_resourceFile
             );
         } catch (Throwable t) {
-            throw new RuntimeException();
+            throw new RuntimeException(t);
         }
     }
 
@@ -52,8 +52,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return INSTANCE;
     }
 
-    public long getPipeline() {
-        return getpipe.get();
+    public Pipeline getPipeline() {
+        return Pipeline.fromIndex((int) getpipe.get());
     }
 
     /**
@@ -157,7 +157,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     public Optional<Pose2d> getBotPose() {
-        int id = (int) getTagId();
+        long id = getTagId();
         if (id > 0 && id < 9) {
             return Optional.of(
                     VisionConstants.CENTER_POSE.plus(
@@ -191,5 +191,23 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
         getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
         getAprilTagTarget().ifPresent((value) -> loggerInputs.aprilTagTarget = value);
+    }
+
+    public enum Pipeline {
+        APRIL_TAG_PIPELINE(0),
+        REFLECTIVE_TAPE_PIPELINE(1);
+
+        public final int index;
+
+        Pipeline(int index) {
+            this.index = index;
+        }
+
+        public static Pipeline fromIndex(int index) {
+            if (index == REFLECTIVE_TAPE_PIPELINE.index) {
+                return REFLECTIVE_TAPE_PIPELINE;
+            }
+            return APRIL_TAG_PIPELINE;
+        }
     }
 }

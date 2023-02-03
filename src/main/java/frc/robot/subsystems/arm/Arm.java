@@ -191,8 +191,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     public void resetArmEncoders() {
-        shoulderEncoder.setPosition(90);
-        elbowEncoder.setPosition(180); //TODO: check this value
+        shoulderEncoder.setPosition(ArmConstants.SHOULDER_ZERO_POSITION);
+        elbowEncoder.setPosition(ArmConstants.ELBOW_ZERO_POSITION);
     }
 
     /**

@@ -32,6 +32,8 @@ public class ArmConstants { //TODO: find all constant values
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d();
     public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d();
     public static final Translation2d FLOOR_SCORING = new Translation2d();
+    public static final double ELBOW_ZERO_POSITION = 180; //[degrees] TODO: check real values
+    public static final double SHOULDER_ZERO_POSITION = 90; //[degrees]
 
     //shoulder physics
     public static final double SHOULDER_GEARING = 0; // Arbitrary units

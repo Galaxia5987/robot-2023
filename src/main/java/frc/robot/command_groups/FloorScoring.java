@@ -12,14 +12,9 @@ import frc.robot.subsystems.vision.VisionConstants;
 public class FloorScoring extends SequentialCommandGroup {
 
     public FloorScoring(){
-        Limelight limelight = Limelight.getInstance();
         Gripper gripper = Gripper.getInstance();
         addCommands(
-                new ConditionalCommand(
-                        new TapeCommandGroup(),
-                        new AprilTagCommandGroup(),
-                        () -> limelight.getPipeline() == VisionConstants.REFLECTIVE_TAPE_PIPELINE
-                ),
+                new AdjustToTarget(true, false),
                 new SetArmsPosition(ArmConstants.FLOOR_SCORING),
                 new InstantCommand(gripper::open, gripper),
                 new SetArmsPosition(ArmConstants.RETRACTED_POSITION)

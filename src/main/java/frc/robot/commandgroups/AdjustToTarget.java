@@ -1,4 +1,4 @@
-package frc.robot.command_groups;
+package frc.robot.commandgroups;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.vision.Limelight;

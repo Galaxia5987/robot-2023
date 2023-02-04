@@ -1,4 +1,4 @@
-package frc.robot.command_groups;
+package frc.robot.commandgroups;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;

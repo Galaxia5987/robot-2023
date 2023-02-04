@@ -1,11 +1,11 @@
 package frc.robot.autonomous.paths;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.command_groups.PickUpCube;
-import frc.robot.command_groups.UpperScoring;
-import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.intake.ConstantsIntake;
+import frc.robot.commandgroups.PickUpCube;
+import frc.robot.commandgroups.UpperScoring;
+import frc.robot.subsystems.vision.Limelight;
 
 /**
  * This class contains all the parts to the path RightConeCubeHigh.
@@ -16,9 +16,12 @@ import frc.robot.subsystems.intake.ConstantsIntake;
  */
 public class RightConeCubeHigh extends SequentialCommandGroup {
     public RightConeCubeHigh() {
+        Limelight limelight = Limelight.getInstance();
         addCommands(
+                new InstantCommand(limelight::setTapePipeline, limelight),
                 new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanner/RightConeCubeHigh blue 1"),
+                new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new PickUpCube(),
                 FollowPath.loadTrajectory(".pathplanner/RightConeCubeHigh blue 2"),
                 new UpperScoring()

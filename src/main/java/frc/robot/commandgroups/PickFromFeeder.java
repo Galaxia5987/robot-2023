@@ -5,11 +5,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.commands.SetArmsPosition;
 import frc.robot.subsystems.gripper.Gripper;
+import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 
 
 public class PickFromFeeder extends SequentialCommandGroup {
-    public PickFromFeeder(Translation2d armStartPosition, Translation2d armEndPosition) {
+    public PickFromFeeder(Translation2d armStartPosition, Translation2d armEndPosition, boolean cone) {
         Gripper gripper = Gripper.getInstance();
         Limelight limelight = Limelight.getInstance();
         addCommands(

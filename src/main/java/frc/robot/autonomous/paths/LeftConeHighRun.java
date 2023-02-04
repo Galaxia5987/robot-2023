@@ -1,8 +1,10 @@
 package frc.robot.autonomous.paths;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.command_groups.UpperScoring;
+import frc.robot.commandgroups.UpperScoring;
+import frc.robot.subsystems.vision.Limelight;
 
 /**
  * This class contains all the parts of the path LeftConeHighRun.
@@ -12,7 +14,9 @@ import frc.robot.command_groups.UpperScoring;
  */
 public class LeftConeHighRun extends SequentialCommandGroup {
     public LeftConeHighRun() {
+        Limelight limelight = Limelight.getInstance();
         addCommands(
+                new InstantCommand(limelight::setTapePipeline, limelight),
                 new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanner/LeftConeHighRun blue")
         );

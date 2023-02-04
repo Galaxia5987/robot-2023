@@ -1,4 +1,4 @@
-package frc.robot.command_groups.bits;
+package frc.robot.commandgroups.bits;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;

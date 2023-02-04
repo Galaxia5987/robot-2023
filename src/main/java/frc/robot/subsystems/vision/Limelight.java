@@ -56,6 +56,14 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Pipeline.fromIndex((int) getpipe.get());
     }
 
+    public void setAprilTagsPipeline() {
+        table.getEntry("pipeline").setNumber(Pipeline.APRIL_TAG_PIPELINE.index);
+    }
+
+    public void setTapePipeline() {
+        table.getEntry("pipeline").setNumber(Pipeline.REFLECTIVE_TAPE_PIPELINE.index);
+    }
+
     /**
      * Checks whether the limelight can see any targets
      *

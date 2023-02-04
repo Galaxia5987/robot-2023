@@ -12,15 +12,16 @@ import frc.robot.autonomous.FollowPath;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.HolonomicDrive;
+import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
+import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
+import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.utils.ui.XboxMap;
 
 public class RobotContainer {
-    private static final Leds led = Leds.getInstance();
-    private static final Arm arm = Arm.getInstance();
+//    private static final Leds led = Leds.getInstance();
+//    private static final Arm arm = Arm.getInstance();
     public static Gyroscope gyroscope = new Gyroscope();
     public static SwerveDrive swerveSubsystem = new SwerveDrive();
     private static RobotContainer INSTANCE = null;
@@ -29,6 +30,7 @@ public class RobotContainer {
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
+    private final JoystickButton b = new JoystickButton(xboxController, XboxController.Button.kB.value);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton lb = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
     private final JoystickButton leftTrigger = new JoystickButton(leftJoystick, 1);
@@ -52,10 +54,11 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
+//        swerveSubsystem.setDefaultCommand(
+//                new JoystickDrive(swerveSubsystem, leftJoystick, rightJoystick)
+//        );
         swerveSubsystem.setDefaultCommand(
-                new HolonomicDrive(
-                        new XboxMap(xboxController)
-                )
+                new XboxDrive(swerveSubsystem, xboxController)
         );
     }
 
@@ -65,6 +68,7 @@ public class RobotContainer {
         )));
         a.whileTrue(new ProxyCommand(() -> teleopTargetAdjustCommand));
         rb.onTrue(new InstantCommand(gyroscope::resetYaw));
+        b.whileTrue(new BalanceOnStation(swerveSubsystem, gyroscope));
     }
 
 

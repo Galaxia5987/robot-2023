@@ -1,4 +1,4 @@
-package frc.robot.subsystems.drivetrain.commands;
+package frc.robot.command_groups;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -27,6 +27,7 @@ public class AdjustToTape extends CommandBase {
                 SwerveConstants.TARGET_ROTATION_Kp,
                 SwerveConstants.TARGET_ROTATION_Ki,
                 SwerveConstants.TARGET_ROTATION_Kd, new TrapezoidProfile.Constraints(10, 5));
+        addRequirements(swerveDrive);
     }
 
     @Override
@@ -43,8 +44,8 @@ public class AdjustToTape extends CommandBase {
 
         if (yaw.isPresent()) {
             Rotation2d absoluteYaw = yaw.get().plus(robotAngle);
-            speeds.vyMetersPerSecond = yController.calculate(absoluteYaw.getCos(), 0);
-            speeds.omegaRadiansPerSecond = rotationController.calculate(absoluteYaw.getRadians(), 0);
+            speeds.vyMetersPerSecond = yController.calculate(absoluteYaw.getSin(), 0);
+            speeds.omegaRadiansPerSecond = rotationController.calculate(yaw.get().getRadians(), 0);
         } else {
             speeds = lastSpeeds;
         }

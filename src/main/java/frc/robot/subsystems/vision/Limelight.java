@@ -36,7 +36,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
                     AprilTagFields.k2023ChargedUp.m_resourceFile
             );
         } catch (Throwable t) {
-            throw new RuntimeException();
+            throw new RuntimeException(t);
         }
     }
 
@@ -52,8 +52,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return INSTANCE;
     }
 
-    public long getPipeline() {
-        return getpipe.get();
+    public Pipeline getPipeline() {
+        return Pipeline.fromIndex((int) getpipe.get());
     }
 
     /**
@@ -121,7 +121,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.of(new Pose2d(translation2d, robotAngle));
     }
 
-    public Optional<Pose2d> getAprilTagTarget() {
+    public Optional<Pose2d> getAprilTagTarget(boolean rightSide, boolean useHorizontalOffset) {
         int id = (int) getTagId();
         var pose3d = aprilTagFieldLayout.getTagPose(id);
         if (pose3d.isPresent()) {
@@ -131,12 +131,22 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
             if (id < 5) {
                 if (id == 4) {
                     withOffset = pose2d.getTranslation().minus(VisionConstants.DOUBLE_SUBSTATION_ADJUST_OFFSET);
+                    if (rightSide && useHorizontalOffset) {
+                        withOffset = withOffset.plus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    } else if (useHorizontalOffset) {
+                        withOffset = withOffset.minus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    }
                 } else {
                     withOffset = pose2d.getTranslation().minus(VisionConstants.TARGET_ADJUST_OFFSET);
                 }
             } else {
                 if (id == 8) {
                     withOffset = pose2d.getTranslation().plus(VisionConstants.DOUBLE_SUBSTATION_ADJUST_OFFSET);
+                    if (rightSide && useHorizontalOffset) {
+                        withOffset = withOffset.plus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    } else if (useHorizontalOffset) {
+                        withOffset = withOffset.minus(VisionConstants.DOUBLE_SUBSTATION_HORIZONTAL_ADJUST_OFFSET);
+                    }
                 } else {
                     withOffset = pose2d.getTranslation().plus(VisionConstants.TARGET_ADJUST_OFFSET);
                 }
@@ -145,6 +155,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
             return Optional.of(new Pose2d(withOffset, pose2d.getRotation().plus(Rotation2d.fromDegrees(180))));
         }
         return Optional.empty();
+    }
+
+    public Optional<Pose2d> getAprilTagTarget() {
+        return getAprilTagTarget(true, false);
     }
 
     public Optional<Pose2d> getAprilTagTarget(DriverStation.Alliance alliance) {
@@ -157,7 +171,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
 
     public Optional<Pose2d> getBotPose() {
-        int id = (int) getTagId();
+        long id = getTagId();
         if (id > 0 && id < 9) {
             return Optional.of(
                     VisionConstants.CENTER_POSE.plus(
@@ -188,8 +202,26 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value.getDegrees());
         loggerInputs.tagId = getTagId();
-        getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
-        getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.targetDistance = value);
+        getTargetDistance(VisionConstants.UPPER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.highTargetDistance = value);
+        getTargetDistance(VisionConstants.LOWER_CONE_TARGET_TAPE_HEIGHT).ifPresent((value) -> loggerInputs.lowTargetDistance = value);
         getAprilTagTarget().ifPresent((value) -> loggerInputs.aprilTagTarget = value);
+    }
+
+    public enum Pipeline {
+        APRIL_TAG_PIPELINE(0),
+        REFLECTIVE_TAPE_PIPELINE(1);
+
+        public final int index;
+
+        Pipeline(int index) {
+            this.index = index;
+        }
+
+        public static Pipeline fromIndex(int index) {
+            if (index == REFLECTIVE_TAPE_PIPELINE.index) {
+                return REFLECTIVE_TAPE_PIPELINE;
+            }
+            return APRIL_TAG_PIPELINE;
+        }
     }
 }

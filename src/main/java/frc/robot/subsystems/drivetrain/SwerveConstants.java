@@ -75,14 +75,7 @@ public class SwerveConstants {
             TARGET_ROTATION_Kp, TARGET_ROTATION_Ki, TARGET_ROTATION_Kd, TARGET_ROTATION_Kf
     );
 
-    public static double CHARGING_STATION_BALANCE_Kp = 0.5;
-    public static double CHARGING_STATION_BALANCE_Ki = 0;
-    public static double CHARGING_STATION_BALANCE_Kd = 0;
-    public static double CHARGING_STATION_BALANCE_Kf = 0;
-    public static double CHARGING_STATION_BALANCE_VELOCITY = 0.5;
-    public static double CHARGING_STATION_BALANCE_ACCELERATION = 0.25;
-    public static TrapezoidProfile.Constraints CHARGING_STATION_BALANCE_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            CHARGING_STATION_BALANCE_VELOCITY, CHARGING_STATION_BALANCE_ACCELERATION);
+    public static double CHARGING_STATION_BALANCE_Kf = 1.2;
 
-
+    public static double FEEDFORWARD_MULTIPLIER = 0;
 }

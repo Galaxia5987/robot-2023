@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
@@ -21,11 +22,11 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     private final TalonFX shoulderMainMotor = new TalonFX(Ports.ArmPorts.SHOULDER_MAIN_MOTOR);
     private final TalonFX shoulderAuxMotor = new TalonFX(Ports.ArmPorts.SHOULDER_AUX_MOTOR);
-    private final CANCoder shoulderEncoder = new CANCoder(Ports.ArmPorts.SHOULDER_ENCODER);
+    private final DutyCycleEncoder shoulderEncoder = new DutyCycleEncoder(Ports.ArmPorts.SHOULDER_ENCODER);
 
     private final TalonFX elbowMainMotor = new TalonFX(Ports.ArmPorts.ELBOW_MAIN_MOTOR);
     private final TalonFX elbowAuxMotor = new TalonFX(Ports.ArmPorts.ELBOW_AUX_MOTOR);
-    private final CANCoder elbowEncoder = new CANCoder(Ports.ArmPorts.ELBOW_ENCODER);
+    private final DutyCycleEncoder elbowEncoder = new DutyCycleEncoder(Ports.ArmPorts.ELBOW_ENCODER);
 
     private final UnitModel unitModel = new UnitModel(ArmConstants.TICKS_PER_RADIAN);
     private double shoulderFeedforward;
@@ -78,7 +79,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      * @param kD
      * @param encoder
      */
-    private void configureMainMotor(TalonFX mainMotor, double kP, double kI, double kD, CANCoder encoder) {
+    private void configureMainMotor(TalonFX mainMotor, double kP, double kI, double kD, DutyCycleEncoder encoder) {
         mainMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         mainMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_SATURATION);
         mainMotor.setNeutralMode(NeutralMode.Brake);
@@ -223,6 +224,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         );
         shoulderFeedforward = tempFeedforward.shoulderFeedForward;
         elbowFeedForward = tempFeedforward.elbowFeedForward;
+        shoulderMainMotor.setSelectedSensorPosition(unitModel.toTicks(shoulderEncoder.getAbsolutePosition()));
+        elbowMainMotor.setSelectedSensorPosition(unitModel.toTicks(elbowEncoder.getAbsolutePosition()));
     }
 
     @Override

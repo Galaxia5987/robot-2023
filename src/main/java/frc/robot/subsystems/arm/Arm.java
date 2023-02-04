@@ -191,6 +191,11 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         return unitModel.toVelocity(elbowMainMotor.getSelectedSensorVelocity());
     }
 
+    public void resetArmEncoders() {
+        shoulderEncoder.setPositionOffset(ArmConstants.SHOULDER_ZERO_POSITION);
+        elbowEncoder.setPositionOffset(ArmConstants.ELBOW_ZERO_POSITION);
+    }
+
     /**
      * Stops the motors
      */
@@ -231,5 +236,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         loggerInputs.elbowMotorPower = elbowMainMotor.getMotorOutputPercent();
         loggerInputs.shoulderSetpoint = shoulderSetpoint;
         loggerInputs.shoulderSetpoint = elbowSetpoint;
+        loggerInputs.shoulderEncoderPosition = shoulderEncoder.getAbsolutePosition();
+        loggerInputs.elbowEncoderPosition = elbowEncoder.getAbsolutePosition();
     }
 }

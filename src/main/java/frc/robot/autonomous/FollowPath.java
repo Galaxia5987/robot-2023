@@ -273,7 +273,6 @@ public class FollowPath extends CommandBase {
             log.botPose = Utils.pose2dToArray(botPose.get());
             swerveDrive.resetOdometry(relativePose);
             gyroscope.resetYaw(relativePose.getRotation());
-
             var pStart = new PathPoint(
                     botPose.get().getTranslation(),
                     new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond),
@@ -302,6 +301,20 @@ public class FollowPath extends CommandBase {
         }
         return new RunCommand(() -> {
         });
+    }
+
+    public static FollowPath loadTrajectory(String path){
+        SwerveDrive swerveDrive = SwerveDrive.getInstance();
+        return new FollowPath(
+                PathPlanner.loadPath(path, SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND, SwerveConstants.MAX_LINEAR_ACCELERATION),
+                swerveDrive::getPose,
+                swerveDrive.getKinematics(),
+                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+                new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
+                swerveDrive::setStates,
+                swerveDrive
+        );
     }
 
     @Override

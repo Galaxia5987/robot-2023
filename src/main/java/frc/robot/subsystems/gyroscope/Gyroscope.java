@@ -49,12 +49,13 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
         navx.reset();
     }
 
-    public static Gyroscope getInstance(){
-        if (INSTANCE == null){
+    public static Gyroscope getInstance() {
+        if (INSTANCE == null) {
             INSTANCE = new Gyroscope();
         }
         return INSTANCE;
     }
+
     /**
      * Resets the yaw of the navx to the current yaw.
      *

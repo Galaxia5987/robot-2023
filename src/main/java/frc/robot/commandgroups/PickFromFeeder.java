@@ -9,7 +9,7 @@ import frc.robot.subsystems.vision.Limelight;
 
 
 public class PickFromFeeder extends SequentialCommandGroup {
-    public PickFromFeeder(Translation2d armStartPosition, Translation2d armEndPosition){
+    public PickFromFeeder(Translation2d armStartPosition, Translation2d armEndPosition) {
         Gripper gripper = Gripper.getInstance();
         Limelight limelight = Limelight.getInstance();
         addCommands(

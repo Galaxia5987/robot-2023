@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class ArmConstants { //TODO: find all constant values
 
+    public static final int WAIT_TIME = 0;
+
     // motor configuration
     public static final double VOLT_COMP_SATURATION = 10; //[V]
     public static final boolean ENABLE_VOLT_COMPENSATION = true;
@@ -32,6 +34,8 @@ public class ArmConstants { //TODO: find all constant values
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d();
     public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d();
     public static final Translation2d FLOOR_SCORING = new Translation2d();
+    public static final double ELBOW_ZERO_POSITION = 180; //[degrees] TODO: check real values
+    public static final double SHOULDER_ZERO_POSITION = 90; //[degrees]
 
     //shoulder physics
     public static final double SHOULDER_GEARING = 0; // Arbitrary units
@@ -50,8 +54,6 @@ public class ArmConstants { //TODO: find all constant values
     public static final double ELBOW_CENTER_OF_MASS_RADIUS = 0; // [m]
     public static final int ELBOW_NUMBER_OF_MOTORS = 2; // Arbitrary units
     public static final double ELBOW_ARM_LENGTH = 0; //[m]
-
-    public static final Translation2d ARM_DEFAULT_POSITION = new Translation2d(0, 0);
 
     public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CENTER_OF_MASS_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);

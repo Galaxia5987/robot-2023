@@ -19,9 +19,9 @@ public class BalanceOnStation extends CommandBase {
     private boolean lastAtSetpoint = false;
     private final Timer timer = new Timer();
 
-    public BalanceOnStation(SwerveDrive swerveDrive, Gyroscope gyroscope) {
-        this.swerveDrive = swerveDrive;
-        this.gyroscope = gyroscope;
+    public BalanceOnStation() {
+        this.swerveDrive = SwerveDrive.getInstance();
+        this.gyroscope = Gyroscope.getInstance();
         addRequirements(swerveDrive);
     }
 

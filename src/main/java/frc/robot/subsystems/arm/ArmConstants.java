@@ -10,12 +10,15 @@ public class ArmConstants { //TODO: find all constant values
     // motor configuration
     public static final double VOLT_COMP_SATURATION = 10; //[V]
     public static final boolean ENABLE_VOLT_COMPENSATION = true;
-    public static final double MOTION_ACCELERATION = 0;
-    public static final double MOTION_CRUISE_VELOCITY = 0;
+    public static final double MOTION_ACCELERATION = 0; // [rad/sec^2]
+    public static final double MOTION_CRUISE_VELOCITY = 0; // [rad/sec]
     public static final double DEADBAND = 0.05; // [%]
     public static final double SETPOINT_DEADBAND = 0;
     public static final double TICKS_PER_RADIAN = 1024 / (Math.PI * 2);
-    public static final TalonFXInvertType CLOCKWISE = TalonFXInvertType.Clockwise;
+    public static final TalonFXInvertType MAIN_CLOCKWISE = TalonFXInvertType.Clockwise;
+    public static final TalonFXInvertType AUX_CLOCKWISE = TalonFXInvertType.Clockwise;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0;
 
     //PID
     public static final double shoulderP = 0.1;

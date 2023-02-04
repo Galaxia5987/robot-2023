@@ -1,21 +1,23 @@
 package frc.robot.subsystems.vision;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class LimelightLogInputs implements LoggableInputs {
-    public double targetDistance = 0;
+    public double lowTargetDistance = 0;
+    public double highTargetDistance = 0;
     public double yaw = 0;
     public boolean hasTargets = false;
     public float tagId = 0;
-    public Pose3d aprilTagTarget = new Pose3d();
+    public Pose2d aprilTagTarget = new Pose2d();
 
     public LimelightLogInputs() {
     }
 
     public void toLog(LogTable table) {
-        table.put("targetDistance", targetDistance);
+        table.put("lowTargetDistance", lowTargetDistance);
+        table.put("highTargetDistance", highTargetDistance);
         table.put("yaw", yaw);
         table.put("hasTargets", hasTargets);
         table.put("tagId", tagId);
@@ -23,7 +25,8 @@ public class LimelightLogInputs implements LoggableInputs {
     }
 
     public void fromLog(LogTable table) {
-        targetDistance = table.getDouble("targetDistance", targetDistance);
+        lowTargetDistance = table.getDouble("lowTargetDistance", lowTargetDistance);
+        highTargetDistance = table.getDouble("highTargetDistance", highTargetDistance);
         yaw = table.getDouble("yaw", yaw);
         hasTargets = table.getBoolean("hasTargets", hasTargets);
         tagId = table.getFloat("tagId", tagId);

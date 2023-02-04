@@ -40,7 +40,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         driveMotor.setInverted(driveInverted);
         driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.selectProfileSlot(1, 0);
-        driveMotor.configNeutralDeadband(0.175);
+        driveMotor.configNeutralDeadband(0.19);
         driveMotor.setSelectedSensorPosition(0);
 
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
@@ -171,7 +171,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
      */
     public void vroom() {
         driveMotor.set(ControlMode.PercentOutput, 1);
-        angleMotor.set(ControlMode.PercentOutput, 0.5);
+        angleMotor.set(ControlMode.PercentOutput, 0.2);
     }
 
     /**

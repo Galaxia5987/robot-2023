@@ -4,14 +4,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.Utils;
-
-import java.util.Arrays;
 
 import static frc.robot.Ports.SwerveDrive.*;
 import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
@@ -27,6 +23,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
             // Rear right
             new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
+    private static SwerveDrive INSTANCE;
     private final SwerveModule mFrontLeft;
     private final SwerveModule mFrontRight;
     private final SwerveModule mRearLeft;
@@ -90,6 +87,13 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 REAR_RIGHT_ANGLE_INVERTED,
                 REAR_RIGHT_ANGLE_SENSOR_PHASE,
                 REAR_RIGHT_MOTION_MAGIC_CONFIGS);
+    }
+
+    public static SwerveDrive getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new SwerveDrive();
+        }
+        return INSTANCE;
     }
 
     /**
@@ -160,7 +164,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @param states are the states to set.
      */
     public void setStates(SwerveModuleState[] states) {
-        swerveModuleStates = Arrays.copyOf(states, states.length);
+        swerveModuleStates = states;
 
         mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND,
                 swerveModuleStates[Module.FL.number].angle);

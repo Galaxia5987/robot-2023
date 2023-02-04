@@ -63,12 +63,9 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        rightTrigger.whileTrue(new ProxyCommand(() -> FollowPath.generatePathToAprilTag(
-                swerveSubsystem, limelight, gyroscope
-        )));
         a.whileTrue(new ProxyCommand(() -> teleopTargetAdjustCommand));
         rb.onTrue(new InstantCommand(gyroscope::resetYaw));
-        b.whileTrue(new BalanceOnStation(swerveSubsystem, gyroscope));
+        b.whileTrue(new BalanceOnStation());
     }
 
 

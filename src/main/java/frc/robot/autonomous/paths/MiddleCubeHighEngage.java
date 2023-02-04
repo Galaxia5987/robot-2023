@@ -2,7 +2,7 @@ package frc.robot.autonomous.paths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.commandGroups.UpperScoring;
+import frc.robot.command_groups.UpperScoring;
 import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 
 /**

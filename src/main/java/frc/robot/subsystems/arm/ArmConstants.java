@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class ArmConstants { //TODO: find all constant values
 
+    public static final int WAIT_TIME = 0;
+
     // motor configuration
     public static final double VOLT_COMP_SATURATION = 10; //[V]
     public static final boolean ENABLE_VOLT_COMPENSATION = true;

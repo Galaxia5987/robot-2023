@@ -2,8 +2,8 @@ package frc.robot.autonomous.paths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.commandGroups.PickUpCube;
-import frc.robot.commandGroups.UpperScoring;
+import frc.robot.command_groups.PickUpCube;
+import frc.robot.command_groups.UpperScoring;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.intake.ConstantsIntake;
 

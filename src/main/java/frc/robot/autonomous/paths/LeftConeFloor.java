@@ -1,7 +1,7 @@
 package frc.robot.autonomous.paths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commandGroups.FloorScoring;
+import frc.robot.command_groups.FloorScoring;
 
 /**
  * This

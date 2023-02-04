@@ -31,7 +31,8 @@ public class SetArmsPosition extends CommandBase {
     @Override
     public boolean isFinished() {
         var position = this.position.get();
-        return MathUtil.applyDeadband(position.getX() - arm.getEndPosition().getX(), ArmConstants.SETPOINT_DEADBAND) == 0 &&
-                MathUtil.applyDeadband(position.getY() - arm.getEndPosition().getY(), ArmConstants.SETPOINT_DEADBAND) == 0;
+        var difference = arm.getEndPosition().minus(position);
+        return MathUtil.applyDeadband(difference.getX(), ArmConstants.SETPOINT_DEADBAND) == 0 &&
+                MathUtil.applyDeadband(difference.getY(), ArmConstants.SETPOINT_DEADBAND) == 0;
     }
 }

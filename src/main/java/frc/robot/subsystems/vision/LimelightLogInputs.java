@@ -27,6 +27,7 @@ public class LimelightLogInputs implements LoggableInputs {
 
     public void fromLog(LogTable table) {
         lowTargetDistance = table.getDouble("lowTargetDistance", lowTargetDistance);
+        highTargetDistance = table.getDouble("highTargetDistance", highTargetDistance);
         yaw = table.getDouble("yaw", yaw);
         hasTargets = table.getBoolean("hasTargets", hasTargets);
         tagId = table.getFloat("tagId", tagId);

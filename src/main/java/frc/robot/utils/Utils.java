@@ -41,22 +41,6 @@ public class Utils {
         return new ChassisSpeeds(array[0], array[1], array[2]);
     }
 
-    public static SwerveModulePosition[] statesToPositions(SwerveModuleState... states) {
-        SwerveModulePosition[] positions = new SwerveModulePosition[states.length];
-        for (int i = 0; i < states.length; i++) {
-            positions[i] = new SwerveModulePosition(states[i].speedMetersPerSecond, states[i].angle);
-        }
-        return positions;
-    }
-
-    public static SwerveModuleState[] positionsToStates(SwerveModulePosition... positions) {
-        SwerveModuleState[] states = new SwerveModuleState[positions.length];
-        for (int i = 0; i < positions.length; i++) {
-            states[i] = new SwerveModuleState(positions[i].distanceMeters, positions[i].angle);
-        }
-        return states;
-    }
-
     /**
      * Converts the relative angles to pitch relative to the coordinate system of the field,
      * aka the absolute pitch. This value can be used to balance on the charge station.

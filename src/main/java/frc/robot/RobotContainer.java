@@ -21,6 +21,7 @@ import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.intake.Command.Feed;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
@@ -86,6 +87,8 @@ public class RobotContainer {
         b.onTrue(new MidScoring());
         y.onTrue(new UpperScoring());
         x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));
+
+        xboxLeftTrigger.whileTrue(new Feed(0.5));
     }
 
 

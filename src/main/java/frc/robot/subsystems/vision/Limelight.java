@@ -56,6 +56,15 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Pipeline.fromIndex((int) getpipe.get());
     }
 
+    public void togglePipeline() {
+        var pipeline = getPipeline();
+        if (pipeline == Pipeline.APRIL_TAG_PIPELINE) {
+            setTapePipeline();
+        } else {
+            setAprilTagsPipeline();
+        }
+    }
+
     public void setAprilTagsPipeline() {
         table.getEntry("pipeline").setNumber(Pipeline.APRIL_TAG_PIPELINE.index);
     }

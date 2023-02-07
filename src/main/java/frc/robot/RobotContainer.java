@@ -89,6 +89,7 @@ public class RobotContainer {
         x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));
 
         xboxLeftTrigger.whileTrue(new Feed(0.5));
+        xboxRightTrigger.onTrue(new InstantCommand(limelight::togglePipeline));
     }
 
 

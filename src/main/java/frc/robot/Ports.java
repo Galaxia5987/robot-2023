@@ -49,5 +49,12 @@ public final class Ports {
         public static final int INTAKE_MOTOR = 0;
         public static final int ANGLE_MOTOR = 0;
     }
+
+    public static class UI {
+        public static final int JOYSTICK_TRIGGER = 1;
+        public static final int JOYSTICK_TOP_BOTTOM_BUTTON = 2;
+        public static final int JOYSTICK_TOP_LEFT_BUTTON = 3;
+        public static final int JOYSTICK_TOP_RIGHT_BUTTON = 4;
+    }
 }
 

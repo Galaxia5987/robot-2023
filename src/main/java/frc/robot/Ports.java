@@ -5,17 +5,17 @@ public final class Ports {
     public static class ArmPorts {
         public static final int SHOULDER_MAIN_MOTOR = 0;
         public static final int SHOULDER_AUX_MOTOR = 0;
-        public static final int ELBOW_MAIN_MOTOR = 0;
-        public static final int ELBOW_AUX_MOTOR = 0;
-        public static final int SHOULDER_ENCODER = 0;
-        public static final int ELBOW_ENCODER = 0;
+        public static final int ELBOW_MAIN_MOTOR = 2;
+        public static final int ELBOW_AUX_MOTOR = 6;
+        public static final int SHOULDER_ENCODER = 7;
+        public static final int ELBOW_ENCODER = 8;
     }
 
     public static final class SwerveDrive {
-        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR_ID = 7;
-        public static final int FRONT_LEFT_MODULE_STEER_MOTOR_ID = 8;
-        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR_ID = 3;
-        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR_ID = 4;
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR_ID = 42;
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR_ID = 41;
+        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR_ID = 31;
+        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR_ID = 21;
         public static final int REAR_LEFT_MODULE_DRIVE_MOTOR_ID = 1;
         public static final int REAR_LEFT_MODULE_STEER_MOTOR_ID = 6;
         public static final int REAR_RIGHT_MODULE_DRIVE_MOTOR_ID = 5;
@@ -46,8 +46,8 @@ public final class Ports {
 
     public static class Intake {
         public static final int BEAM_BREAKER_SENSOR = 0;
-        public static final int INTAKE_MOTOR = 0;
-        public static final int ANGLE_MOTOR = 0;
+        public static final int INTAKE_MOTOR = 5;
+        public static final int ANGLE_MOTOR = 7;
     }
 }
 

@@ -50,7 +50,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
 
     /**
      * @return the relative output.
-     * Return the power that the motor applies [%].
+     * Return the power that the motor applies. [%]
      */
     private double getPower() {
         return motor.get();
@@ -59,14 +59,14 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     /**
      * Set the motors' relative output.
      *
-     * @param power is the power that the motor applies [%].
+     * @param power is the power that the motor applies. [%]
      */
     public void setPower(double power) {
         motor.set(power);
     }
 
     /**
-     * @return the motor's position [degrees].
+     * @return the motor's position. [degrees]
      */
 
     public double getAngle() {
@@ -76,7 +76,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     /**
      * Sets the angles position.
      *
-     * @param angle is the angle of the retractor [degrees].
+     * @param angle is the angle of the retractor. [degrees]
      */
     public void setAngle(double angle) {
         pidController.setReference(unitModel.toTicks(angle), CANSparkMax.ControlType.kPosition);

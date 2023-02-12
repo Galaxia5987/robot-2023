@@ -3,7 +3,6 @@ package frc.robot.subsystems.drivetrain;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.pathplanner.lib.auto.PIDConstants;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.autonomous.DrivetrainFeedforwardConstants;
 import frc.robot.utils.controllers.PIDFConstants;
 

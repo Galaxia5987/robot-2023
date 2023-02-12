@@ -9,11 +9,12 @@ import frc.robot.subsystems.vision.Limelight;
 
 /**
  * This class contains al the parts for the path MiddleCubeHighEngage.
- *
+ * <p>
  * In this path the robot places a cube in the middle grid
  * in the upper part and goes to the charge station.
  */
 public class MiddleCubeHighEngage extends SequentialCommandGroup {
+
     public MiddleCubeHighEngage() {
         Limelight limelight = Limelight.getInstance();
         addCommands(

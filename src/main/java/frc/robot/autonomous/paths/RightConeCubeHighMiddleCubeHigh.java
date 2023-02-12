@@ -9,7 +9,7 @@ import frc.robot.subsystems.vision.Limelight;
 
 /**
  * This class contains all the parts to the path RightConeCubeHighMiddleCubeHigh.
- *
+ * <p>
  * In this path the robot places a cone in the grid that is the furthest away from the feeder,
  * goes to pick up a cube (the one that's furthest from the feeder),
  * returns to place it in the same grid,
@@ -22,14 +22,14 @@ public class RightConeCubeHighMiddleCubeHigh extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(limelight::setTapePipeline, limelight),
                 new UpperScoring(),
-                FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 1"),
+                FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 1"),
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new PickUpCube(),
-                FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 2"),
+                FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 2"),
                 new UpperScoring(),
-                FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 3"),
+                FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 3"),
                 new PickUpCube(),
-                FollowPath.loadTrajectory(".pathplanner/RightConeCubeHighMiddleCubeHigh blue 4"),
+                FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 4"),
                 new UpperScoring()
         );
     }

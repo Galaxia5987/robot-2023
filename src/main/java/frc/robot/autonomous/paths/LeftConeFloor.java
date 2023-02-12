@@ -9,7 +9,8 @@ import frc.robot.subsystems.vision.Limelight;
  * This
  */
 public class LeftConeFloor extends SequentialCommandGroup {
-    public LeftConeFloor(){
+
+    public LeftConeFloor() {
         Limelight limelight = Limelight.getInstance();
         addCommands(
                 new InstantCommand(limelight::setTapePipeline, limelight),

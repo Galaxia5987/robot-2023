@@ -19,10 +19,10 @@ public class LeftConeCubeHigh extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(limelight::setTapePipeline, limelight),
                 new UpperScoring(),
-                FollowPath.loadTrajectory(".pathplanner/LeftConeCubeHigh blue 1"),
+                FollowPath.loadTrajectory("pathplanner/LeftConeCubeHigh blue 1"),
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new PickUpCube(),
-                FollowPath.loadTrajectory(".pathplanner/LeftConeCubeHigh blue 2"),
+                FollowPath.loadTrajectory("pathplanner/LeftConeCubeHigh blue 2"),
                 new UpperScoring()
         );
     }

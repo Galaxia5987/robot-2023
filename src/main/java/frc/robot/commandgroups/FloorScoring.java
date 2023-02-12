@@ -9,7 +9,7 @@ import frc.robot.subsystems.gripper.Gripper;
 
 public class FloorScoring extends SequentialCommandGroup {
 
-    public FloorScoring(){
+    public FloorScoring() {
         Gripper gripper = Gripper.getInstance();
         addCommands(
                 new AdjustToTarget(true, false),

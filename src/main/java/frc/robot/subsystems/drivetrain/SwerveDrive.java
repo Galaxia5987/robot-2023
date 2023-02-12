@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
@@ -14,6 +13,7 @@ import static frc.robot.Ports.SwerveDrive.*;
 import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
 
 public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
+    private static SwerveDrive INSTANCE;
     private final SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(
             // Front left
             new Translation2d(DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
@@ -23,8 +23,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
             new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
             // Rear right
             new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
-
-    private static SwerveDrive INSTANCE;
     private final SwerveModule mFrontLeft;
     private final SwerveModule mFrontRight;
     private final SwerveModule mRearLeft;

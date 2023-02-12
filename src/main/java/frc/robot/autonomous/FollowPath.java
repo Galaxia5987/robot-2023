@@ -303,7 +303,7 @@ public class FollowPath extends CommandBase {
         });
     }
 
-    public static FollowPath loadTrajectory(String path){
+    public static FollowPath loadTrajectory(String path) {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         return new FollowPath(
                 PathPlanner.loadPath(path, SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND, SwerveConstants.MAX_LINEAR_ACCELERATION),

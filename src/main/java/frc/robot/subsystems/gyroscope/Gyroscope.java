@@ -20,6 +20,13 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
         loggerInputs.zeroYaw = new Rotation2d();
     }
 
+    public static Gyroscope getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Gyroscope();
+        }
+        return INSTANCE;
+    }
+
     @Override
     public void periodic() {
         if (!zeroInitialized && navx.isConnected()) {
@@ -33,7 +40,7 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
         loggerInputs.rawYaw = navx.getRotation2d();
         loggerInputs.yaw = getYaw();
         loggerInputs.pitch = zeroPitch.minus(Rotation2d.fromDegrees(navx.getRoll()));
-        loggerInputs.roll = Rotation2d.fromDegrees(Math.toDegrees(navx.getPitch() - zeroRoll));
+        loggerInputs.roll = new Rotation2d(navx.getPitch() - zeroRoll);
     }
 
     @Override
@@ -45,15 +52,7 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
      * Resets the yaw of the navx to the current yaw.
      */
     public void resetYaw() {
-        loggerInputs.zeroYaw = new Rotation2d();
-        navx.reset();
-    }
-
-    public static Gyroscope getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Gyroscope();
-        }
-        return INSTANCE;
+        loggerInputs.zeroYaw = getRawYaw();
     }
 
     /**

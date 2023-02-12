@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
@@ -14,6 +13,7 @@ import static frc.robot.Ports.SwerveDrive.*;
 import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
 
 public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
+    private static SwerveDrive INSTANCE;
     private final SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(
             // Front left
             new Translation2d(DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
@@ -23,8 +23,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
             new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
             // Rear right
             new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
-
-    private static SwerveDrive INSTANCE;
     private final SwerveModule mFrontLeft;
     private final SwerveModule mFrontRight;
     private final SwerveModule mRearLeft;
@@ -56,7 +54,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.FL.number],
                 FRONT_LEFT_DRIVE_INVERTED,
                 FRONT_LEFT_ANGLE_INVERTED,
-                FRONT_LEFT_ANGLE_SENSOR_PHASE,
                 FRONT_LEFT_MOTION_MAGIC_CONFIGS);
         mFrontRight = new SwerveModule(
                 Module.FR,
@@ -66,7 +63,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.FR.number],
                 FRONT_RIGHT_DRIVE_INVERTED,
                 FRONT_RIGHT_ANGLE_INVERTED,
-                FRONT_RIGHT_ANGLE_SENSOR_PHASE,
                 FRONT_RIGHT_MOTION_MAGIC_CONFIGS);
         mRearLeft = new SwerveModule(
                 Module.RL,
@@ -76,7 +72,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.RL.number],
                 REAR_LEFT_DRIVE_INVERTED,
                 REAR_LEFT_ANGLE_INVERTED,
-                REAR_LEFT_ANGLE_SENSOR_PHASE,
                 REAR_LEFT_MOTION_MAGIC_CONFIGS);
         mRearRight = new SwerveModule(
                 Module.RR,
@@ -86,7 +81,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 OFFSETS[Module.RR.number],
                 REAR_RIGHT_DRIVE_INVERTED,
                 REAR_RIGHT_ANGLE_INVERTED,
-                REAR_RIGHT_ANGLE_SENSOR_PHASE,
                 REAR_RIGHT_MOTION_MAGIC_CONFIGS);
     }
 
@@ -131,10 +125,9 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @param driveSignal the drive signal to process.
      */
     public void drive(DriveSignal driveSignal) {
-        if (Utils.epsilonEquals(driveSignal.vx, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(driveSignal.vy, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(driveSignal.omega, 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
-            loggerInputs.setpoint = new double[]{0, 0, 0};
+        if (Utils.epsilonEquals(driveSignal.vx, 0) &&
+                Utils.epsilonEquals(driveSignal.vy, 0) &&
+                Utils.epsilonEquals(driveSignal.omega, 0)) {
             stop();
             return;
         }
@@ -208,6 +201,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     public void stop() {
+        swerveModuleStates = mKinematics.toSwerveModuleStates(new ChassisSpeeds());
         mFrontLeft.stop();
         mFrontRight.stop();
         mRearLeft.stop();

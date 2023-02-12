@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -25,7 +26,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
     private boolean initializedOffset = false;
 
     public SwerveModule(SwerveDrive.Module number, int driveMotorPort, int angleMotorPort, int encoderPort, int offset, boolean driveInverted,
-                        boolean angleInverted, boolean angleSensorPhase, double[] motionMagicConfigs) {
+                        boolean angleInverted, double[] motionMagicConfigs) {
         super(new SwerveModuleLogInputs());
         this.number = number;
         this.offset = offset;
@@ -36,17 +37,25 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         driveMotor.configFactoryDefault();
         angleMotor.configFactoryDefault();
 
+        // TODO: check voltage compensation and ramp rate
         driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
         driveMotor.setInverted(driveInverted);
         driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.selectProfileSlot(1, 0);
-        driveMotor.configNeutralDeadband(0.19);
-        driveMotor.setSelectedSensorPosition(0);
+        driveMotor.configNeutralDeadband(NEUTRAL_DEADBAND);
+        driveMotor.configSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
+        driveMotor.configStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
+        driveMotor.configGetSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
+        driveMotor.configGetStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
+        driveMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
 
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
         angleMotor.configFeedbackNotContinuous(false, TALON_TIMEOUT);
         angleMotor.setInverted(angleInverted);
-        angleMotor.setSensorPhase(angleSensorPhase);
+        angleMotor.configSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
+        angleMotor.configStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
+        angleMotor.configGetSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
+        angleMotor.configGetStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
         configMotionMagic(motionMagicConfigs);
 
         angleMotor.setNeutralMode(NeutralMode.Brake);

@@ -23,16 +23,12 @@ public final class Ports {
 
         public static boolean FRONT_LEFT_DRIVE_INVERTED = true;
         public static boolean FRONT_LEFT_ANGLE_INVERTED = true;
-        public static boolean FRONT_LEFT_ANGLE_SENSOR_PHASE = false;
         public static boolean FRONT_RIGHT_DRIVE_INVERTED = true;
         public static boolean FRONT_RIGHT_ANGLE_INVERTED = true;
-        public static boolean FRONT_RIGHT_ANGLE_SENSOR_PHASE = false;
         public static boolean REAR_LEFT_DRIVE_INVERTED = true;
         public static boolean REAR_LEFT_ANGLE_INVERTED = true;
-        public static boolean REAR_LEFT_ANGLE_SENSOR_PHASE = false;
         public static boolean REAR_RIGHT_DRIVE_INVERTED = true;
         public static boolean REAR_RIGHT_ANGLE_INVERTED = true;
-        public static boolean REAR_RIGHT_ANGLE_SENSOR_PHASE = false;
     }
 
     public static class Leds {
@@ -48,6 +44,8 @@ public final class Ports {
         public static final int BEAM_BREAKER_SENSOR = 9;
         public static final int INTAKE_MOTOR = 0;
         public static final int ANGLE_MOTOR = 1;
+        public static final boolean POWER_INVERTED = false;
+        public static final boolean ANGLE_INVERTED = false;
     }
 
     public static class UI {

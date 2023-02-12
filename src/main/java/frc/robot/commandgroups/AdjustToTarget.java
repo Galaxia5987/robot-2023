@@ -1,6 +1,7 @@
 package frc.robot.commandgroups;
 
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.vision.Limelight;
 
 public class AdjustToTarget extends SequentialCommandGroup {

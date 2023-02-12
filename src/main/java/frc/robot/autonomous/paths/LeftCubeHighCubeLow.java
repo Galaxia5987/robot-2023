@@ -10,7 +10,7 @@ import frc.robot.subsystems.vision.Limelight;
 
 /**
  * This calss contains all the parts of the path LeftCubeHighCubeLow.
- *
+ * <p>
  * In this path the robot places a cube in the upper part of the grid that is closest to the feeder,
  * goes to get another cube (the one that is closest to the feeder)
  * and places it in the middle part of the same grid.
@@ -22,9 +22,9 @@ public class LeftCubeHighCubeLow extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new UpperScoring(),
-                FollowPath.loadTrajectory(".pathplanner/LeftCubeHighCubeLow blue 1"),
+                FollowPath.loadTrajectory("pathplanner/LeftCubeHighCubeLow blue 1"),
                 new PickUpCube(),
-                FollowPath.loadTrajectory(".pathplanner/LeftCubeHighCubeLow blue 2"),
+                FollowPath.loadTrajectory("pathplanner/LeftCubeHighCubeLow blue 2"),
                 new MidScoring()
         );
     }

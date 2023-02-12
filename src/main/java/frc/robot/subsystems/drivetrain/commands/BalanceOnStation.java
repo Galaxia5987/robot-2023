@@ -1,9 +1,7 @@
 package frc.robot.subsystems.drivetrain.commands;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveSignal;
@@ -15,9 +13,9 @@ import frc.robot.utils.Utils;
 public class BalanceOnStation extends CommandBase {
     private final SwerveDrive swerveDrive;
     private final Gyroscope gyroscope;
+    private final Timer timer = new Timer();
     private boolean atSetpoint = false;
     private boolean lastAtSetpoint = false;
-    private final Timer timer = new Timer();
 
     public BalanceOnStation() {
         this.swerveDrive = SwerveDrive.getInstance();
@@ -38,7 +36,6 @@ public class BalanceOnStation extends CommandBase {
         double vx = 0 - absoluteAngle;
         vx = Math.copySign(SwerveConstants.CHARGING_STATION_BALANCE_Kf, vx);
         if (atSetpoint) {
-            swerveDrive.drive(new DriveSignal(0, 0, 0, new Translation2d(), true));
             swerveDrive.stop();
         } else {
             swerveDrive.drive(new DriveSignal(vx, 0, 0, new Translation2d(), true));
@@ -53,7 +50,6 @@ public class BalanceOnStation extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        swerveDrive.drive(new DriveSignal(new ChassisSpeeds(), new Translation2d(), true));
         swerveDrive.stop();
     }
 

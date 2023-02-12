@@ -1,9 +1,9 @@
-package frc.robot.subsystems.intake.Command;
+package frc.robot.subsystems.intake.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.intake.BeamBreaker;
-import frc.robot.subsystems.intake.ConstantsIntake;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
 
 public class Feed extends CommandBase {
     private final Intake intake = Intake.getInstance();
@@ -20,7 +20,7 @@ public class Feed extends CommandBase {
      */
     @Override
     public void initialize() {
-        intake.setAngle(ConstantsIntake.ANGLE_DOWN);
+        intake.setAngle(IntakeConstants.ANGLE_DOWN);
     }
 
     /**
@@ -39,7 +39,7 @@ public class Feed extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        intake.setAngle(ConstantsIntake.ANGLE_UP);
+        intake.setAngle(IntakeConstants.ANGLE_UP);
         intake.setPower(0);
     }
 }

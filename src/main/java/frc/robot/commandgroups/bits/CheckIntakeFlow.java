@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.gripper.Gripper;
-import frc.robot.subsystems.intake.Command.Feed;
+import frc.robot.subsystems.intake.commands.Feed;
 
 public class CheckIntakeFlow extends SequentialCommandGroup {
     public CheckIntakeFlow() {

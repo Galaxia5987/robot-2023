@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
@@ -54,10 +53,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Configures the aux motors
-     *
-     * @param auxMotor
-     * @param mainMotor
+     * Configures the aux motors.
      */
     private void configureAuxMotor(TalonFX auxMotor, TalonFX mainMotor) {
         auxMotor.follow(mainMotor);
@@ -68,13 +64,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Configures the main motors
-     *
-     * @param mainMotor
-     * @param kP
-     * @param kI
-     * @param kD
-     * @param encoder
+     * Configures the main motors.
      */
     private void configureMainMotor(TalonFX mainMotor, double kP, double kI, double kD, DutyCycleEncoder encoder) {
         mainMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
@@ -93,36 +83,36 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Sets the power of the shoulder motors
+     * Sets the power of the shoulder motors.
      *
-     * @param power desired power
+     * @param power desired power. [-1,1]
      */
     public void setShoulderJointPower(double power) {
         shoulderMainMotor.set(TalonFXControlMode.PercentOutput, power);
     }
 
     /**
-     * Sets the power of the elbow motors
+     * Sets the power of the elbow motors.
      *
-     * @param power desired power
+     * @param power desired power. [-1,1]
      */
     public void setElbowJointPower(double power) {
         elbowMainMotor.set(TalonFXControlMode.PercentOutput, power);
     }
 
     /**
-     * Gets the angle of the shoulder joint
+     * Gets the angle of the shoulder joint.
      *
-     * @return angle of the shoulder joint [rad]
+     * @return angle of the shoulder joint. [rad]
      */
     public double getShoulderJointAngle() {
         return unitModel.toUnits(shoulderMainMotor.getSelectedSensorPosition()) - ArmConstants.SHOULDER_ABSOLUTE_ENCODER_OFFSET;
     }
 
     /**
-     * Sets the angle of the shoulder joint
+     * Sets the angle of the shoulder joint.
      *
-     * @param angle desired angle [degrees]
+     * @param angle desired angle. [degrees]
      */
     public void setShoulderJointAngle(double angle) {
         shoulderMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)),
@@ -131,18 +121,18 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Gets the angle of the elbow joint
+     * Gets the angle of the elbow joint.
      *
-     * @return elbow joint angle [rad]
+     * @return elbow joint angle. [rad]
      */
     public double getElbowJointAngle() {
         return unitModel.toUnits(elbowMainMotor.getSelectedSensorPosition()) - ArmConstants.ELBOW_ABSOLUTE_ENCODER_OFFSET;
     }
 
     /**
-     * Sets the angle of the elbow joint
+     * Sets the angle of the elbow joint.
      *
-     * @param angle desired angle [degrees]
+     * @param angle desired angle. [degrees]
      */
     public void setElbowJointAngle(double angle) {
         elbowMainMotor.set(TalonFXControlMode.MotionMagic, unitModel.toTicks(Math.toRadians(angle)),
@@ -151,18 +141,18 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Calculates the position of the end of the arm
+     * Calculates the position of the end of the arm.
      *
-     * @return Translation2d of the position
+     * @return Translation2d of the position.
      */
     public Translation2d getEndPosition() {
         return kinematics.forwardKinematics(getShoulderJointAngle(), getElbowJointAngle());
     }
 
     /**
-     * Sets the position of the end of the arm
+     * Sets the position of the end of the arm.
      *
-     * @param armLocation Translation2d of the desired location
+     * @param armLocation Translation2d of the desired location.
      */
     public void setEndPosition(Translation2d armLocation) {
         var angles = kinematics.inverseKinematics(armLocation);
@@ -171,7 +161,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Gets the velocity of the shoulder motors
+     * Gets the velocity of the shoulder motors.
      *
      * @return shoulder motors velocity. [rad/sec]
      */
@@ -180,7 +170,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Gets the velocity of the elbow motors
+     * Gets the velocity of the elbow motors.
      *
      * @return elbow motor velocity. [rad/sec]
      */
@@ -194,7 +184,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     }
 
     /**
-     * Stops the motors
+     * Stops the motors.
      */
     public void stop() {
         shoulderMainMotor.neutralOutput();

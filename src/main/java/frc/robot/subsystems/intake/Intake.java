@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.units.UnitModel;
@@ -14,18 +15,27 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final SparkMaxPIDController pidController = angleMotor.getPIDController();
     private final RelativeEncoder encoder = angleMotor.getEncoder();
-    private final UnitModel unitModel = new UnitModel(ConstantsIntake.TICKS_PER_DEGREE);
+    private final UnitModel unitModel = new UnitModel(IntakeConstants.TICKS_PER_DEGREE);
 
     private Intake() {
         super(new IntakeLoggedInputs());
 
         motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        angleMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        pidController.setP(ConstantsIntake.kP);
-        pidController.setI(ConstantsIntake.kI);
-        pidController.setD(ConstantsIntake.kD);
-        motor.burnFlash();
+        motor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+        motor.setInverted(Ports.Intake.POWER_INVERTED);
 
+        angleMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        angleMotor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+        angleMotor.setInverted(Ports.Intake.ANGLE_INVERTED);
+
+        pidController.setP(IntakeConstants.kP);
+        pidController.setI(IntakeConstants.kI);
+        pidController.setD(IntakeConstants.kD);
+        pidController.setOutputRange(-1, 1);
+        pidController.setFeedbackDevice(encoder);
+
+        motor.burnFlash();
+        angleMotor.burnFlash();
     }
 
     /**
@@ -40,23 +50,23 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
 
     /**
      * @return the relative output.
-     * Return the power that the motor applies [%].
+     * Return the power that the motor applies. [%]
      */
-    public double getPower() {
+    private double getPower() {
         return motor.get();
     }
 
     /**
      * Set the motors' relative output.
      *
-     * @param power is the power that the motor applies [%].
+     * @param power is the power that the motor applies. [%]
      */
     public void setPower(double power) {
         motor.set(power);
     }
 
     /**
-     * @return the motor's position [degrees].
+     * @return the motor's position. [degrees]
      */
 
     public double getAngle() {
@@ -66,7 +76,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     /**
      * Sets the angles position.
      *
-     * @param angle is the angle of the retractor [degrees].
+     * @param angle is the angle of the retractor. [degrees]
      */
     public void setAngle(double angle) {
         pidController.setReference(unitModel.toTicks(angle), CANSparkMax.ControlType.kPosition);

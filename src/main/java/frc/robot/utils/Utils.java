@@ -2,8 +2,6 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class Utils {
     public static final double EPSILON = 1e-9;
@@ -39,22 +37,6 @@ public class Utils {
 
     public static ChassisSpeeds arrayToChassisSpeeds(double[] array) {
         return new ChassisSpeeds(array[0], array[1], array[2]);
-    }
-
-    public static SwerveModulePosition[] statesToPositions(SwerveModuleState... states) {
-        SwerveModulePosition[] positions = new SwerveModulePosition[states.length];
-        for (int i = 0; i < states.length; i++) {
-            positions[i] = new SwerveModulePosition(states[i].speedMetersPerSecond, states[i].angle);
-        }
-        return positions;
-    }
-
-    public static SwerveModuleState[] positionsToStates(SwerveModulePosition... positions) {
-        SwerveModuleState[] states = new SwerveModuleState[positions.length];
-        for (int i = 0; i < positions.length; i++) {
-            states[i] = new SwerveModuleState(positions[i].distanceMeters, positions[i].angle);
-        }
-        return states;
     }
 
     /**

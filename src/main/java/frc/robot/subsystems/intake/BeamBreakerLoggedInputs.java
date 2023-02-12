@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class BeamBreakerLoggedInputs implements LoggableInputs {
-    public boolean beamBreakerState;
+    public boolean beamBreakerState = true;
 
     /**
      * Implement the variables into the logger.

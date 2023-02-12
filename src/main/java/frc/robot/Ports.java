@@ -7,8 +7,8 @@ public final class Ports {
         public static final int SHOULDER_AUX_MOTOR = 0;
         public static final int ELBOW_MAIN_MOTOR = 0;
         public static final int ELBOW_AUX_MOTOR = 0;
-        public static final int SHOULDER_ENCODER = 0;
-        public static final int ELBOW_ENCODER = 0;
+        public static final int SHOULDER_ENCODER = 1;
+        public static final int ELBOW_ENCODER = 2;
     }
 
     public static final class SwerveDrive {
@@ -45,9 +45,9 @@ public final class Ports {
     }
 
     public static class Intake {
-        public static final int BEAM_BREAKER_SENSOR = 0;
+        public static final int BEAM_BREAKER_SENSOR = 9;
         public static final int INTAKE_MOTOR = 0;
-        public static final int ANGLE_MOTOR = 0;
+        public static final int ANGLE_MOTOR = 1;
     }
 
     public static class UI {

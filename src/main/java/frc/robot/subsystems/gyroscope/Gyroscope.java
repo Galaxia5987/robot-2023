@@ -14,7 +14,7 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     private double zeroRoll;
     private boolean zeroInitialized = false;
 
-    public Gyroscope() {
+    private Gyroscope() {
         super(new GyroscopeLogInputs());
         navx = new AHRS(SPI.Port.kMXP);
         loggerInputs.zeroYaw = new Rotation2d();

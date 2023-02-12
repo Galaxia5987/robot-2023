@@ -45,14 +45,14 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
 
-    public SwerveDrive() {
+    private SwerveDrive() {
         super(new SwerveDriveLogInputs());
 
         mFrontLeft = new SwerveModule(
                 Module.FL,
                 FRONT_LEFT_MODULE_DRIVE_MOTOR_ID,
                 FRONT_LEFT_MODULE_STEER_MOTOR_ID,
-                3,
+                6,
                 OFFSETS[Module.FL.number],
                 FRONT_LEFT_DRIVE_INVERTED,
                 FRONT_LEFT_ANGLE_INVERTED,
@@ -62,7 +62,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 Module.FR,
                 FRONT_RIGHT_MODULE_DRIVE_MOTOR_ID,
                 FRONT_RIGHT_MODULE_STEER_MOTOR_ID,
-                2,
+                7,
                 OFFSETS[Module.FR.number],
                 FRONT_RIGHT_DRIVE_INVERTED,
                 FRONT_RIGHT_ANGLE_INVERTED,
@@ -72,7 +72,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 Module.RL,
                 REAR_LEFT_MODULE_DRIVE_MOTOR_ID,
                 REAR_LEFT_MODULE_STEER_MOTOR_ID,
-                0,
+                5,
                 OFFSETS[Module.RL.number],
                 REAR_LEFT_DRIVE_INVERTED,
                 REAR_LEFT_ANGLE_INVERTED,
@@ -82,7 +82,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 Module.RR,
                 REAR_RIGHT_MODULE_DRIVE_MOTOR_ID,
                 REAR_RIGHT_MODULE_STEER_MOTOR_ID,
-                1,
+                8,
                 OFFSETS[Module.RR.number],
                 REAR_RIGHT_DRIVE_INVERTED,
                 REAR_RIGHT_ANGLE_INVERTED,

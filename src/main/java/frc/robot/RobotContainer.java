@@ -21,6 +21,7 @@ import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Command.Feed;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.Leds;
@@ -28,12 +29,13 @@ import frc.robot.subsystems.vision.Limelight;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
-    private final Leds led = Leds.getInstance();
+//    private final Leds led = Leds.getInstance();
     private final Arm arm = Arm.getInstance();
-    private final Gyroscope gyroscope = new Gyroscope();
-    private final SwerveDrive swerveSubsystem = new SwerveDrive();
+    private final Gyroscope gyroscope = Gyroscope.getInstance();
+    private final SwerveDrive swerveSubsystem = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
     private final Intake intake = Intake.getInstance();
+    private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
     private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
@@ -69,27 +71,27 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        swerveSubsystem.setDefaultCommand(
-                new JoystickDrive(swerveSubsystem, leftJoystick, rightJoystick)
-        );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//        swerveSubsystem.setDefaultCommand(
+//                new JoystickDrive(swerveSubsystem, leftJoystick, rightJoystick)
+//        );
+//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
     }
 
     private void configureButtonBindings() {
-        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
-        leftJoystickTrigger.whileTrue(new AdjustToTarget(false, false));
-        rightJoystickTopBottom.whileTrue(new BalanceOnStation());
-
-        leftPOV.whileTrue(new AdjustToTarget(false, true));
-        rightPOV.whileTrue(new AdjustToTarget(true, true));
-
-        a.onTrue(new FloorScoring());
-        b.onTrue(new MidScoring());
-        y.onTrue(new UpperScoring());
-        x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));
-
-        xboxLeftTrigger.whileTrue(new Feed(0.5));
-        xboxRightTrigger.onTrue(new InstantCommand(limelight::togglePipeline));
+//        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+//        leftJoystickTrigger.whileTrue(new AdjustToTarget(false, false));
+//        rightJoystickTopBottom.whileTrue(new BalanceOnStation());
+//
+//        leftPOV.whileTrue(new AdjustToTarget(false, true));
+//        rightPOV.whileTrue(new AdjustToTarget(true, true));
+//
+//        a.onTrue(new FloorScoring());
+//        b.onTrue(new MidScoring());
+//        y.onTrue(new UpperScoring());
+//        x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));
+//
+//        xboxLeftTrigger.whileTrue(new Feed(0.5));
+//        xboxRightTrigger.onTrue(new InstantCommand(limelight::togglePipeline));
     }
 
 

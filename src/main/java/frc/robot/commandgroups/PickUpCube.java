@@ -6,9 +6,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.SetArmsPosition;
 import frc.robot.subsystems.gripper.Gripper;
+<<<<<<< HEAD:src/main/java/frc/robot/commandgroups/PickUpCube.java
 import frc.robot.subsystems.intake.Command.Feed;
 import frc.robot.subsystems.intake.ConstantsIntake;
 import frc.robot.subsystems.leds.Leds;
+=======
+import frc.robot.subsystems.intake.commands.Feed;
+>>>>>>> barel-errors:src/main/java/frc/robot/command_groups/PickUpCube.java
 
 public class PickUpCube extends SequentialCommandGroup {
 

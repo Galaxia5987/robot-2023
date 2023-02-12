@@ -8,14 +8,14 @@ import frc.robot.Ports;
 
 
 public class Leds extends SubsystemBase {
-    private static Leds INSTANCE;
-    private final Color Yellow = new Color(254, 202, 82);
-    private final Color Purple = new Color(51, 1, 176);
+    public static Leds INSTANCE;
     public AddressableLED leds = new AddressableLED(Ports.Leds.LED);
-    public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(Constants.LED_LENGTH);
+    public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LedConstants.LED_LENGTH);
 
     private Leds() {
         leds.setLength(ledBuffer.getLength());
+        leds.setData(ledBuffer);
+        leds.start();
     }
 
     public static Leds getInstance() {
@@ -27,14 +27,13 @@ public class Leds extends SubsystemBase {
 
     public void setYellow() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setLED(i, Yellow);
+            ledBuffer.setLED(i, Color.kYellow);
         }
     }
 
     public void setPurple() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setLED(i, Purple);
+            ledBuffer.setLED(i, Color.kPurple);
         }
     }
-
 }

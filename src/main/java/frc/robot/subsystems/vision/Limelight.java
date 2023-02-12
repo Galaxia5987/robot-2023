@@ -19,7 +19,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final DoubleSubscriber tx = table.getDoubleTopic("tx").subscribe(0.0);
     private final DoubleSubscriber ty = table.getDoubleTopic("ty").subscribe(0.0);
     private final IntegerSubscriber tv = table.getIntegerTopic("tv").subscribe(0);
-    private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0);
+    private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0); // TODO: Check this value
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
     private final IntegerSubscriber getpipe = table.getIntegerTopic("getpipe").subscribe(0); //TODO: check vision pipelines
     private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
@@ -89,7 +89,6 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return tid.get();
     }
 
-
     /**
      * @return pitch from camera to target
      */
@@ -106,7 +105,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         }
         double totalPitch = VisionConstants.CAMERA_PITCH + getPitch().getRadians();
         double error = VisionConstants.CAMERA_HEIGHT - targetHeight;
-        return OptionalDouble.of(Math.abs(error * Math.tan(totalPitch)));
+        return OptionalDouble.of(Math.abs(error / Math.tan(totalPitch)));
     }
 
     /**
@@ -215,6 +214,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * Updates the limelight log inputs.
      */
+    @Override
     public void updateInputs() {
         loggerInputs.hasTargets = hasTargets();
         getYaw().ifPresent((value) -> loggerInputs.yaw = value.getDegrees());

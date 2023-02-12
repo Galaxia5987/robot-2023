@@ -37,7 +37,7 @@ public class AllianceFlipUtil {
             return new Pose2d(
                     VisionConstants.FIELD_LENGTH - pose.getX(),
                     pose.getY(),
-                    apply(alliance, pose.getRotation()));
+                    new Rotation2d(-pose.getRotation().getCos(), pose.getRotation().getSin()));
         } else {
             return pose;
         }
@@ -52,15 +52,13 @@ public class AllianceFlipUtil {
     }
 
     public static ChassisSpeeds apply(Alliance alliance, ChassisSpeeds speeds) {
-        if (shouldFlip(alliance)) {
-            return new ChassisSpeeds(
-                    -speeds.vxMetersPerSecond,
-                    speeds.vyMetersPerSecond,
-                    speeds.omegaRadiansPerSecond
-            );
-        } else {
-            return speeds;
-        }
+        Rotation2d heading = new Rotation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        double magnitude = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        Rotation2d flippedHeading = apply(alliance, heading);
+        return new ChassisSpeeds(
+                flippedHeading.getCos() * magnitude,
+                flippedHeading.getSin() * magnitude,
+                speeds.omegaRadiansPerSecond);
     }
 
     /**

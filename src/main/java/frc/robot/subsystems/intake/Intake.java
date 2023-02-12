@@ -24,7 +24,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         motor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         motor.setInverted(Ports.Intake.POWER_INVERTED);
 
-        angleMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        angleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         angleMotor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         angleMotor.setInverted(Ports.Intake.ANGLE_INVERTED);
 
@@ -63,6 +63,10 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
     public void setPower(double power) {
         motor.set(power);
+    }
+
+    public void setAnglePower(double power) {
+        angleMotor.set(power);
     }
 
     /**

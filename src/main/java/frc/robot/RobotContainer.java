@@ -17,11 +17,13 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
+import frc.robot.subsystems.drivetrain.commands.XboxDrive;
+import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
-import frc.robot.subsystems.intake.Command.Feed;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.Feed;
+import frc.robot.subsystems.intake.commands.XboxWristControl;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 
@@ -33,6 +35,7 @@ public class RobotContainer {
     private final SwerveDrive swerveSubsystem = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
     private final Intake intake = Intake.getInstance();
+    private final Gripper gripper = Gripper.getInstance();
     private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
     private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
@@ -70,9 +73,10 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
 //        swerveSubsystem.setDefaultCommand(
-//                new JoystickDrive(swerveSubsystem, leftJoystick, rightJoystick)
+//                new XboxDrive(swerveSubsystem, xboxController)
 //        );
-//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+    //   intake.setDefaultCommand(new XboxWristControl(xboxController));
     }
 
     private void configureButtonBindings() {
@@ -84,6 +88,7 @@ public class RobotContainer {
 //        rightPOV.whileTrue(new AdjustToTarget(true, true));
 //
 //        a.onTrue(new FloorScoring());
+        a.onTrue(new InstantCommand(gripper::toggle, gripper));
 //        b.onTrue(new MidScoring());
 //        y.onTrue(new UpperScoring());
 //        x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));

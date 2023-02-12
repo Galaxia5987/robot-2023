@@ -8,7 +8,7 @@ import frc.robot.utils.controllers.PIDFConstants;
 
 public class SwerveConstants {
     public static final double TICKS_PER_ROTATION = 2048;
-    public static final int[] OFFSETS = {20169, 6392, 16110, 1795};
+    public static final int[] OFFSETS = {12536, 6538, 15093, 10639};
 
     public static final double DRIVETRAIN_TRACK_WIDTH_METERS = 0.595;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.595;

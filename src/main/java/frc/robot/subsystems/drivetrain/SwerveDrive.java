@@ -125,10 +125,9 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @param driveSignal the drive signal to process.
      */
     public void drive(DriveSignal driveSignal) {
-        if (Utils.epsilonEquals(driveSignal.vx, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(driveSignal.vy, 0, 0.1 * MAX_VELOCITY_METERS_PER_SECOND) &&
-                Utils.epsilonEquals(driveSignal.omega, 0, 0.1 * MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)) {
-            loggerInputs.setpoint = new double[]{0, 0, 0};
+        if (Utils.epsilonEquals(driveSignal.vx, 0) &&
+                Utils.epsilonEquals(driveSignal.vy, 0) &&
+                Utils.epsilonEquals(driveSignal.omega, 0)) {
             stop();
             return;
         }
@@ -202,6 +201,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     public void stop() {
+        swerveModuleStates = mKinematics.toSwerveModuleStates(new ChassisSpeeds());
         mFrontLeft.stop();
         mFrontRight.stop();
         mRearLeft.stop();

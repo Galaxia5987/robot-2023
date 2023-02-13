@@ -23,11 +23,9 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
 
     private Intake() {
         super(new IntakeLoggedInputs());
-
         motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         motor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         motor.setInverted(Ports.Intake.POWER_INVERTED);
-
         angleMotor.setNeutralMode(NeutralMode.Brake);
         angleMotor.enableVoltageCompensation(true);
         angleMotor.setInverted(Ports.Intake.ANGLE_INVERTED);

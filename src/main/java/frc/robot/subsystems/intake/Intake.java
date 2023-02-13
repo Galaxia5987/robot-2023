@@ -1,5 +1,8 @@
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -12,30 +15,24 @@ import frc.robot.utils.units.UnitModel;
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private static Intake INSTANCE;
     private final CANSparkMax motor = new CANSparkMax(Ports.Intake.INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final SparkMaxPIDController pidController = angleMotor.getPIDController();
-    private final RelativeEncoder encoder = angleMotor.getEncoder();
+    private final TalonFX angleMotor = new TalonFX(Ports.Intake.ANGLE_MOTOR);
+    //private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+    //private final SparkMaxPIDController pidController = angleMotor.getPIDController();
+    //private final RelativeEncoder encoder = angleMotor.getEncoder();
     private final UnitModel unitModel = new UnitModel(IntakeConstants.TICKS_PER_DEGREE);
 
     private Intake() {
         super(new IntakeLoggedInputs());
-
         motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         motor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         motor.setInverted(Ports.Intake.POWER_INVERTED);
-
-        angleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        angleMotor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+        angleMotor.setNeutralMode(NeutralMode.Brake);
+        angleMotor.enableVoltageCompensation(true);
         angleMotor.setInverted(Ports.Intake.ANGLE_INVERTED);
-
-        pidController.setP(IntakeConstants.kP);
-        pidController.setI(IntakeConstants.kI);
-        pidController.setD(IntakeConstants.kD);
-        pidController.setOutputRange(-1, 1);
-        pidController.setFeedbackDevice(encoder);
-
+        angleMotor.config_kP(0, IntakeConstants.kP);
+        angleMotor.config_kI(0, IntakeConstants.kI);
+        angleMotor.config_kD(0, IntakeConstants.kD);
         motor.burnFlash();
-        angleMotor.burnFlash();
     }
 
     /**
@@ -74,7 +71,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
 
     public double getAngle() {
-        return unitModel.toUnits(encoder.getPosition());
+        return unitModel.toUnits(angleMotor.getSelectedSensorPosition());
     }
 
     /**
@@ -83,7 +80,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      * @param angle is the angle of the retractor. [degrees]
      */
     public void setAngle(double angle) {
-        pidController.setReference(unitModel.toTicks(angle), CANSparkMax.ControlType.kPosition);
+        angleMotor.set(ControlMode.Position, unitModel.toTicks(angle));
     }
 
     /**

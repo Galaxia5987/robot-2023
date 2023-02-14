@@ -126,6 +126,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      * @return elbow joint angle. [rad]
      */
     public double getElbowJointAngle() {
+//        return elbowEncoder.getAbsolutePosition()
         return unitModel.toUnits(elbowMainMotor.getSelectedSensorPosition()) - ArmConstants.ELBOW_ABSOLUTE_ENCODER_OFFSET;
     }
 
@@ -221,5 +222,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         loggerInputs.elbowAngle = getElbowJointAngle();
         loggerInputs.shoulderMotorPower = shoulderMainMotor.getMotorOutputPercent();
         loggerInputs.elbowMotorPower = elbowMainMotor.getMotorOutputPercent();
+        loggerInputs.shoulderEncoderPosition = shoulderEncoder.getAbsolutePosition();
+        loggerInputs.elbowEncoderPosition = elbowEncoder.getAbsolutePosition();
     }
 }

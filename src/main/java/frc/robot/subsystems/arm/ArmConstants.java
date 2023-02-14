@@ -41,22 +41,22 @@ public class ArmConstants { //TODO: find all constant values
     public static final double SHOULDER_ZERO_POSITION = 90; //[degrees]
 
     //shoulder physics
-    public static final double SHOULDER_GEARING = 1; // Arbitrary units
-    public static final double SHOULDER_MASS = 1; // [kg]
-    public static final double SHOULDER_LENGTH = 1; // [m]
-    public static final double SHOULDER_MOMENT_OF_INERTIA = 1; // [kg*m^2]
-    public static final double SHOULDER_CENTER_OF_MASS_RADIUS = 1; // [m]
+    public static final double SHOULDER_GEARING = 106.7; // Arbitrary units
+    public static final double SHOULDER_MASS = 4; // [kg]
+    public static final double SHOULDER_LENGTH = 0.75679; // [m]
+    public static final double SHOULDER_MOMENT_OF_INERTIA = 2.613; // [kg*m^2]
+    public static final double SHOULDER_CENTER_OF_MASS_RADIUS = 0.32; // [m]
     public static final int SHOULDER_NUMBER_OF_MOTORS = 2; // Arbitrary units
-    public static final double SHOULDER_ARM_LENGTH = 1; //[m]
+    public static final double SHOULDER_ARM_LENGTH = 0.75679; //[m]
 
     //elbow physics
-    public static final double ELBOW_GEARING = 1; // Arbitrary units
-    public static final double ELBOW_MASS = 1; // [kg]
-    public static final double ELBOW_LENGTH = 1; // [m]
-    public static final double ELBOW_MOMENT_OF_INERTIA = 1; // [kg*m^2]
-    public static final double ELBOW_CENTER_OF_MASS_RADIUS = 1; // [m]
+    public static final double ELBOW_GEARING = 51.3; // Arbitrary units
+    public static final double ELBOW_MASS = 3.5; // [kg]
+    public static final double ELBOW_LENGTH = 0.75889; // [m]
+    public static final double ELBOW_MOMENT_OF_INERTIA = 2.65; // [kg*m^2]
+    public static final double ELBOW_CENTER_OF_MASS_RADIUS = 0.377; // [m]
     public static final int ELBOW_NUMBER_OF_MOTORS = 2; // Arbitrary units
-    public static final double ELBOW_ARM_LENGTH = 1; //[m]
+    public static final double ELBOW_ARM_LENGTH = 0.75889; //[m]
 
     public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CENTER_OF_MASS_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);

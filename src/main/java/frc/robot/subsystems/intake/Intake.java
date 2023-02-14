@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -10,6 +11,7 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.utils.units.UnitModel;
 
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private static Intake INSTANCE;
@@ -53,7 +55,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     }
 
     private double getAngleMotorVelocity() {
-        return angleMotor.get();
+        return angleMotor.getSelectedSensorVelocity();
     }
 
     /**
@@ -66,7 +68,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     }
 
     public void setAnglePower(double power) {
-        angleMotor.set(power);
+        angleMotor.set(TalonFXControlMode.PercentOutput, power);
     }
 
     /**
@@ -86,8 +88,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         angleMotor.set(ControlMode.Position, unitModel.toTicks(angle));
     }
 
-    public void resetEncoder(){
-        encoder.setPosition(0.25 * IntakeConstants.GEAR_RATIO);
+    public void resetEncoder(){angleMotor.setSelectedSensorPosition(0.25 * IntakeConstants.GEAR_RATIO);
     }
 
     public double getCurrent() {

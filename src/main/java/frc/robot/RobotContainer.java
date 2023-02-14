@@ -31,7 +31,7 @@ import frc.robot.subsystems.vision.Limelight;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
-//    private final Leds led = Leds.getInstance();
+    //    private final Leds led = Leds.getInstance();
     private final Arm arm = Arm.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
     private final SwerveDrive swerveSubsystem = SwerveDrive.getInstance();
@@ -75,15 +75,16 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
 
-//        swerveSubsystem.setDefaultCommand(
+       // swerveSubsystem.setDefaultCommand(
 //               new XboxDrive(swerveSubsystem, xboxController)
 //        );
- //       arm.setDefaultCommand(new ArmXboxControl(xboxController));
-//       intake.setDefaultCommand(new XboxWristControl(xboxController));
+//       intake.setDefaultCommand(new XboxWristControl(xboxController)
+                arm.setDefaultCommand(new ArmXboxControl(xboxController)
+                );
     }
 
     private void configureButtonBindings() {
- //       b.onTrue(new InstantCommand(gripper::toggle, gripper));
+        //       b.onTrue(new InstantCommand(gripper::toggle, gripper));
 
 //        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
 //        leftJoystickTrigger.whileTrue(new AdjustToTarget(false, false));

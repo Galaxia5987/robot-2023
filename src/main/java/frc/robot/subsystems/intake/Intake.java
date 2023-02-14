@@ -7,7 +7,6 @@ import com.revrobotics.SparkMaxPIDController;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
-import frc.robot.utils.units.UnitModel;
 
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private static Intake INSTANCE;
@@ -15,7 +14,6 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final SparkMaxPIDController pidController = angleMotor.getPIDController();
     private final RelativeEncoder encoder = angleMotor.getEncoder();
-    private final UnitModel unitModel = new UnitModel(IntakeConstants.TICKS_PER_DEGREE);
 
     private Intake() {
         super(new IntakeLoggedInputs());
@@ -33,6 +31,8 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         pidController.setD(IntakeConstants.kD);
         pidController.setOutputRange(-1, 1);
         pidController.setFeedbackDevice(encoder);
+        pidController.setSmartMotionMaxAccel(IntakeConstants.INTAKE_ANGLE_MAX_ACCELERATION, 0);
+        pidController.setSmartMotionMaxVelocity(IntakeConstants.INTAKE_ANGLE_VELOCITY, 0);
 
         motor.burnFlash();
         angleMotor.burnFlash();
@@ -56,6 +56,10 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         return motor.get();
     }
 
+    private double getAngleMotorVelocity() {
+        return angleMotor.get();
+    }
+
     /**
      * Set the motors' relative output.
      *
@@ -74,7 +78,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
 
     public double getAngle() {
-        return unitModel.toUnits(encoder.getPosition());
+        return encoder.getPosition() / IntakeConstants.ROTATIONS_PER_DEGREE;
     }
 
     /**
@@ -83,7 +87,15 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      * @param angle is the angle of the retractor. [degrees]
      */
     public void setAngle(double angle) {
-        pidController.setReference(unitModel.toTicks(angle), CANSparkMax.ControlType.kPosition);
+        pidController.setReference(IntakeConstants.ROTATIONS_PER_DEGREE * angle, CANSparkMax.ControlType.kSmartMotion);
+    }
+
+    public void resetEncoder(){
+        encoder.setPosition(0.25 * IntakeConstants.GEAR_RATIO);
+    }
+
+    public double getCurrent() {
+        return loggerInputs.current;
     }
 
     /**
@@ -93,6 +105,8 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     public void updateInputs() {
         loggerInputs.power = getPower();
         loggerInputs.angle = getAngle();
+        loggerInputs.velocity = getAngleMotorVelocity() * 5676;
+        loggerInputs.current = angleMotor.getOutputCurrent();
     }
 
     @Override

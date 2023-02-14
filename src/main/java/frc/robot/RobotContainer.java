@@ -23,6 +23,8 @@ import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.Feed;
+import frc.robot.subsystems.intake.commands.InitializeEncoder;
+import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.intake.commands.XboxWristControl;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
@@ -72,29 +74,36 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-//        swerveSubsystem.setDefaultCommand(
-//                new XboxDrive(swerveSubsystem, xboxController)
-//        );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
-    //   intake.setDefaultCommand(new XboxWristControl(xboxController));
+
+        swerveSubsystem.setDefaultCommand(
+               new XboxDrive(swerveSubsystem, xboxController)
+        );
+ //       arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//       intake.setDefaultCommand(new XboxWristControl(xboxController));
     }
 
     private void configureButtonBindings() {
+ //       b.onTrue(new InstantCommand(gripper::toggle, gripper));
+//        b.onTrue(new Retract(true));
+//        a.onTrue(new Retract(false));
+//        y.whileTrue(new InitializeEncoder());
+
 //        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
 //        leftJoystickTrigger.whileTrue(new AdjustToTarget(false, false));
-//        rightJoystickTopBottom.whileTrue(new BalanceOnStation());
+        lb.whileTrue(new BalanceOnStation());
 //
 //        leftPOV.whileTrue(new AdjustToTarget(false, true));
 //        rightPOV.whileTrue(new AdjustToTarget(true, true));
 //
 //        a.onTrue(new FloorScoring());
-        a.onTrue(new InstantCommand(gripper::toggle, gripper));
+       // a.onTrue(new InstantCommand(gripper::toggle, gripper));
 //        b.onTrue(new MidScoring());
 //        y.onTrue(new UpperScoring());
 //        x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));
 //
 //        xboxLeftTrigger.whileTrue(new Feed(0.5));
 //        xboxRightTrigger.onTrue(new InstantCommand(limelight::togglePipeline));
+        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 
 

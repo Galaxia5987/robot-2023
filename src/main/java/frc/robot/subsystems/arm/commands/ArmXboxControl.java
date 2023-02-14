@@ -16,7 +16,7 @@ public class ArmXboxControl extends CommandBase {
 
     @Override
     public void execute() {
-        double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.2);
+        double powerSho = MathUtil.applyDeadband(xboxController.getLeftY(), 0.2);
         double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.2);
         arm.setShoulderJointPower(powerSho);
         arm.setElbowJointPower(powerEl);

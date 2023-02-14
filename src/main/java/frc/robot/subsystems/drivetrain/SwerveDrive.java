@@ -125,9 +125,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @param driveSignal the drive signal to process.
      */
     public void drive(DriveSignal driveSignal) {
-        if (Utils.epsilonEquals(driveSignal.vx, 0) &&
-                Utils.epsilonEquals(driveSignal.vy, 0) &&
-                Utils.epsilonEquals(driveSignal.omega, 0)) {
+        if (Utils.speedsEpsilonEquals(driveSignal.speeds())) {
             stop();
             return;
         }

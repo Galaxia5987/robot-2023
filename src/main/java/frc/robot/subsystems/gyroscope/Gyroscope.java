@@ -29,18 +29,14 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
 
     @Override
     public void periodic() {
-        if (!zeroInitialized && navx.isConnected()) {
-            zeroRoll = navx.getRoll();
-            zeroInitialized = true;
-        }
     }
 
     @Override
     public void updateInputs() {
         loggerInputs.rawYaw = navx.getRotation2d();
         loggerInputs.yaw = getYaw();
-        loggerInputs.pitch = zeroPitch.minus(Rotation2d.fromDegrees(navx.getRoll()));
-        loggerInputs.roll = new Rotation2d(navx.getPitch() - zeroRoll);
+        loggerInputs.pitch = zeroPitch.minus(Rotation2d.fromDegrees(navx.getPitch()));
+        loggerInputs.roll = new Rotation2d(navx.getRoll() - zeroRoll);
     }
 
     @Override

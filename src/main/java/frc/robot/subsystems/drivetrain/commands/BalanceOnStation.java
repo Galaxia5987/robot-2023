@@ -9,6 +9,7 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
+import frc.robot.utils.controllers.PIDFController;
 
 public class BalanceOnStation extends CommandBase {
     private final SwerveDrive swerveDrive;
@@ -16,6 +17,13 @@ public class BalanceOnStation extends CommandBase {
     private final Timer timer = new Timer();
     private boolean atSetpoint = false;
     private boolean lastAtSetpoint = false;
+
+    private final PIDFController controller = new PIDFController(
+            SwerveConstants.CHARGING_STATION_BALANCE_Kp,
+            SwerveConstants.CHARGING_STATION_BALANCE_Ki,
+            SwerveConstants.CHARGING_STATION_BALANCE_Kd,
+            SwerveConstants.CHARGING_STATION_BALANCE_Kf
+    );
 
     public BalanceOnStation() {
         this.swerveDrive = SwerveDrive.getInstance();
@@ -31,10 +39,9 @@ public class BalanceOnStation extends CommandBase {
 
     @Override
     public void execute() {
-        atSetpoint = Utils.epsilonEquals(0, gyroscope.getPitch().getSin(), Rotation2d.fromDegrees(2).getSin());
-        var absoluteAngle = gyroscope.getPitch().getSin();
-        double vx = 0 - absoluteAngle;
-        vx = Math.copySign(SwerveConstants.CHARGING_STATION_BALANCE_Kf, vx);
+        double pitch = gyroscope.getPitch().getSin();
+        double vx = controller.calculate(pitch, 0);
+        atSetpoint = Utils.epsilonEquals(0, pitch, Rotation2d.fromDegrees(2).getSin());
         if (atSetpoint) {
             swerveDrive.stop();
         } else {

@@ -14,9 +14,6 @@ def ROBOT_MAIN_CLASS = "frc.robot.Main"
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {
-    task {
-        commandLine 'pkill','-9','"/usr/local/frc/JRE/bin/java?*"'
-    }
     targets {
         roborio(getTargetTypeClass('RoboRIO')) {
             // Team number is loaded either from the .wpilib/wpilib_preferences.json

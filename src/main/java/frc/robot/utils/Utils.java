@@ -60,4 +60,10 @@ public class Utils {
                 (Math.sin(roll) * Math.sin(yaw) + Math.cos(roll) * Math.sin(pitch) * Math.cos(yaw)) / (Math.cos(pitch) * Math.cos(yaw))
         );
     }
+
+    public static boolean speedsEpsilonEquals(ChassisSpeeds speeds) {
+        return epsilonEquals(speeds.vxMetersPerSecond, 0) &&
+                epsilonEquals(speeds.vyMetersPerSecond, 0) &&
+                epsilonEquals(speeds.omegaRadiansPerSecond, 0);
+    }
 }

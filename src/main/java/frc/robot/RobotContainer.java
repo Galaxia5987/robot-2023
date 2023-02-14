@@ -75,35 +75,32 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
 
-        swerveSubsystem.setDefaultCommand(
-               new XboxDrive(swerveSubsystem, xboxController)
-        );
+//        swerveSubsystem.setDefaultCommand(
+//               new XboxDrive(swerveSubsystem, xboxController)
+//        );
  //       arm.setDefaultCommand(new ArmXboxControl(xboxController));
 //       intake.setDefaultCommand(new XboxWristControl(xboxController));
     }
 
     private void configureButtonBindings() {
  //       b.onTrue(new InstantCommand(gripper::toggle, gripper));
-//        b.onTrue(new Retract(true));
-//        a.onTrue(new Retract(false));
-//        y.whileTrue(new InitializeEncoder());
 
 //        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
 //        leftJoystickTrigger.whileTrue(new AdjustToTarget(false, false));
-        lb.whileTrue(new BalanceOnStation());
+//        lb.whileTrue(new BalanceOnStation());
 //
 //        leftPOV.whileTrue(new AdjustToTarget(false, true));
 //        rightPOV.whileTrue(new AdjustToTarget(true, true));
 //
 //        a.onTrue(new FloorScoring());
-       // a.onTrue(new InstantCommand(gripper::toggle, gripper));
+        a.onTrue(new InstantCommand(gripper::toggle, gripper));
 //        b.onTrue(new MidScoring());
 //        y.onTrue(new UpperScoring());
 //        x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));
 //
 //        xboxLeftTrigger.whileTrue(new Feed(0.5));
 //        xboxRightTrigger.onTrue(new InstantCommand(limelight::togglePipeline));
-        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
+//        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 
 

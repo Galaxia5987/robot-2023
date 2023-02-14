@@ -6,8 +6,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
@@ -17,9 +15,6 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private static Intake INSTANCE;
     private final CANSparkMax motor = new CANSparkMax(Ports.Intake.INTAKE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final TalonFX angleMotor = new TalonFX(Ports.Intake.ANGLE_MOTOR);
-    //private final CANSparkMax angleMotor = new CANSparkMax(Ports.Intake.ANGLE_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
-    //private final SparkMaxPIDController pidController = angleMotor.getPIDController();
-    //private final RelativeEncoder encoder = angleMotor.getEncoder();
     private final UnitModel unitModel = new UnitModel(IntakeConstants.TICKS_PER_DEGREE);
 
     private Intake() {
@@ -33,6 +28,8 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         angleMotor.config_kP(0, IntakeConstants.kP);
         angleMotor.config_kI(0, IntakeConstants.kI);
         angleMotor.config_kD(0, IntakeConstants.kD);
+        angleMotor.configMotionCruiseVelocity(IntakeConstants.INTAKE_ANGLE_VELOCITY);
+        angleMotor.configMotionCruiseVelocity(IntakeConstants.INTAKE_ANGLE_MAX_ACCELERATION);
         motor.burnFlash();
     }
 
@@ -54,10 +51,6 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         return motor.get();
     }
 
-    private double getAngleMotorVelocity() {
-        return angleMotor.getSelectedSensorVelocity();
-    }
-
     /**
      * Set the motors' relative output.
      *
@@ -65,6 +58,10 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
     public void setPower(double power) {
         motor.set(power);
+    }
+
+    private double getAngleMotorVelocity() {
+        return angleMotor.getSelectedSensorVelocity();
     }
 
     public void setAnglePower(double power) {
@@ -88,7 +85,8 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         angleMotor.set(ControlMode.Position, unitModel.toTicks(angle));
     }
 
-    public void resetEncoder(){angleMotor.setSelectedSensorPosition(0.25 * IntakeConstants.GEAR_RATIO);
+    public void resetEncoder() {
+        angleMotor.setSelectedSensorPosition(90 * IntakeConstants.TICKS_PER_DEGREE);
     }
 
     public double getCurrent() {

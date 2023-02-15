@@ -8,7 +8,7 @@ public final class Ports {
         public static final int ELBOW_MAIN_MOTOR = 12;
         public static final int ELBOW_AUX_MOTOR = 10;
         public static final int SHOULDER_ENCODER = 4;
-        public static final int ELBOW_ENCODER = 1;
+        public static final int ELBOW_ENCODER = 2;
     }
 
     public static final class SwerveDrive {

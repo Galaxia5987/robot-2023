@@ -25,9 +25,8 @@ public class ArmKinematics {
      * @return the position of the end effector. ([m, [m])
      */
     public Translation2d forwardKinematics(double shoulderAngle, double elbowAngle) {
-        double theta = elbowAngle + shoulderAngle - Math.PI / 2;
-        double x = length1 * Math.cos(shoulderAngle) + length2 * Math.sin(theta);
-        double y = length1 * Math.sin(shoulderAngle) + length2 * Math.cos(theta);
+        double x = length1 * Math.cos(shoulderAngle) + length2 * Math.cos(elbowAngle);
+        double y = length1 * Math.sin(shoulderAngle) + length2 * Math.sin(elbowAngle);
         return new Translation2d(x, y);
     }
 
@@ -38,15 +37,25 @@ public class ArmKinematics {
      * @return the angles of the shoulder and elbow joints. ([rad, rad])
      */
     public InverseKinematicsSolution inverseKinematics(Translation2d translation) {
-        double x = translation.getX();
-        double y = translation.getY();
-        double c2 = (x * x + y * y - length1 * length1 - length2 * length2) / (2 * length1 * length2);
-        double s2 = Math.sqrt(1 - c2 * c2);
-        double shoulderAngle = Math.acos(c2);
-        double theta = Math.acos((y * (length1 + length2 * c2) - x * length2 * s2) / (x * x + y * y));
-        double elbowAngle = theta - shoulderAngle + Math.PI / 2;
+        double x = translation.getX(), y = translation.getY(), s2, c2, K1, K2, psi, theta;
+        if (x > 0) {
+            y = -y;
+        }
 
-        return new InverseKinematicsSolution(shoulderAngle, elbowAngle);
+        c2 = (x * x + y * y - length1 * length1 - length2 * length2) / (2 * length1 * length2);
+        s2 = Math.sqrt(1 - c2 * c2);
+        K1 = length1 + length2 * c2;
+        K2 = length2 * s2;
+        psi = Math.atan2(y, x) - Math.atan2(K2, K1);
+        theta = Math.atan2(s2, c2);
+        theta = theta + psi;
+
+        if (x > 0) {
+            psi = -psi;
+            theta = -theta;
+        }
+
+        return new InverseKinematicsSolution(psi, theta - psi - Math.PI);
     }
 
     /**

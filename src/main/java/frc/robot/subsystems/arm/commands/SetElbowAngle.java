@@ -15,12 +15,12 @@ public class SetElbowAngle extends CommandBase {
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
         arm.setElbowJointAngle(angle);
     }
 
     @Override
     public boolean isFinished() {
-        return MathUtil.applyDeadband(Math.toRadians(angle) - arm.getElbowJointAngle(), ArmConstants.SETPOINT_DEADBAND) == 0;
+        return MathUtil.applyDeadband(Math.toRadians(angle) - arm.getElbowJointAngle().getRadians(), ArmConstants.SETPOINT_DEADBAND) == 0;
     }
 }

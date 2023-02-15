@@ -7,39 +7,6 @@ public class ArmConstants { //TODO: find all constant values
 
     public static final int WAIT_TIME = 0;
 
-    // motor configuration
-    public static final double VOLT_COMP_SATURATION = 10; //[V]
-    public static final boolean ENABLE_VOLT_COMPENSATION = true;
-    public static final double MOTION_ACCELERATION = 0; // [rad/sec^2]
-    public static final double MOTION_CRUISE_VELOCITY = 0; // [rad/sec]
-    public static final double DEADBAND = 0.05; // [%]
-    public static final double SETPOINT_DEADBAND = 0;
-    public static final double TICKS_PER_RADIAN = 1024 / (Math.PI * 2);
-    public static final TalonFXInvertType MAIN_CLOCKWISE = TalonFXInvertType.Clockwise;
-    public static final TalonFXInvertType AUX_CLOCKWISE = TalonFXInvertType.Clockwise;
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0;
-    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0;
-
-    //PID
-    public static final double shoulderP = 0.1;
-    public static final double shoulderI = 0.0;
-    public static final double shoulderD = 0.0;
-    public static final double elbowP = 0.1;
-    public static final double elbowI = 0.0;
-    public static final double elbowD = 0.0;
-
-    //arm positions
-    public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
-    public static final Translation2d FEEDER_POSITION = new Translation2d();
-    public static final Translation2d RETRACTED_POSITION = new Translation2d();
-    public static final Translation2d UPPER_CONE_SCORING = new Translation2d();
-    public static final Translation2d MIDDLE_CONE_SCORING = new Translation2d();
-    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d();
-    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d();
-    public static final Translation2d FLOOR_SCORING = new Translation2d();
-    public static final double ELBOW_ZERO_POSITION = 180; //[degrees] TODO: check real values
-    public static final double SHOULDER_ZERO_POSITION = 90; //[degrees]
-
     //shoulder physics
     public static final double SHOULDER_GEARING = 106.7; // Arbitrary units
     public static final double SHOULDER_MASS = 4; // [kg]
@@ -57,6 +24,43 @@ public class ArmConstants { //TODO: find all constant values
     public static final double ELBOW_CENTER_OF_MASS_RADIUS = 0.377; // [m]
     public static final int ELBOW_NUMBER_OF_MOTORS = 2; // Arbitrary units
     public static final double ELBOW_ARM_LENGTH = 0.75889; //[m]
+
+    // motor configuration
+    public static final double VOLT_COMP_SATURATION = 10; //[V]
+    public static final boolean ENABLE_VOLT_COMPENSATION = true;
+    public static final double SHOULDER_ACCELERATION = 0.8/Math.pow(0.25, 2); // [rad/sec^2]
+    public static final double ELBOW_ACCELERATION = 0; // [rad/sec^2]
+    public static final double SHOULDER_CRUISE_VELOCITY = 0.8; // [rad/sec]
+    public static final double ELBOW_CRUISE_VELOCITY = 0; // [rad/sec]
+    public static final double SETPOINT_DEADBAND = 0;
+    public static final double SHOULDER_FALCON_TICKS_PER_REVOLUTION = 2048 * SHOULDER_GEARING;
+    public static final double ELBOW_FALCON_TICKS_PER_REVOLUTION = 2048 * ELBOW_GEARING;
+    public static final double TICKS_PER_RADIAN_SHOULDER = SHOULDER_FALCON_TICKS_PER_REVOLUTION / (Math.PI * 2);
+    public static final double TICKS_PER_RADIAN_ELBOW = ELBOW_FALCON_TICKS_PER_REVOLUTION / (Math.PI * 2);
+    public static final TalonFXInvertType MAIN_CLOCKWISE = TalonFXInvertType.Clockwise;
+    public static final TalonFXInvertType AUX_CLOCKWISE = TalonFXInvertType.Clockwise;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.521346148760737;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.45973984667891277;
+
+    //PID
+    public static final double shoulderP = 5;
+    public static final double shoulderI = 0.0;
+    public static final double shoulderD = 0.0;
+    public static final double elbowP = 0.0;
+    public static final double elbowI = 0.0;
+    public static final double elbowD = 0.0;
+
+    //arm positions
+    public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
+    public static final Translation2d FEEDER_POSITION = new Translation2d();
+    public static final Translation2d RETRACTED_POSITION = new Translation2d();
+    public static final Translation2d UPPER_CONE_SCORING = new Translation2d();
+    public static final Translation2d MIDDLE_CONE_SCORING = new Translation2d();
+    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d();
+    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d();
+    public static final Translation2d FLOOR_SCORING = new Translation2d();
+    public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees] TODO: check real values
+    public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
 
     public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CENTER_OF_MASS_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);

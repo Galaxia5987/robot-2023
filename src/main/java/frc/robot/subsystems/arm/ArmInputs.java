@@ -12,4 +12,11 @@ public class ArmInputs {
     public double elbowSetpoint = 0;
     public double shoulderEncoderPosition = 0;
     public double elbowEncoderPosition = 0;
+    public double shoulderVelocity = 0;
+    public double elbowVelocity = 0;
+    public double[] armPosition = new double[2];
+    public double[] inverseKinematicsSolution = new double[2];
+    public double[] feedforward = new double[2];
+    public double shoulderAcceleration = 0;
+    public double elbowAcceleration = 0;
 }

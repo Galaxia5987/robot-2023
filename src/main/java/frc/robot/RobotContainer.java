@@ -14,6 +14,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.arm.commands.SetArmsPosition;
+import frc.robot.subsystems.arm.commands.SetElbowAngle;
 import frc.robot.subsystems.arm.commands.SetShoulderAngle;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
@@ -87,7 +88,9 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         a.onTrue(new InstantCommand(arm::resetArmEncoders));
-        b.whileTrue(new SetShoulderAngle(60));
+        b.whileTrue(new SetElbowAngle(-90));
+        x.whileTrue(new SetElbowAngle(90));
+        y.whileTrue(new SetElbowAngle(180));
 //        x.onTrue(new SetShoulderAngle())
 
         //       b.onTrue(new InstantCommand(gripper::toggle, gripper));

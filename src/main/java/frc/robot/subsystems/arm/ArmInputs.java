@@ -19,4 +19,7 @@ public class ArmInputs {
     public double[] feedforward = new double[2];
     public double shoulderAcceleration = 0;
     public double elbowAcceleration = 0;
+    public double shoulderError = 0;
+    public double elbowError = 0;
+    public double shoulderOutputVoltage = 0;
 }

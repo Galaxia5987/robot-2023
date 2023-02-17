@@ -16,19 +16,12 @@ public class Feed extends CommandBase {
     }
 
     /**
-     * open the retractor for cubes
-     */
-    @Override
-    public void initialize() {
-        intake.setAngle(IntakeConstants.ANGLE_DOWN);
-    }
-
-    /**
      * start the motor of the Intake
      */
     @Override
     public void execute() {
         intake.setPower(power);
+        intake.setAnglePower(-0.05);
     }
 
 
@@ -39,7 +32,6 @@ public class Feed extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        intake.setAngle(IntakeConstants.ANGLE_UP);
         intake.setPower(0);
     }
 }

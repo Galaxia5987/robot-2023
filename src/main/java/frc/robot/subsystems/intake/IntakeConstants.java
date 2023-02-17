@@ -14,7 +14,7 @@ public class IntakeConstants {
     public static final double ANGLE_UP = 90; //[deg]
     public static final double ANGLE_DOWN = -29; //[deg]
 
-    public static final double INTAKE_POWER = 0.6; //[%]
+    public static final double INTAKE_POWER = 0.9; //[%]
     public static final double INTAKE_ANGLE_VELOCITY = Units.rpmToRps(1100) * FALCON_TICKS_PER_ROTATION * 10; //[RPM]
     public static final double INTAKE_ANGLE_MAX_ACCELERATION = INTAKE_ANGLE_VELOCITY / 0.5; //[RPM/s]
     public static final double MAX_CURRENT = 60;

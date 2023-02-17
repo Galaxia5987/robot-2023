@@ -5,7 +5,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.FollowPath;
@@ -25,6 +27,7 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.commands.Feed;
 import frc.robot.subsystems.intake.commands.InitializeEncoder;
 import frc.robot.subsystems.intake.commands.Retract;
@@ -78,20 +81,25 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
 
-       // swerveSubsystem.setDefaultCommand(
-//               new XboxDrive(swerveSubsystem, xboxController)
-//        );
-//       intake.setDefaultCommand(new XboxWristControl(xboxController)
-                arm.setDefaultCommand(new ArmXboxControl(xboxController)
-                );
+        swerveSubsystem.setDefaultCommand(
+               new XboxDrive(swerveSubsystem, xboxController)
+        );
+//       intake.setDefaultCommand(new XboxWristControl(xboxController));
+//                arm.setDefaultCommand(new ArmXboxControl(xboxController)
+//                );
     }
 
     private void configureButtonBindings() {
-        a.onTrue(new InstantCommand(arm::resetArmEncoders));
-        b.whileTrue(new SetElbowAngle(-90));
-        x.whileTrue(new SetElbowAngle(90));
-        y.whileTrue(new SetElbowAngle(180));
+//        a.onTrue(new InstantCommand(arm::resetArmEncoders));
+//        b.whileTrue(new SetElbowAngle(-90));
+//        x.whileTrue(new SetElbowAngle(90));
+//        y.whileTrue(new SetElbowAngle(180));
 //        x.onTrue(new SetShoulderAngle())
+        xboxLeftTrigger.onTrue(new Retract(false));
+        xboxLeftTrigger.whileTrue(new Feed(IntakeConstants.INTAKE_POWER));
+        xboxLeftTrigger.onFalse(new Retract(true).raceWith(
+                new FunctionalCommand(() -> intake.setPower(IntakeConstants.INTAKE_POWER), () -> {}, (i) -> intake.setPower(0), () -> false)
+        ));
 
         //       b.onTrue(new InstantCommand(gripper::toggle, gripper));
 
@@ -110,7 +118,7 @@ public class RobotContainer {
 //
 //        xboxLeftTrigger.whileTrue(new Feed(0.5));
 //        xboxRightTrigger.onTrue(new InstantCommand(limelight::togglePipeline));
-//        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
+        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
     }
 
 

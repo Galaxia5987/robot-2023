@@ -48,7 +48,7 @@ public class XboxDrive extends CommandBase {
                 vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                 omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                 new Translation2d(),
-                xboxController.getLeftTriggerAxis() <= 0.1);
+                true);
         swerveDrive.drive(signal);
     }
 }

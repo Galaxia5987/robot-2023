@@ -43,15 +43,15 @@ public class ArmConstants { //TODO: find all constant values
     public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.45973984667891277;
 
     //PID
-    public static final double shoulderP = 1;
+    public static final double shoulderP = 0.03;
     public static final double shoulderI = 0.0;
     public static final double shoulderD = 0.0;
-    public static final double elbowP = 0.02;
-    public static final double elbowI = 0.00003;
+    public static final double elbowP = 0.07;
+    public static final double elbowI = 0.000001;
     public static final double elbowD = 0.0;
 
-    public static final double SHOULDER_FEED_FORWARD = 0.0;
-    public static final double EBLOW_FEED_FORWARD = 0.0;
+    public static final double SHOULDER_FEED_FORWARD = 0.02;
+    public static final double ELBOW_FEED_FORWARD = 0.02;
 
     //arm positions
     public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();

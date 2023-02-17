@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,24 +10,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.commandgroups.*;
+import frc.robot.commandgroups.UpperScoring;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.*;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
-import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.commands.Feed;
-import frc.robot.subsystems.intake.commands.InitializeEncoder;
-import frc.robot.subsystems.intake.commands.Retract;
-import frc.robot.subsystems.intake.commands.XboxWristControl;
-import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 
 public class RobotContainer {
@@ -56,6 +50,8 @@ public class RobotContainer {
     private final JoystickButton rightJoystickTopBottom = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
     private final Trigger leftPOV = new Trigger(() -> xboxController.getPOV() == 270);
     private final Trigger rightPOV = new Trigger(() -> xboxController.getPOV() == 90);
+    private final Trigger upPOV = new Trigger(() -> xboxController.getPOV() == 0);
+    private final Trigger downPOV = new Trigger(() -> xboxController.getPOV() == 180);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -75,22 +71,24 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
 
-       // swerveSubsystem.setDefaultCommand(
-//               new XboxDrive(swerveSubsystem, xboxController)
-//        );
+        swerveSubsystem.setDefaultCommand(
+               new XboxDrive(swerveSubsystem, xboxController)
+        );
 //       intake.setDefaultCommand(new XboxWristControl(xboxController)
-                arm.setDefaultCommand(new ArmXboxControl(xboxController)
-                );
+//                arm.setDefaultCommand(new ArmXboxControl(xboxController)
+//                );
     }
 
     private void configureButtonBindings() {
         a.onTrue(new InstantCommand(arm::resetArmEncoders));
-        b.whileTrue(new HoldShoulderPosition());
-        x.whileTrue(new HoldElbowPosition());
-        y.whileTrue(new HoldArmPosition());
+//        b.whileTrue(new SetArmsPositionAngular(new Translation2d(1.05, 0.3)));
+//        x.whileTrue(new SetArmsPositionAngular(new Translation2d(0.8, 0.6)));
+//        y.whileTrue(new SetArmsPositionLinear(new Translation2d(-0.37, 0.55)));
 //        x.onTrue(new SetShoulderAngle())
 
-        //       b.onTrue(new InstantCommand(gripper::toggle, gripper));
+//        b.whileTrue(new GetArmOutOfRobot());
+
+        b.onTrue(new InstantCommand(gripper::toggle, gripper));
 
 //        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
 //        leftJoystickTrigger.whileTrue(new AdjustToTarget(false, false));
@@ -103,6 +101,7 @@ public class RobotContainer {
 //        a.onTrue(new InstantCommand(gripper::toggle, gripper));
 //        b.onTrue(new MidScoring());
 //        y.onTrue(new UpperScoring());
+        y.onTrue(new SetArmsPositionAngular(new Translation2d(1.125, 0.641)));
 //        x.onTrue(new PickFromFeeder(ArmConstants.FEEDER_POSITION, ArmConstants.FEEDER_POSITION, true));
 //
 //        xboxLeftTrigger.whileTrue(new Feed(0.5));

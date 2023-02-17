@@ -16,14 +16,14 @@ public class SetElbowAngle extends CommandBase {
     private final Timer timer = new Timer();
 
     public SetElbowAngle(double angle) {
-        this.angle = angle;
+        this.angle = AngleUtil.normalize(angle);
         addRequirements(arm);
     }
 
     @Override
     public void initialize() {
         double startAngle = AngleUtil.normalize(arm.getElbowJointAngle().getDegrees());
-        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(90, 180),
+        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(180, 270),
                 new TrapezoidProfile.State(angle, 0),
                 new TrapezoidProfile.State(startAngle, 0));
                 timer.start();

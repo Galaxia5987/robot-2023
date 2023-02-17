@@ -1,6 +1,8 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.utils.math.AngleUtil;
 
 /**
  * This class contains the kinematics for the arm.
@@ -66,8 +68,8 @@ public class ArmKinematics {
         public double elbowAngle;
 
         public InverseKinematicsSolution(double shoulderAngle, double elbowAngle) {
-            this.shoulderAngle = shoulderAngle;
-            this.elbowAngle = elbowAngle;
+            this.shoulderAngle = AngleUtil.normalize(Rotation2d.fromRadians(shoulderAngle)).getRadians();
+            this.elbowAngle = AngleUtil.normalize(Rotation2d.fromRadians(elbowAngle)).getRadians();
         }
     }
 }

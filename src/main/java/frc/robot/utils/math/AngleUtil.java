@@ -34,6 +34,10 @@ public class AngleUtil {
         return angle % 360;
     }
 
+    public static Rotation2d normalize(Rotation2d angle) {
+        return Rotation2d.fromDegrees(normalize(angle.getDegrees()));
+    }
+
     public static double absoluteAngleToYaw(double angle) {
         angle = normalize(angle);
         while (angle > 180) {

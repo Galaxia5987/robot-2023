@@ -6,11 +6,9 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
-import frc.robot.utils.Utils;
 import frc.robot.utils.math.AngleUtil;
 import frc.robot.utils.units.UnitModel;
 
@@ -18,9 +16,6 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     private static Arm INSTANCE = null;
 
     private final ArmKinematics kinematics = new ArmKinematics(ArmConstants.SHOULDER_ARM_LENGTH, ArmConstants.ELBOW_ARM_LENGTH);
-    private final ArmSystemModel systemModel = new ArmSystemModel(ArmConstants.ARM_CONSTANTS);
-    private final AccelerationCalculation shoulderAccelerationCalculation = new AccelerationCalculation();
-    private final AccelerationCalculation elbowAccelerationCalculation = new AccelerationCalculation();
 
     private final TalonFX shoulderMainMotor = new TalonFX(Ports.ArmPorts.SHOULDER_MAIN_MOTOR);
     private final TalonFX shoulderAuxMotor = new TalonFX(Ports.ArmPorts.SHOULDER_AUX_MOTOR);
@@ -33,11 +28,12 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     private final UnitModel unitModelShoulder = new UnitModel(ArmConstants.TICKS_PER_RADIAN_SHOULDER);
     private final UnitModel unitModelElbow = new UnitModel(ArmConstants.TICKS_PER_RADIAN_ELBOW);
-    private double shoulderFeedforward;
-    private double elbowFeedForward;
 
     private double shoulderOffset = ArmConstants.SHOULDER_ABSOLUTE_ENCODER_OFFSET;
     private double elbowOffset = ArmConstants.ELBOW_ABSOLUTE_ENCODER_OFFSET;
+
+    private double shoulderFeedforward;
+    private double elbowFeedforward;
 
     private Arm() {
         super(new ArmInputsAutoLogged());
@@ -132,7 +128,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      */
     public void setShoulderJointAngle(double angle) {
         double error = unitModelShoulder.toTicks(Math.toRadians(angle)) - unitModelShoulder.toTicks(getShoulderJointAngle().getRadians());
-        shoulderMainMotor.set(TalonFXControlMode.Position, shoulderMainMotor.getSelectedSensorPosition() + error);
+        shoulderMainMotor.set(TalonFXControlMode.Position, shoulderMainMotor.getSelectedSensorPosition() + error,
+                DemandType.ArbitraryFeedForward, shoulderFeedforward);
         loggerInputs.shoulderSetpoint = angle;
         loggerInputs.shoulderError = error;
     }
@@ -153,7 +150,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      */
     public void setElbowJointAngle(double angle) {
         double error = unitModelElbow.toTicks(Math.toRadians(angle)) - unitModelElbow.toTicks(getElbowJointAngle().getRadians());
-        elbowMainMotor.set(TalonFXControlMode.Position, elbowMainMotor.getSelectedSensorPosition() + error);
+        elbowMainMotor.set(TalonFXControlMode.Position, elbowMainMotor.getSelectedSensorPosition() + error,
+                DemandType.ArbitraryFeedForward, elbowFeedforward);
         loggerInputs.elbowSetpoint = angle;
         loggerInputs.elbowError = error;
     }
@@ -221,6 +219,15 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     @Override
     public void periodic() {
         SmartDashboard.putString("Arm Encoder Offset", "{" + shoulderOffset + ", " + elbowOffset + "}");
+        Translation2d position = getEndPosition();
+        Rotation2d angle = new Rotation2d(position.getX(), position.getY());
+        shoulderFeedforward = ArmConstants.SHOULDER_FEED_FORWARD *
+                position.getNorm() * angle.getCos();
+        elbowFeedforward = ArmConstants.EBLOW_FEED_FORWARD *
+                getElbowJointAngle()
+                .plus(getShoulderJointAngle())
+                .minus(Rotation2d.fromDegrees(180))
+                .getCos() * ArmConstants.ELBOW_ARM_LENGTH;
     }
 
     @Override
@@ -239,25 +246,10 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         ArmKinematics.InverseKinematicsSolution kinematicsSolution = kinematics.inverseKinematics(position);
         loggerInputs.inverseKinematicsSolution[0] = Math.toDegrees(kinematicsSolution.shoulderAngle);
         loggerInputs.inverseKinematicsSolution[1] = Math.toDegrees(kinematicsSolution.elbowAngle);
-        shoulderAccelerationCalculation.addVelocity(getShoulderMotorVelocity(), Timer.getFPGATimestamp());
-        double shoulderAcceleration = shoulderAccelerationCalculation.getAcceleration(); // rad/sec^2
-
-        elbowAccelerationCalculation.addVelocity(getElbowMotorVelocity(), Timer.getFPGATimestamp());
-        double elbowAcceleration = elbowAccelerationCalculation.getAcceleration(); // rad/sec^2
-
-        var tempFeedforward = systemModel.calculateFeedForward(
-                getShoulderJointAngle().getRadians(), getElbowJointAngle().getRadians(),
-                getShoulderMotorVelocity(), getElbowMotorVelocity(),
-                shoulderAcceleration, elbowAcceleration
-        );
-        shoulderFeedforward = tempFeedforward.shoulderFeedForward;
-        elbowFeedForward = tempFeedforward.elbowFeedForward;
 
         loggerInputs.feedforward[0] = shoulderFeedforward;
-        loggerInputs.feedforward[1] = elbowFeedForward;
+        loggerInputs.feedforward[1] = elbowFeedforward;
 
-        loggerInputs.elbowAcceleration = elbowAcceleration;
-        loggerInputs.shoulderAcceleration = shoulderAcceleration;
         loggerInputs.shoulderOutputVoltage = shoulderMainMotor.getMotorOutputVoltage();
     }
 }

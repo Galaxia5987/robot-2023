@@ -50,6 +50,9 @@ public class ArmConstants { //TODO: find all constant values
     public static final double elbowI = 0.00003;
     public static final double elbowD = 0.0;
 
+    public static final double SHOULDER_FEED_FORWARD = 0.0;
+    public static final double EBLOW_FEED_FORWARD = 0.0;
+
     //arm positions
     public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
     public static final Translation2d FEEDER_POSITION = new Translation2d();

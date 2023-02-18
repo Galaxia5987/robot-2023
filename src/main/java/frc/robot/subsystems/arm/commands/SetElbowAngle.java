@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.utils.Utils;
 import frc.robot.utils.math.AngleUtil;
 
 public class SetElbowAngle extends CommandBase {
@@ -38,6 +39,6 @@ public class SetElbowAngle extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return MathUtil.applyDeadband(Math.toRadians(angle) - arm.getElbowJointAngle().getRadians(), ArmConstants.SETPOINT_DEADBAND) == 0;
+        return Utils.epsilonEquals(angle, arm.getElbowJointAngle().getDegrees(), ArmConstants.SETPOINT_DEADBAND);
     }
 }

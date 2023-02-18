@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.utils.Utils;
 
 public class ArmXboxControl extends CommandBase {
     private final Arm arm = Arm.getInstance();
@@ -16,11 +17,10 @@ public class ArmXboxControl extends CommandBase {
 
     @Override
     public void execute() {
-        double powerSho = 0.3 * MathUtil.applyDeadband(-xboxController.getLeftY(), 0.2
-        );
-        double powerEl = 0.3 * MathUtil.applyDeadband(-xboxController.getRightY(), 0.2);
-        arm.setShoulderJointPower(powerSho);
-        arm.setElbowJointPower(powerEl);
+        double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.2);
+        double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.2);
+        arm.setShoulderJointPower(0.3 * powerSho);
+        arm.setElbowJointPower(0.3 * powerEl);
     }
 
     @Override

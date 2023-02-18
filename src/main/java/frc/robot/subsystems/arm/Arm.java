@@ -44,11 +44,6 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         shoulderMainMotor.setInverted(TalonFXInvertType.CounterClockwise);
         elbowMainMotor.setInverted(ArmConstants.MAIN_CLOCKWISE);
 
-        shoulderMainMotor.configMotionAcceleration(unitModelShoulder.toTicks100ms(ArmConstants.SHOULDER_ACCELERATION));
-        elbowMainMotor.configMotionCruiseVelocity(unitModelElbow.toTicks100ms(ArmConstants.ELBOW_ACCELERATION));
-        shoulderMainMotor.configMotionAcceleration(unitModelShoulder.toTicks100ms(ArmConstants.SHOULDER_CRUISE_VELOCITY));
-        elbowMainMotor.configMotionCruiseVelocity(unitModelElbow.toTicks100ms(ArmConstants.ELBOW_CRUISE_VELOCITY));
-
         configureMainMotor(shoulderMainMotor, ArmConstants.shoulderP, ArmConstants.shoulderI, ArmConstants.shoulderD);
         configureAuxMotor(shoulderAuxMotor, shoulderMainMotor);
 

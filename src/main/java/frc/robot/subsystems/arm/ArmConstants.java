@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.utils.math.ArmLinearProfile;
 
 public class ArmConstants { //TODO: find all constant values
 
@@ -28,11 +29,7 @@ public class ArmConstants { //TODO: find all constant values
     // motor configuration
     public static final double VOLT_COMP_SATURATION = 10; //[V]
     public static final boolean ENABLE_VOLT_COMPENSATION = true;
-    public static final double SHOULDER_ACCELERATION = 0.8/Math.pow(0.25, 2); // [rad/sec^2]
-    public static final double ELBOW_ACCELERATION = 0; // [rad/sec^2]
-    public static final double SHOULDER_CRUISE_VELOCITY = 0.8; // [rad/sec]
-    public static final double ELBOW_CRUISE_VELOCITY = 0; // [rad/sec]
-    public static final double SETPOINT_DEADBAND = 0;
+    public static final double SETPOINT_DEADBAND = 1;
     public static final double SHOULDER_FALCON_TICKS_PER_REVOLUTION = 2048 * SHOULDER_GEARING;
     public static final double ELBOW_FALCON_TICKS_PER_REVOLUTION = 2048 * ELBOW_GEARING;
     public static final double TICKS_PER_RADIAN_SHOULDER = SHOULDER_FALCON_TICKS_PER_REVOLUTION / (Math.PI * 2);
@@ -55,12 +52,16 @@ public class ArmConstants { //TODO: find all constant values
 
     //arm positions
     public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
-    public static final Translation2d FEEDER_POSITION = new Translation2d();
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.417, 0.657);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
-    public static final Translation2d UPPER_CONE_SCORING = new Translation2d();
-    public static final Translation2d MIDDLE_CONE_SCORING = new Translation2d();
-    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d();
-    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d();
+    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.03, 0.91);
+    public static final Translation2d UPPER_CONE_SCORING2 = new Translation2d(1.159, 0.955);
+    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.759, 0.62);
+    public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);
+    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.125, 0.641);
+    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.667, 0.481);
+    public static final Translation2d OUT_ROBOT1 = new Translation2d(-0.392, 0.067);
+    public static final Translation2d OUT_ROBOT2 = new Translation2d(-0.4508, 0.3976);
     public static final Translation2d FLOOR_SCORING = new Translation2d();
     public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees] TODO: check real values
     public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
@@ -71,4 +72,7 @@ public class ArmConstants { //TODO: find all constant values
             ELBOW_MASS, ELBOW_LENGTH, ELBOW_MOMENT_OF_INERTIA, ELBOW_CENTER_OF_MASS_RADIUS, ELBOW_GEARING, ELBOW_NUMBER_OF_MOTORS);
 
     public static final SystemConstants ARM_CONSTANTS = new SystemConstants(SHOULDER_JOINT_CONSTANTS, ELBOW_JOINT_CONSTANTS);
+
+    public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT1 = new ArmLinearProfile.Waypoint(0, 0, 0, 0.5);
+    public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT2 = new ArmLinearProfile.Waypoint(0, 0, 0, 0);
 }

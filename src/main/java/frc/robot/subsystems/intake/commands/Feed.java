@@ -20,7 +20,7 @@ public class Feed extends CommandBase {
      */
     @Override
     public void initialize() {
-        intake.setAngle(IntakeConstants.ANGLE_DOWN);
+//        intake.setAngle(IntakeConstants.ANGLE_DOWN);
     }
 
     /**
@@ -32,14 +32,14 @@ public class Feed extends CommandBase {
     }
 
 
-    @Override
-    public boolean isFinished() {
-        return beamBreaker.isBeamBlocked();
-    }
+//    @Override
+//    public boolean isFinished() {
+//        return beamBreaker.isBeamBlocked();
+//    }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setAngle(IntakeConstants.ANGLE_UP);
+//        intake.setAngle(IntakeConstants.ANGLE_UP);
         intake.setPower(0);
     }
 }

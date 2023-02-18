@@ -3,6 +3,7 @@ package frc.robot.commandgroups;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 import frc.robot.subsystems.arm.commands.SetArmsPositionLinear;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.intake.IntakeConstants;
@@ -16,7 +17,7 @@ public class PickUpCube extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(gripper::open, gripper),
                 new Feed(IntakeConstants.INTAKE_POWER),
-                new SetArmsPositionLinear(ArmConstants.ABOVE_GAME_PIECE),
+                new SetArmsPositionAngular(ArmConstants.ABOVE_GAME_PIECE),
                 new InstantCommand(gripper::close, gripper)
         );
     }

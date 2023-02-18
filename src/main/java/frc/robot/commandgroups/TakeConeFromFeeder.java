@@ -3,6 +3,7 @@ package frc.robot.commandgroups;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 import frc.robot.subsystems.arm.commands.SetArmsPositionLinear;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.vision.Limelight;
@@ -16,9 +17,9 @@ public class TakeConeFromFeeder extends SequentialCommandGroup {
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new AdjustToAprilTag(rightSide, true)
                         .alongWith(new InstantCommand(gripper::open, gripper)),
-                new SetArmsPositionLinear(ArmConstants.FEEDER_POSITION),
+                new SetArmsPositionAngular(ArmConstants.FEEDER_POSITION),
                 new InstantCommand(gripper::close),
-                new SetArmsPositionLinear(ArmConstants.RETRACTED_POSITION)
+                new SetArmsPositionAngular(ArmConstants.RETRACTED_POSITION)
         );
     }
 }

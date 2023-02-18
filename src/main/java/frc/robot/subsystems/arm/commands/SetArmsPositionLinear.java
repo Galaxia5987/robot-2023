@@ -18,8 +18,11 @@ public class SetArmsPositionLinear extends CommandBase {
 
     private final Timer timer = new Timer();
 
-    public SetArmsPositionLinear(Translation2d position) {
+    private final double deadband;
+
+    public SetArmsPositionLinear(Translation2d position, double deadband) {
         this.position = position;
+        this.deadband = deadband;
         addRequirements(arm);
     }
 
@@ -52,9 +55,6 @@ public class SetArmsPositionLinear extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        var position = this.position;
-        var difference = arm.getEndPosition().minus(position);
-        return MathUtil.applyDeadband(difference.getX(), ArmConstants.SETPOINT_DEADBAND) == 0 &&
-                MathUtil.applyDeadband(difference.getY(), ArmConstants.SETPOINT_DEADBAND) == 0;
+        return position.minus(arm.getEndPosition()).getNorm() < deadband;
     }
 }

@@ -7,7 +7,6 @@ import frc.robot.subsystems.intake.IntakeConstants;
 
 public class Retract extends CommandBase {
     private final Intake intake = Intake.getInstance();
-    private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
     private final boolean state;
 
     public Retract(boolean state) {
@@ -16,8 +15,13 @@ public class Retract extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        intake.setPower(0);
+    }
+
+    @Override
     public void execute() {
-        if (state){
+        if (state) {
             intake.setAnglePower(IntakeConstants.ANGLE_MOTOR_POWER);
         } else {
             intake.setAnglePower(-IntakeConstants.ANGLE_MOTOR_POWER);

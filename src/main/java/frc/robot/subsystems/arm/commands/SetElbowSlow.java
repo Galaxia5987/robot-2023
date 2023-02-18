@@ -6,25 +6,24 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.utils.Utils;
 import frc.robot.utils.math.AngleUtil;
 
-public class SetShoulderAngle extends CommandBase {
+public class SetElbowSlow extends CommandBase {
     private final Arm arm = Arm.getInstance();
     private final double angle;
 
     private TrapezoidProfile profile;
     private final Timer timer = new Timer();
 
-    public SetShoulderAngle(double angle) {
+    public SetElbowSlow(double angle) {
         this.angle = AngleUtil.normalize(angle);
         addRequirements(arm);
     }
 
     @Override
     public void initialize() {
-        double startAngle = AngleUtil.normalize(arm.getShoulderJointAngle().getDegrees());
-        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(45, 90),
+        double startAngle = AngleUtil.normalize(arm.getElbowJointAngle().getDegrees());
+        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(90, 180),
                 new TrapezoidProfile.State(angle, 0),
                 new TrapezoidProfile.State(startAngle, 0));
         timer.start();
@@ -34,11 +33,11 @@ public class SetShoulderAngle extends CommandBase {
     @Override
     public void execute() {
         var state = profile.calculate(timer.get());
-        arm.setShoulderJointAngle(state.position);
+        arm.setElbowJointAngle(state.position);
     }
 
     @Override
     public boolean isFinished() {
-        return Utils.epsilonEquals(angle, arm.getShoulderJointAngle().getDegrees(), ArmConstants.SETPOINT_DEADBAND);
+        return MathUtil.applyDeadband(Math.toRadians(angle) - arm.getElbowJointAngle().getRadians(), ArmConstants.SETPOINT_DEADBAND) == 0;
     }
 }

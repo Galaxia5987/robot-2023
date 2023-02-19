@@ -22,15 +22,15 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         motor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         motor.setInverted(Ports.Intake.POWER_INVERTED);
+        for (int i = 1; i <= 6; i++) {
+            motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.fromId(i), 500);
+        }
+        motor.burnFlash();
+
         angleMotor.setNeutralMode(NeutralMode.Brake);
         angleMotor.enableVoltageCompensation(true);
+        angleMotor.configVoltageCompSaturation(Constants.NOMINAL_VOLTAGE);
         angleMotor.setInverted(Ports.Intake.ANGLE_INVERTED);
-        angleMotor.config_kP(0, IntakeConstants.kP);
-        angleMotor.config_kI(0, IntakeConstants.kI);
-        angleMotor.config_kD(0, IntakeConstants.kD);
-        angleMotor.configMotionCruiseVelocity(IntakeConstants.INTAKE_ANGLE_VELOCITY);
-        angleMotor.configMotionCruiseVelocity(IntakeConstants.INTAKE_ANGLE_MAX_ACCELERATION);
-        motor.burnFlash();
     }
 
     /**

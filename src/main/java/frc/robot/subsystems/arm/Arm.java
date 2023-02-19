@@ -58,6 +58,11 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
         shoulderMainMotor.configClosedLoopPeakOutput(0, 0.3);
         elbowMainMotor.configClosedLoopPeakOutput(0, 0.3);
+
+        for (int i = 1; i <= 17; i++) {
+            shoulderAuxMotor.setStatusFramePeriod(i, 500);
+            elbowAuxMotor.setStatusFramePeriod(i, 500);
+        }
     }
 
     /**

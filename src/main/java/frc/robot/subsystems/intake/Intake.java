@@ -100,8 +100,8 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     public void updateInputs() {
         loggerInputs.power = getPower();
         loggerInputs.angle = getAngle();
-        loggerInputs.velocity = getAngleMotorVelocity() * 5676;
-        loggerInputs.current = angleMotor.getOutputCurrent();
+        loggerInputs.velocity = getAngleMotorVelocity();
+        loggerInputs.current = angleMotor.getStatorCurrent();
     }
 
     @Override

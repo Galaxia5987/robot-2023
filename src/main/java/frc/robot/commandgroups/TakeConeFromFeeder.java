@@ -16,9 +16,9 @@ public class TakeConeFromFeeder extends SequentialCommandGroup {
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new AdjustToAprilTag(rightSide, true)
                         .alongWith(new InstantCommand(gripper::open, gripper)),
-                new SetArmsPositionAngular(ArmConstants.FEEDER_POSITION),
+                new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION),
                 new InstantCommand(gripper::close),
-                new SetArmsPositionAngular(ArmConstants.RETRACTED_POSITION)
+                new SetArmsPositionAngular(() -> ArmConstants.RETRACTED_POSITION)
         );
     }
 }

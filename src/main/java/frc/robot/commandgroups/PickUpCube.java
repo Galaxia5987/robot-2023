@@ -16,7 +16,7 @@ public class PickUpCube extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(gripper::open, gripper),
                 new Feed(IntakeConstants.INTAKE_POWER),
-                new SetArmsPositionAngular(ArmConstants.ABOVE_GAME_PIECE),
+                new SetArmsPositionAngular(() -> ArmConstants.ABOVE_GAME_PIECE),
                 new InstantCommand(gripper::close, gripper)
         );
     }

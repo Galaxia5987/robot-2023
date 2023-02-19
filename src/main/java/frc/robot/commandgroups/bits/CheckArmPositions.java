@@ -8,12 +8,12 @@ import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 
 public class CheckArmPositions extends SequentialCommandGroup {
     public CheckArmPositions() {
-        new SetArmsPositionAngular(new Translation2d(0, 0), 0.02);
+        new SetArmsPositionAngular(() -> new Translation2d(0, 0), 0.02);
         new WaitCommand(1);
-        new SetArmsPositionAngular(new Translation2d(0, 0), 0.02);
+        new SetArmsPositionAngular(() -> new Translation2d(0, 0), 0.02);
         new WaitCommand(1);
-        new SetArmsPositionAngular(new Translation2d(0, 0), 0.02);
+        new SetArmsPositionAngular(() -> new Translation2d(0, 0), 0.02);
         new WaitCommand(1);
-        new SetArmsPositionAngular(ArmConstants.ABOVE_GAME_PIECE, 0.02);
+        new SetArmsPositionAngular(() -> ArmConstants.ABOVE_GAME_PIECE, 0.02);
     }
 }

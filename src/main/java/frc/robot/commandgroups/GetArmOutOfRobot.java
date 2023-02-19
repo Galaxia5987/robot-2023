@@ -8,8 +8,8 @@ public class GetArmOutOfRobot extends SequentialCommandGroup {
 
     public GetArmOutOfRobot() {
         addCommands(
-                new SetArmsPositionAngular(ArmConstants.OUT_ROBOT1, 0.05),
-                new SetArmsPositionAngular(ArmConstants.OUT_ROBOT2, 0.05)
+                new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT1, 0.05),
+                new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT2, 0.05)
         );
     }
 }

@@ -15,12 +15,12 @@ public class UpperScoring extends SequentialCommandGroup {
         Gripper gripper = Gripper.getInstance();
         addCommands(
                 new AdjustToTarget(true, false),
-                new SetArmsPositionAngular(limelight.getPipeline() == Limelight.Pipeline.REFLECTIVE_TAPE_PIPELINE ?
+                new SetArmsPositionAngular(() -> limelight.getPipeline() == Limelight.Pipeline.REFLECTIVE_TAPE_PIPELINE ?
                         ArmConstants.UPPER_CONE_SCORING2 :
                         ArmConstants.UPPER_CUBE_SCORING),
                 new InstantCommand(gripper::open, gripper),
                 new WaitCommand(ArmConstants.WAIT_TIME),
-                new SetArmsPositionAngular(ArmConstants.RETRACTED_POSITION)
+                new SetArmsPositionAngular(() -> ArmConstants.RETRACTED_POSITION)
         );
     }
 }

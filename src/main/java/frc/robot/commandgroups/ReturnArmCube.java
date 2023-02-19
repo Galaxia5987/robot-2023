@@ -13,7 +13,7 @@ public class ReturnArmCube extends SequentialCommandGroup {
 
         addCommands(
                 new InstantCommand(openGripperAtEnd ? gripper::open : gripper::close, gripper),
-                new SetArmsPositionAngular(ArmConstants.OUT_ROBOT2)
+                new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT2)
         );
     }
 }

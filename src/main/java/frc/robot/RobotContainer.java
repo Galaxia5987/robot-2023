@@ -90,12 +90,12 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        b.whileTrue(new SetArmsPositionAngular(ArmConstants.FEEDER_POSITION))
+        b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION))
                 .onFalse(new ReturnArmCube(false));
-        y.whileTrue(new SetArmsPositionAngular(ArmConstants.UPPER_CONE_SCORING2))
+        y.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING2))
                 .onFalse(new ReturnArmCube(true));
-        x.whileTrue(new SetArmsPositionAngular(ArmConstants.MIDDLE_CONE_SCORING1)
-                .andThen(new SetArmsPositionAngular(ArmConstants.MIDDLE_CONE_SCORING2)))
+        x.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1)
+                .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2)))
                 .onFalse(new ReturnArmCube(true));
         lb.onTrue(new InstantCommand(gripper::toggle));
 

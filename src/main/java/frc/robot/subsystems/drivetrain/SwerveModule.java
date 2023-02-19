@@ -3,6 +3,7 @@ package frc.robot.subsystems.drivetrain;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -48,6 +49,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         driveMotor.configGetSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
         driveMotor.configGetStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
         driveMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
+        driveMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
 
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
         angleMotor.configFeedbackNotContinuous(false, TALON_TIMEOUT);
@@ -56,6 +58,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         angleMotor.configStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
         angleMotor.configGetSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
         angleMotor.configGetStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
+        angleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
         configMotionMagic(motionMagicConfigs);
 
         angleMotor.setNeutralMode(NeutralMode.Brake);
@@ -163,7 +166,7 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
      * @return the state of the module, comprised of speed [m/s] and angle.
      */
     public SwerveModuleState getState() {
-        return new SwerveModuleState(loggerInputs.dSetpoint, getAngle());
+        return new SwerveModuleState(loggerInputs.dVelocity, getAngle());
     }
 
     /**

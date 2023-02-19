@@ -31,8 +31,8 @@ public class ArmConstants { //TODO: find all constant values
     public static final boolean ENABLE_VOLT_COMPENSATION = true;
     public static final double SETPOINT_DEADBAND = 1;
     public static final double SHOULDER_FALCON_TICKS_PER_REVOLUTION = 2048 * SHOULDER_GEARING;
-    public static final double ELBOW_FALCON_TICKS_PER_REVOLUTION = 2048 * ELBOW_GEARING;
     public static final double TICKS_PER_RADIAN_SHOULDER = SHOULDER_FALCON_TICKS_PER_REVOLUTION / (Math.PI * 2);
+    public static final double ELBOW_FALCON_TICKS_PER_REVOLUTION = 2048 * ELBOW_GEARING;
     public static final double TICKS_PER_RADIAN_ELBOW = ELBOW_FALCON_TICKS_PER_REVOLUTION / (Math.PI * 2);
     public static final TalonFXInvertType MAIN_CLOCKWISE = TalonFXInvertType.Clockwise;
     public static final TalonFXInvertType AUX_CLOCKWISE = TalonFXInvertType.Clockwise;

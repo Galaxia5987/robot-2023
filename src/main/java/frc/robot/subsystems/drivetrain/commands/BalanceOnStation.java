@@ -15,15 +15,14 @@ public class BalanceOnStation extends CommandBase {
     private final SwerveDrive swerveDrive;
     private final Gyroscope gyroscope;
     private final Timer timer = new Timer();
-    private boolean atSetpoint = false;
-    private boolean lastAtSetpoint = false;
-
     private final PIDFController controller = new PIDFController(
             SwerveConstants.CHARGING_STATION_BALANCE_Kp,
             SwerveConstants.CHARGING_STATION_BALANCE_Ki,
             SwerveConstants.CHARGING_STATION_BALANCE_Kd,
             SwerveConstants.CHARGING_STATION_BALANCE_Kf
     );
+    private boolean atSetpoint = false;
+    private boolean lastAtSetpoint = false;
 
     public BalanceOnStation() {
         this.swerveDrive = SwerveDrive.getInstance();

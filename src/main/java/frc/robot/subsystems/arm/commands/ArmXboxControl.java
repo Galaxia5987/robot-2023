@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.utils.Utils;
 
 public class ArmXboxControl extends CommandBase {
     private final Arm arm = Arm.getInstance();

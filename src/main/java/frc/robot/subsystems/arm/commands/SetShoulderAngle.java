@@ -1,6 +1,5 @@
 package frc.robot.subsystems.arm.commands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -12,9 +11,8 @@ import frc.robot.utils.math.AngleUtil;
 public class SetShoulderAngle extends CommandBase {
     private final Arm arm = Arm.getInstance();
     private final double angle;
-
-    private TrapezoidProfile profile;
     private final Timer timer = new Timer();
+    private TrapezoidProfile profile;
 
     public SetShoulderAngle(double angle) {
         this.angle = AngleUtil.normalize(angle);

@@ -1,6 +1,9 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.math.AngleUtil;
-import frc.robot.utils.math.InterpolatingDoubleMap;
 import frc.robot.utils.units.UnitModel;
 
 public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {

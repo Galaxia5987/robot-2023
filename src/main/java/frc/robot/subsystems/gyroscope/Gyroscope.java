@@ -12,7 +12,7 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     private final AHRS navx;
     private Rotation2d zeroPitch = new Rotation2d();
     private double zeroRoll;
-    private boolean zeroInitialized = false;
+    private final boolean zeroInitialized = false;
 
     private Gyroscope() {
         super(new GyroscopeLogInputs());

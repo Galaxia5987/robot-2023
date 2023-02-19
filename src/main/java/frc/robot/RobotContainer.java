@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.FollowPath;
@@ -17,7 +16,8 @@ import frc.robot.commandgroups.GetArmOutOfRobot;
 import frc.robot.commandgroups.ReturnArmCube;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.arm.commands.*;
+import frc.robot.subsystems.arm.commands.ArmXboxControl;
+import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
@@ -96,7 +96,7 @@ public class RobotContainer {
         y.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING2))
                 .onFalse(new ReturnArmCube(true));
         x.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1)
-                .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2)))
+                        .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2)))
                 .onFalse(new ReturnArmCube(true));
         lb.onTrue(new InstantCommand(gripper::toggle));
 
@@ -108,11 +108,13 @@ public class RobotContainer {
         xboxLeftTrigger.whileTrue(new Feed(IntakeConstants.INTAKE_POWER));
         xboxLeftTrigger.onTrue(new Retract(false));
         xboxLeftTrigger.onFalse(new Retract(true).raceWith(new FunctionalCommand(
-                () -> {}, () -> intake.setPower(IntakeConstants.INTAKE_POWER), (i) -> intake.setPower(0), () -> false
+                () -> {
+                }, () -> intake.setPower(IntakeConstants.INTAKE_POWER), (i) -> intake.setPower(0), () -> false
         )));
         xboxRightTrigger.whileTrue(new Feed(-IntakeConstants.INTAKE_POWER));
         xboxRightTrigger.onFalse(new Retract(true).raceWith(new FunctionalCommand(
-                () -> {}, () -> intake.setPower(-IntakeConstants.INTAKE_POWER), (i) -> intake.setPower(0), () -> false
+                () -> {
+                }, () -> intake.setPower(-IntakeConstants.INTAKE_POWER), (i) -> intake.setPower(0), () -> false
         )));
 
         start.onTrue(new InstantCommand(limelight::togglePipeline));

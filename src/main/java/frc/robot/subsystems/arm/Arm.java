@@ -9,8 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.math.AngleUtil;
@@ -230,11 +228,6 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         elbowMainMotor.neutralOutput();
     }
 
-    public void hold() {
-        setShoulderJointPower(shoulderFeedforward);
-        setElbowJointPower(elbowFeedforward);
-    }
-
     @Override
     public String getSubsystemName() {
         return "Arm";
@@ -279,9 +272,5 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     public ArmKinematics getKinematics() {
         return kinematics;
-    }
-
-    public Command holdCommand() {
-        return new RunCommand(this::hold);
     }
 }

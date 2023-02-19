@@ -103,7 +103,7 @@ public class RobotContainer {
         downPOV.whileTrue(new GetArmIntoRobot());
         upPOV.whileTrue(new GetArmOutOfRobot());
 
-        rb.whileTrue(arm.holdCommand());
+        rb.whileTrue(new HoldArmPosition());
 
         xboxLeftTrigger.whileTrue(new Feed(IntakeConstants.INTAKE_POWER));
         xboxLeftTrigger.onTrue(new Retract(false));

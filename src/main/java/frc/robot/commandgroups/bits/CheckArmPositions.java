@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
-import frc.robot.subsystems.arm.commands.SetArmsPositionLinear;
 
 public class CheckArmPositions extends SequentialCommandGroup {
     public CheckArmPositions() {

@@ -2,12 +2,11 @@ package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.FollowPath;
@@ -17,6 +16,7 @@ import frc.robot.commandgroups.ReturnArmCube;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
+import frc.robot.subsystems.arm.commands.HoldArmPosition;
 import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
@@ -28,6 +28,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.commands.Feed;
 import frc.robot.subsystems.intake.commands.Retract;
+import frc.robot.subsystems.intake.commands.XboxWristControl;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
 
@@ -91,13 +92,16 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION))
-                .onFalse(new ReturnArmCube(false));
-        y.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING2))
-                .onFalse(new ReturnArmCube(true));
-        x.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1)
-                        .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2)))
-                .onFalse(new ReturnArmCube(true));
+        b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION)
+                .andThen(new HoldArmPosition()));
+        y.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING2)
+                .andThen(new HoldArmPosition()));
+        x.whileTrue(new ConditionalCommand(
+                new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1, 0.05, 0, 0),
+                new InstantCommand(),
+                () -> arm.getElbowJointAngle().getDegrees() > 180)
+                    .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2))
+                        .andThen(new HoldArmPosition()));
         lb.onTrue(new InstantCommand(gripper::toggle));
 
         downPOV.whileTrue(new GetArmIntoRobot());
@@ -105,21 +109,18 @@ public class RobotContainer {
 
         rb.whileTrue(new HoldArmPosition());
 
-        xboxLeftTrigger.whileTrue(new Feed(IntakeConstants.INTAKE_POWER));
-        xboxLeftTrigger.onTrue(new Retract(false));
-        xboxLeftTrigger.onFalse(new Retract(true).raceWith(new FunctionalCommand(
-                () -> {
-                }, () -> intake.setPower(IntakeConstants.INTAKE_POWER), (i) -> intake.setPower(0), () -> false
-        )));
-        xboxRightTrigger.whileTrue(new Feed(-IntakeConstants.INTAKE_POWER));
-        xboxRightTrigger.onFalse(new Retract(true).raceWith(new FunctionalCommand(
-                () -> {
-                }, () -> intake.setPower(-IntakeConstants.INTAKE_POWER), (i) -> intake.setPower(0), () -> false
-        )));
+        xboxLeftTrigger.onTrue(new Retract(false)
+                        .alongWith(new InstantCommand(() -> intake.setPower(IntakeConstants.INTAKE_POWER))))
+                .onFalse(new Retract(true)
+                        .andThen(new InstantCommand(() -> intake.setPower(0))));
+        xboxRightTrigger.onTrue(new Retract(false)
+                        .alongWith(new InstantCommand(() -> intake.setPower(-IntakeConstants.INTAKE_POWER))))
+                .onFalse(new Retract(true)
+                        .andThen(new InstantCommand(() -> intake.setPower(0))));
 
         start.onTrue(new InstantCommand(limelight::togglePipeline));
 
-        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        rightJoystickTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
     }
 
 

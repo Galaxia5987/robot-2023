@@ -58,8 +58,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         elbowMainMotor.config_IntegralZone(0, 0.0001);
         elbowMainMotor.setIntegralAccumulator(2 / 3.0 * ArmConstants.ELBOW_FALCON_TICKS_PER_REVOLUTION / 360.0);
 
-        shoulderMainMotor.configClosedLoopPeakOutput(0, 0.3);
-        elbowMainMotor.configClosedLoopPeakOutput(0, 0.3);
+        shoulderMainMotor.configClosedLoopPeakOutput(0, 0.4);
+        elbowMainMotor.configClosedLoopPeakOutput(0, 0.4);
 
         for (int i = 1; i <= 17; i++) {
             shoulderAuxMotor.setStatusFramePeriod(i, 500);

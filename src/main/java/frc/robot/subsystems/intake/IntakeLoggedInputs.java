@@ -6,6 +6,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public class IntakeLoggedInputs implements LoggableInputs {
     public double velocity;
     public double power;
+    public double anglePower;
     public double angle;
     public double current;
 
@@ -18,6 +19,7 @@ public class IntakeLoggedInputs implements LoggableInputs {
         table.put("angle", angle);
         table.put("velocity", velocity);
         table.put("current", current);
+        table.put("anglePower", anglePower);
     }
 
     /**

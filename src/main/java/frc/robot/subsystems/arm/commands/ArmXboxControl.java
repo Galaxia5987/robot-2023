@@ -4,10 +4,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.utils.Utils;
 
 public class ArmXboxControl extends CommandBase {
     private final Arm arm = Arm.getInstance();
     private final XboxController xboxController;
+
+    private double shoulderHoldAngle;
+    private double elbowHoldAngle;
+    private boolean lastJoysticksZero;
 
     public ArmXboxControl(XboxController xboxController) {
         this.xboxController = xboxController;
@@ -18,8 +23,22 @@ public class ArmXboxControl extends CommandBase {
     public void execute() {
         double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.2);
         double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.2);
-        arm.setShoulderJointPower(0.3 * powerSho);
-        arm.setElbowJointPower(0.3 * powerEl);
+
+//        boolean joysticksZero = Utils.epsilonEquals(powerSho, 0) && Utils.epsilonEquals(powerEl, 0);
+//
+//        if (!lastJoysticksZero && joysticksZero) {
+//            shoulderHoldAngle = arm.getShoulderJointAngle().getDegrees();
+//            elbowHoldAngle = arm.getElbowJointAngle().getDegrees();
+//        }
+//        if (joysticksZero) {
+//            arm.setShoulderJointAngle(shoulderHoldAngle);
+//            arm.setElbowJointAngle(elbowHoldAngle);
+//        } else {
+            arm.setShoulderJointPower(0.3 * powerSho);
+            arm.setElbowJointPower(0.3 * powerEl);
+//        }
+//
+//        lastJoysticksZero = joysticksZero;
     }
 
     @Override

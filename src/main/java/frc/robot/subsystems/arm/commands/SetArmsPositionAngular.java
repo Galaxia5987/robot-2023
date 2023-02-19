@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmKinematics;
 
+import java.util.OptionalDouble;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -19,6 +20,9 @@ public class SetArmsPositionAngular extends CommandBase {
     private final Supplier<Translation2d> positionSupplier;
     private TrapezoidProfile shoulderProfile;
     private TrapezoidProfile elbowProfile;
+
+    private double finalShoulderVelocity = 0;
+    private double finalElbowVelocity = 0;
 
     public SetArmsPositionAngular(Supplier<Translation2d> positionSupplier, double deadBand) {
         Supplier<ArmKinematics.InverseKinematicsSolution> solution =
@@ -33,15 +37,21 @@ public class SetArmsPositionAngular extends CommandBase {
         this(positionSupplier, 0.02);
     }
 
+    public SetArmsPositionAngular(Supplier<Translation2d> positionSupplier, double deadBand, double finalShoulderVelocity, double finalElbowVelocity) {
+        this(positionSupplier, deadBand);
+        this.finalShoulderVelocity = finalShoulderVelocity;
+        this.finalElbowVelocity = finalElbowVelocity;
+    }
+
     @Override
     public void initialize() {
         double currentShoulderAngle = arm.getShoulderJointAngle().getDegrees();
         double currentElbowAngle = arm.getElbowJointAngle().getDegrees();
         shoulderProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(180, 90),
-                new TrapezoidProfile.State(shoulderAngle.getAsDouble(), 0),
+                new TrapezoidProfile.State(shoulderAngle.getAsDouble(), finalShoulderVelocity),
                 new TrapezoidProfile.State(currentShoulderAngle, 0));
         elbowProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(270, 110),
-                new TrapezoidProfile.State(elbowAngle.getAsDouble(), 0),
+                new TrapezoidProfile.State(elbowAngle.getAsDouble(), finalElbowVelocity),
                 new TrapezoidProfile.State(currentElbowAngle, 0));
 
         timer.start();

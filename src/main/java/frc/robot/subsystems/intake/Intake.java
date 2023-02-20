@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
@@ -60,10 +61,11 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
      */
     public void setPower(double power) {
         motor.set(power);
+        loggerInputs.setpointPower = power;
     }
 
     private double getAngleMotorVelocity() {
-        return angleMotor.getSelectedSensorVelocity();
+        return unitModel.toVelocity(angleMotor.getSelectedSensorVelocity());
     }
 
     public void setAnglePower(double power) {
@@ -88,7 +90,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     }
 
     public void resetEncoder() {
-        angleMotor.setSelectedSensorPosition(90 * IntakeConstants.TICKS_PER_DEGREE);
+        angleMotor.setSelectedSensorPosition(0);
     }
 
     public double getCurrent() {
@@ -96,7 +98,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     }
 
     public Command run(double power) {
-        return new InstantCommand(() -> this.setPower(power));
+        return new RunCommand(() -> this.setPower(power));
     }
 
     /**

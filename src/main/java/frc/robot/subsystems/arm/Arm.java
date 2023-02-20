@@ -7,14 +7,11 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Ports;
-import frc.robot.Robot;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.utils.math.AngleUtil;
@@ -242,9 +239,13 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
                 ArmConstants.SHOULDER_ARM_LENGTH * shoulderAngle.getSin());
     }
 
-    public boolean armIsInFrame() {
+    public boolean armIsOutOfFrame() {
         Translation2d elbowJoint = getElbowJointPosition(), endPosition = getEndPosition();
-        return elbowJoint.getX() < 0 && endPosition.getX() < 0;
+        return !(elbowJoint.getX() < 0) || !(endPosition.getX() < 0);
+    }
+
+    public boolean armIsInRobot() {
+        return getEndPosition().getY() < 0 && getShoulderJointAngle().getDegrees() > 90;
     }
 
     public boolean changedToDefaultCommand() {

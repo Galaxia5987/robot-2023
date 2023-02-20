@@ -48,7 +48,7 @@ public class ArmConstants { //TODO: find all constant values
     public static final double elbowD = 0.0;
 
     public static final double SHOULDER_FEED_FORWARD = 0.02;
-    public static final double ELBOW_FEED_FORWARD = 0.0;
+    public static final double ELBOW_FEED_FORWARD = 0.02;
 
     //arm positions
     public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
@@ -59,7 +59,8 @@ public class ArmConstants { //TODO: find all constant values
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.125, 0.641);
     public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.667, 0.481);
-    public static final Translation2d OUT_ROBOT1 = new Translation2d(-0.392, 0.067);
+    public static final Translation2d OUT_ROBOT1 = new Translation2d(-0.392, 0.0);
+    public static final Translation2d IN_ROBOT = new Translation2d(-0.362, 0.1);
     public static final Translation2d OUT_ROBOT2 = new Translation2d(-0.4508, 0.3976);
     public static final Translation2d FLOOR_SCORING = new Translation2d();
     public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees] TODO: check real values

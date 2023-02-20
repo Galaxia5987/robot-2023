@@ -1,35 +1,30 @@
 package frc.robot.subsystems.intake.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.utils.Utils;
 
 public class IntakeDefaultCommand extends CommandBase {
     private final Intake intake = Intake.getInstance();
-
-    private double angle;
-    private boolean finishedUpwardMotion = false;
+    private boolean lastIntakeNotAtSetpoint = false;
 
     public IntakeDefaultCommand() {
         addRequirements(intake);
     }
 
     @Override
-    public void initialize() {
-        intake.setAnglePower(IntakeConstants.ANGLE_MOTOR_POWER);
-    }
-
-    @Override
     public void execute() {
-        if (!finishedUpwardMotion && intake.getCurrent() >= IntakeConstants.MAX_CURRENT) {
-            finishedUpwardMotion = true;
-            intake.setAnglePower(0);
-            angle = intake.getAngle() - 30;
+        boolean intakeNotAtSetpoint = !Utils.epsilonEquals(intake.getAngle(), 0, 2);
+
+        if (intakeNotAtSetpoint) {
+            intake.setAnglePower(IntakeConstants.ANGLE_MOTOR_POWER);
         }
-        if (finishedUpwardMotion) {
-            intake.setAngle(angle);
+        if (intake.getCurrent() > IntakeConstants.MAX_CURRENT) {
+            intake.setAnglePower(0);
         }
 
-        System.out.println(finishedUpwardMotion);
+        lastIntakeNotAtSetpoint = intakeNotAtSetpoint;
     }
 }

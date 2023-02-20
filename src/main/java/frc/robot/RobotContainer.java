@@ -14,17 +14,16 @@ import frc.robot.commandgroups.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
-import frc.robot.subsystems.arm.commands.HoldArmPosition;
 import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.commands.Retract;
+import frc.robot.subsystems.intake.commands.IntakeDefaultCommand;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
 
@@ -55,8 +54,8 @@ public class RobotContainer {
     private final JoystickButton rightJoystickTopBottom = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
     private final Trigger leftPOV = new Trigger(() -> xboxController.getPOV() == 270);
     private final Trigger rightPOV = new Trigger(() -> xboxController.getPOV() == 90);
-    private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0, 50));
-    private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180, 50));
+    private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0));
+    private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180));
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
 
     /**
@@ -78,13 +77,10 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-
         swerveSubsystem.setDefaultCommand(
                 new JoystickDrive(leftJoystick, rightJoystick)
         );
-//        intake.setDefaultCommand(new IntakeDefaultCommand());
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
-//        intake.setDefaultCommand(new XboxWristControl(xboxController));
     }
 
     private void configureButtonBindings() {
@@ -95,25 +91,23 @@ public class RobotContainer {
                 new InstantCommand(),
                 () -> arm.getElbowJointAngle().getDegrees() > 180)
                     .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2)));
-        a.whileTrue(new ConditionalCommand(
-                new ReturnArm(true),
-                new ReturnArm(false),
-                () -> arm.getShoulderJointAngle().getDegrees() < 90));
+        a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
+
 
         downPOV.whileTrue(new GetArmIntoRobot());
         upPOV.whileTrue(new GetArmOutOfRobot());
 
-        xboxLeftTrigger.onTrue(new Feed(false))
+        xboxLeftTrigger.onTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
-        xboxRightTrigger.onTrue(new Feed(true))
+        xboxRightTrigger.onTrue(new Feed(true).unless(arm::armIsOutOfFrame))
                 .onFalse(new ReturnIntake());
 
         start.onTrue(new InstantCommand(limelight::togglePipeline));
 
-        rightJoystickTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
+        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
 
-        leftJoystickTrigger.whileTrue(new AdjustToTarget());
+        leftJoystickTrigger.whileTrue(new BalanceOnStation());
     }
 
 

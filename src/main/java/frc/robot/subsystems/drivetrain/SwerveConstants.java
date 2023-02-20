@@ -85,7 +85,7 @@ public class SwerveConstants {
             TARGET_ROTATION_Kp, TARGET_ROTATION_Ki, TARGET_ROTATION_Kd, TARGET_ROTATION_Kf
     );
 
-    public static double CHARGING_STATION_BALANCE_Kp = 5;
+    public static double CHARGING_STATION_BALANCE_Kp = 50;
     public static double CHARGING_STATION_BALANCE_Ki = 0;
     public static double CHARGING_STATION_BALANCE_Kd = 1;
     public static double CHARGING_STATION_BALANCE_Kf = 0;

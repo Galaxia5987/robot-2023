@@ -1,5 +1,6 @@
 package frc.robot.commandgroups;
 
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.arm.Arm;
@@ -15,8 +16,11 @@ public class GetArmIntoRobot extends SequentialCommandGroup {
         Arm arm = Arm.getInstance();
 
         addCommands(
-                new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT2, 0.05),
-                new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT1, 0.05),
+                new ConditionalCommand(
+                        new InstantCommand(),
+                        new SetArmsPositionAngular(() -> ArmConstants.IN_ROBOT, 0.05),
+                        arm::armIsInRobot
+                ),
                 new SetShoulderAngle(129).alongWith(new InstantCommand(arm::stop)),
                 new SetElbowAngle(329),
                 new HoldArmPosition()

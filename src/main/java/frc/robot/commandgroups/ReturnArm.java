@@ -6,10 +6,9 @@ import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 
 public class ReturnArm extends SequentialCommandGroup {
 
-    public ReturnArm(boolean feederPosition) {
+    public ReturnArm() {
 
         addCommands(
-                feederPosition ? new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION) :
                 new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT2)
         );
     }

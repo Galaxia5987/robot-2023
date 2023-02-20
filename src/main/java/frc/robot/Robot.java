@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,6 +33,9 @@ public class Robot extends LoggedRobot {
 
     private RobotContainer robotContainer;
     private Command autonomousCommand;
+
+    private static boolean lastEnabled = false;
+    private static boolean justEnabled = false;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -81,6 +85,10 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         LoggedSubsystem.getSubsystems().forEach(LoggedSubsystem::updateSubsystem);
         CommandScheduler.getInstance().run();
+
+        boolean enabled = DriverStation.isEnabled();
+        justEnabled = !lastEnabled && enabled;
+        lastEnabled = enabled;
     }
 
     /**
@@ -155,5 +163,9 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testPeriodic() {
+    }
+
+    public static boolean justEnabled() {
+        return justEnabled;
     }
 }

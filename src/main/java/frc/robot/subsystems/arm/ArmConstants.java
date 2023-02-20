@@ -52,10 +52,9 @@ public class ArmConstants { //TODO: find all constant values
 
     //arm positions
     public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.417, 0.627);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.467, 0.627);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
-    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.03, 0.91);
-    public static final Translation2d UPPER_CONE_SCORING2 = new Translation2d(1.189, 0.925);
+    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.189, 0.925);
     public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.809, 0.62);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.125, 0.641);

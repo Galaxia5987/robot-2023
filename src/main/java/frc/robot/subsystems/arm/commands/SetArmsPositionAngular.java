@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmKinematics;
 
-import java.util.OptionalDouble;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -60,12 +59,15 @@ public class SetArmsPositionAngular extends CommandBase {
 
     @Override
     public void execute() {
-        double time = timer.get();
-        double shoulder = shoulderProfile.calculate(time).position;
-        double elbow = elbowProfile.calculate(time).position;
+        arm.setCurrentCommand(this);
 
-        arm.setShoulderJointAngle(shoulder);
-        arm.setElbowJointAngle(elbow);
+        double time = timer.get();
+        double shoulderSetpoint = shoulderProfile.calculate(time).position;
+        double elbowSetpoint = elbowProfile.calculate(time).position;
+
+        arm.setShoulderJointAngle(shoulderSetpoint);
+        arm.setElbowJointAngle(elbowSetpoint);
+
     }
 
     @Override

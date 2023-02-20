@@ -7,12 +7,19 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Ports;
+import frc.robot.Robot;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.utils.math.AngleUtil;
 import frc.robot.utils.units.UnitModel;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     private static Arm INSTANCE = null;
@@ -36,6 +43,14 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     private double shoulderFeedforward;
     private double elbowFeedforward;
 
+    private Command lastCommand;
+    private Command currentCommand;
+    private boolean changedToDefaultCommand = false;
+
+    public void setCurrentCommand(Command currentCommand) {
+        this.currentCommand = currentCommand;
+    }
+
     private Arm() {
         super(new ArmInputsAutoLogged());
         shoulderMainMotor.configFactoryDefault();
@@ -52,14 +67,14 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         configureMainMotor(elbowMainMotor, ArmConstants.elbowP, ArmConstants.elbowI, ArmConstants.elbowD);
         configureAuxMotor(elbowAuxMotor, elbowMainMotor);
 
-        shoulderMainMotor.config_IntegralZone(0, 0.0001);
-        shoulderMainMotor.setIntegralAccumulator(1 / 3.0 * ArmConstants.SHOULDER_FALCON_TICKS_PER_REVOLUTION / 360.0);
+//        shoulderMainMotor.config_IntegralZone(0, 0.0001);
+//        shoulderMainMotor.setIntegralAccumulator(1 / 3.0 * ArmConstants.SHOULDER_FALCON_TICKS_PER_REVOLUTION / 360.0);
+//
+//        elbowMainMotor.config_IntegralZone(0, 0.0001);
+//        elbowMainMotor.setIntegralAccumulator(2 / 3.0 * ArmConstants.ELBOW_FALCON_TICKS_PER_REVOLUTION / 360.0);
 
-        elbowMainMotor.config_IntegralZone(0, 0.0001);
-        elbowMainMotor.setIntegralAccumulator(2 / 3.0 * ArmConstants.ELBOW_FALCON_TICKS_PER_REVOLUTION / 360.0);
-
-        shoulderMainMotor.configClosedLoopPeakOutput(0, 0.4);
-        elbowMainMotor.configClosedLoopPeakOutput(0, 0.4);
+        shoulderMainMotor.configClosedLoopPeakOutput(0, 0.3);
+        elbowMainMotor.configClosedLoopPeakOutput(0, 0.3);
 
         for (int i = 1; i <= 17; i++) {
             shoulderAuxMotor.setStatusFramePeriod(i, 500);
@@ -220,6 +235,22 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         elbowOffset = AngleUtil.normalize(elbowAngleReset) / 360.0;
     }
 
+    public Translation2d getElbowJointPosition() {
+        Rotation2d shoulderAngle = getShoulderJointAngle();
+        return new Translation2d(
+                ArmConstants.SHOULDER_ARM_LENGTH * shoulderAngle.getCos(),
+                ArmConstants.SHOULDER_ARM_LENGTH * shoulderAngle.getSin());
+    }
+
+    public boolean armIsInFrame() {
+        Translation2d elbowJoint = getElbowJointPosition(), endPosition = getEndPosition();
+        return elbowJoint.getX() < 0 && endPosition.getX() < 0;
+    }
+
+    public boolean changedToDefaultCommand() {
+        return changedToDefaultCommand;
+    }
+
     /**
      * Stops the motors.
      */
@@ -235,6 +266,15 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     @Override
     public void periodic() {
+        double t = Timer.getFPGATimestamp();
+
+        changedToDefaultCommand = !(lastCommand instanceof ArmXboxControl) && currentCommand instanceof ArmXboxControl;
+        lastCommand = currentCommand;
+
+        if (currentCommand != null) {
+            Logger.getInstance().recordOutput("ArmCommand", currentCommand.getName());
+        }
+
         SmartDashboard.putString("Arm Encoder Offset", "{" + shoulderOffset + ", " + elbowOffset + "}");
         Translation2d position = getEndPosition();
         Rotation2d angle = new Rotation2d(position.getX(), position.getY());

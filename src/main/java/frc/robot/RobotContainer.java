@@ -10,9 +10,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.commandgroups.GetArmIntoRobot;
-import frc.robot.commandgroups.GetArmOutOfRobot;
-import frc.robot.commandgroups.ReturnArmCube;
+import frc.robot.commandgroups.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
@@ -26,9 +24,7 @@ import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.commands.Feed;
 import frc.robot.subsystems.intake.commands.Retract;
-import frc.robot.subsystems.intake.commands.XboxWristControl;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
 
@@ -59,8 +55,8 @@ public class RobotContainer {
     private final JoystickButton rightJoystickTopBottom = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
     private final Trigger leftPOV = new Trigger(() -> xboxController.getPOV() == 270);
     private final Trigger rightPOV = new Trigger(() -> xboxController.getPOV() == 90);
-    private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0, 45));
-    private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180, 45));
+    private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0, 50));
+    private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180, 50));
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
 
     /**
@@ -84,7 +80,7 @@ public class RobotContainer {
     private void configureDefaultCommands() {
 
         swerveSubsystem.setDefaultCommand(
-                new JoystickDrive(swerveSubsystem, leftJoystick, rightJoystick)
+                new JoystickDrive(leftJoystick, rightJoystick)
         );
 //        intake.setDefaultCommand(new IntakeDefaultCommand());
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
@@ -92,35 +88,32 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION)
-                .andThen(new HoldArmPosition()));
-        y.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING2)
-                .andThen(new HoldArmPosition()));
+        b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION));
+        y.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING));
         x.whileTrue(new ConditionalCommand(
-                new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1, 0.05, 0, 0),
+                new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1, 0.05),
                 new InstantCommand(),
                 () -> arm.getElbowJointAngle().getDegrees() > 180)
-                    .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2))
-                        .andThen(new HoldArmPosition()));
+                    .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2)));
+        a.whileTrue(new ConditionalCommand(
+                new ReturnArm(true),
+                new ReturnArm(false),
+                () -> arm.getShoulderJointAngle().getDegrees() < 90));
         lb.onTrue(new InstantCommand(gripper::toggle));
 
         downPOV.whileTrue(new GetArmIntoRobot());
         upPOV.whileTrue(new GetArmOutOfRobot());
 
-        rb.whileTrue(new HoldArmPosition());
-
-        xboxLeftTrigger.onTrue(new Retract(false)
-                        .alongWith(new InstantCommand(() -> intake.setPower(IntakeConstants.INTAKE_POWER))))
-                .onFalse(new Retract(true)
-                        .andThen(new InstantCommand(() -> intake.setPower(0))));
-        xboxRightTrigger.onTrue(new Retract(false)
-                        .alongWith(new InstantCommand(() -> intake.setPower(-IntakeConstants.INTAKE_POWER))))
-                .onFalse(new Retract(true)
-                        .andThen(new InstantCommand(() -> intake.setPower(0))));
+        xboxLeftTrigger.onTrue(new Feed(false))
+                .onFalse(new ReturnIntake());
+        xboxRightTrigger.onTrue(new Feed(true))
+                .onFalse(new ReturnIntake());
 
         start.onTrue(new InstantCommand(limelight::togglePipeline));
 
         rightJoystickTrigger.onTrue(new InstantCommand(() -> gyroscope.resetYaw(Rotation2d.fromDegrees(180))));
+
+        leftJoystickTrigger.whileTrue(new AdjustToTarget());
     }
 
 

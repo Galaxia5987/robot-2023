@@ -11,7 +11,7 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 
 public class JoystickDrive extends CommandBase {
-    private final SwerveDrive swerveDrive;
+    private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Joystick leftJoystick;
     private final Joystick rightJoystick;
 
@@ -19,8 +19,7 @@ public class JoystickDrive extends CommandBase {
     private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(SwerveConstants.XY_SLEW_RATE_LIMIT);
     private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(SwerveConstants.ROTATION_SLEW_RATE_LIMIT);
 
-    public JoystickDrive(SwerveDrive swerveDrive, Joystick leftJoystick, Joystick rightJoystick) {
-        this.swerveDrive = swerveDrive;
+    public JoystickDrive(Joystick leftJoystick, Joystick rightJoystick) {
         this.leftJoystick = leftJoystick;
         this.rightJoystick = rightJoystick;
         addRequirements(swerveDrive);

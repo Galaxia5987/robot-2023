@@ -15,6 +15,7 @@ public class GetArmIntoRobot extends SequentialCommandGroup {
         Arm arm = Arm.getInstance();
 
         addCommands(
+                new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT2, 0.05),
                 new SetArmsPositionAngular(() -> ArmConstants.OUT_ROBOT1, 0.05),
                 new SetShoulderAngle(129).alongWith(new InstantCommand(arm::stop)),
                 new SetElbowAngle(329),

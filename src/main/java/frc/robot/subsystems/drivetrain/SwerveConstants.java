@@ -12,15 +12,17 @@ public class SwerveConstants {
 
     public static final double DRIVETRAIN_TRACK_WIDTH_METERS = 0.51594;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.66594;
+    public static final double DRIVETRAIN_TOTAL_LENGTH = 832 / 1000.0;
+    public static final double DRIVETRAIN_TOTAL_WIDTH = 682 / 1000.0;
 
     public static final double DRIVE_REDUCTION = (1 / 2.0) * (22.0 / 24.0) * (15.0 / 45.0);
     public static final double ANGLE_GEAR_RATIO = (14.0 / 72.0) * 0.5;
     public static final double WHEEL_DIAMETER = 0.1023679821;
 
     public static final StatorCurrentLimitConfiguration STATOR_CURRENT_LIMIT_CONFIG = new StatorCurrentLimitConfiguration(
-            true, 35, 2, 0.02);
+            true, 40, 2, 0.02);
     public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG = new SupplyCurrentLimitConfiguration(
-            true, 35, 2, 0.02);
+            true, 40, 2, 0.02);
     public static final double NEUTRAL_DEADBAND = 0.175;
 
     // kP, kI, kD, kF, sCurveStrength, cruiseVelocity, acceleration, allowableError,
@@ -50,13 +52,13 @@ public class SwerveConstants {
     public static double AUTO_ROTATION_Ki = 0.0;
     public static double AUTO_ROTATION_Kd = 0.0;
     public static double AUTO_ROTATION_Kf = 0.0;
-    public static double TARGET_XY_Kp = 5.0;
+    public static double TARGET_XY_Kp = 15.0;
     public static double TARGET_XY_Ki = 0.0;
     public static double TARGET_XY_Kd = 0.0;
-    public static double TARGET_ROTATION_Kp = 7.5;
-    public static double TARGET_ROTATION_Ki = 0.15;
+    public static double TARGET_ROTATION_Kp = 8.0;
+    public static double TARGET_ROTATION_Ki = 0.0;
     public static double TARGET_ROTATION_Kd = 0.0;
-    public static double TARGET_ROTATION_Kf = 0.1;
+    public static double TARGET_ROTATION_Kf = 0.0;
     public static double AUTO_XY_VELOCITY_FEEDFORWARD = 0.33031;
     public static double AUTO_XY_ACCELERATION_FEEDFORWARD = 0.080553;
     public static double AUTO_XY_STATIC_FEEDFORWARD = 0.21189;

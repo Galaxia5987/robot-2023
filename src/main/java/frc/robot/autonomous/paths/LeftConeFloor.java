@@ -13,7 +13,7 @@ public class LeftConeFloor extends SequentialCommandGroup {
     public LeftConeFloor() {
         Limelight limelight = Limelight.getInstance();
         addCommands(
-                new InstantCommand(limelight::setTapePipeline, limelight),
+                new InstantCommand(limelight::setTapeMiddlePipeline, limelight),
                 new FloorScoring()
         );
     }

@@ -12,6 +12,7 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
+import frc.robot.utils.controllers.PIDFController;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
@@ -20,14 +21,18 @@ public class AdjustToTarget extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
     private final Limelight limelight = Limelight.getInstance();
-    private final PIDController yController;
+    private final PIDFController yController;
     private final ProfiledPIDController rotationController;
     private ChassisSpeeds lastSpeeds = new ChassisSpeeds();
 
     private final TargetAdjustInputsAutoLogged inputs = new TargetAdjustInputsAutoLogged();
+    private final double desiredYaw;
+    private final double desiredAbsoluteYaw;
 
-    public AdjustToTarget() {
-        yController = new PIDController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd);
+    public AdjustToTarget(double desiredYaw, double desiredAbsoluteYaw) {
+        this.desiredYaw = desiredYaw;
+        this.desiredAbsoluteYaw = desiredAbsoluteYaw;
+        yController = new PIDFController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
         rotationController = new ProfiledPIDController(
                 SwerveConstants.TARGET_ROTATION_Kp,
                 SwerveConstants.TARGET_ROTATION_Ki,
@@ -43,15 +48,16 @@ public class AdjustToTarget extends CommandBase {
 
     @Override
     public void execute() {
-        Rotation2d robotAngle = gyroscope.getYaw().plus(Rotation2d.fromDegrees(180));
-        Optional<Rotation2d> yaw = limelight.getYaw();
+        Rotation2d robotAngle = gyroscope.getYaw();
         ChassisSpeeds speeds = new ChassisSpeeds();
+        var absoluteYaw = limelight.getAbsoluteYaw(robotAngle);
+        var yaw = limelight.getYaw();
         inputs.robotAngle = robotAngle.getDegrees();
 
-        if (yaw.isPresent()) {
+        if (yaw.isPresent() && absoluteYaw.isPresent()) {
             inputs.yaw = yaw.get().getDegrees();
-            speeds.vyMetersPerSecond = yController.calculate(yaw.get().getCos(), 0);
-            speeds.omegaRadiansPerSecond = -rotationController.calculate(yaw.get().minus(robotAngle).getRadians(), 0);
+            speeds.vyMetersPerSecond = yController.calculate(absoluteYaw.get().getSin(), Math.sin(desiredAbsoluteYaw));
+            speeds.omegaRadiansPerSecond = rotationController.calculate(yaw.get().getRadians(), desiredYaw);
             inputs.outputVy = speeds.vyMetersPerSecond;
             inputs.outputOmega = speeds.omegaRadiansPerSecond;
         }

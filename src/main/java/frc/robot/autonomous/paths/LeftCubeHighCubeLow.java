@@ -21,11 +21,11 @@ public class LeftCubeHighCubeLow extends SequentialCommandGroup {
         Limelight limelight = Limelight.getInstance();
         addCommands(
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
-                new UpperScoring(),
+//                new UpperScoring(),
                 FollowPath.loadTrajectory("pathplanner/LeftCubeHighCubeLow blue 1"),
                 new PickUpCube(),
-                FollowPath.loadTrajectory("pathplanner/LeftCubeHighCubeLow blue 2"),
-                new MidScoring()
+                FollowPath.loadTrajectory("pathplanner/LeftCubeHighCubeLow blue 2")
+//                new MidScoring()
         );
     }
 }

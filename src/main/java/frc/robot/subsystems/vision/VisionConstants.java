@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.*;
 
 public class VisionConstants {
     public static final double CAMERA_HEIGHT = 0.76; //[m]
-    public static final double CAMERA_PITCH = 0.0872665; //[radian]
+    public static final double CAMERA_PITCH = 0.0; //[radian]
     public static final double UPPER_CONE_TARGET_TAPE_HEIGHT = 1.17; //[m]
     public static final double LOWER_CONE_TARGET_TAPE_HEIGHT = 0.65; //[m]
     public static final double FIELD_LENGTH = 16.54;
@@ -51,4 +51,6 @@ public class VisionConstants {
                 return null;
         }
     }
+
+    public static final Rotation2d CAMERA_YAW = Rotation2d.fromDegrees(16.62);
 }

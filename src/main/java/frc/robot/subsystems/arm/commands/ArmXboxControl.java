@@ -24,8 +24,8 @@ public class ArmXboxControl extends CommandBase {
     public void execute() {
         arm.setCurrentCommand(this);
 
-        double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.2);
-        double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.2);
+        double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.05);
+        double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.05);
 
         boolean joysticksZero = Utils.epsilonEquals(powerSho, 0) && Utils.epsilonEquals(powerEl, 0);
 

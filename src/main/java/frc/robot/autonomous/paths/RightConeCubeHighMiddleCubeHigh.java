@@ -20,17 +20,17 @@ public class RightConeCubeHighMiddleCubeHigh extends SequentialCommandGroup {
     public RightConeCubeHighMiddleCubeHigh() {
         Limelight limelight = Limelight.getInstance();
         addCommands(
-                new InstantCommand(limelight::setTapePipeline, limelight),
-                new UpperScoring(),
+                new InstantCommand(limelight::setTapeMiddlePipeline, limelight),
+//                new UpperScoring(),
                 FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 1"),
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new PickUpCube(),
                 FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 2"),
-                new UpperScoring(),
+//                new UpperScoring(),
                 FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 3"),
                 new PickUpCube(),
-                FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 4"),
-                new UpperScoring()
+                FollowPath.loadTrajectory("pathplanner/RightConeCubeHighMiddleCubeHigh blue 4")
+//                new UpperScoring()
         );
     }
 }

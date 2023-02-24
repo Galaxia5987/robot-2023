@@ -22,7 +22,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final DoubleSubscriber ts = table.getDoubleTopic("ts").subscribe(0.0); // TODO: Check this value
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
     private final IntegerSubscriber getpipe = table.getIntegerTopic("getpipe").subscribe(0); //TODO: check vision pipelines
-    private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
+    private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose_targetspace").subscribe(new double[6]);
 
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
@@ -59,7 +59,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public void togglePipeline() {
         var pipeline = getPipeline();
         if (pipeline == Pipeline.APRIL_TAG_PIPELINE) {
-            setTapePipeline();
+            setTapeMiddlePipeline();
         } else {
             setAprilTagsPipeline();
         }
@@ -69,8 +69,12 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         table.getEntry("pipeline").setNumber(Pipeline.APRIL_TAG_PIPELINE.index);
     }
 
-    public void setTapePipeline() {
-        table.getEntry("pipeline").setNumber(Pipeline.REFLECTIVE_TAPE_PIPELINE.index);
+    public void setTapeMiddlePipeline() {
+        table.getEntry("pipeline").setNumber(Pipeline.REFLECTIVE_TAPE_MIDDLE_PIPELINE.index);
+    }
+
+    public void setTapeTopPipeline() {
+        table.getEntry("pipeline").setNumber(Pipeline.REFLECTIVE_TAPE_TOP_PIPELINE.index);
     }
 
     /**
@@ -92,20 +96,33 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     /**
      * @return pitch from camera to target
      */
-    public Rotation2d getPitch() {
-        return Rotation2d.fromDegrees(ty.get());
+    public Optional<Rotation2d> getPitch() {
+        if (!hasTargets()) {
+            return Optional.empty();
+        }
+        return Optional.of(Rotation2d.fromDegrees(tx.get()));
     }
 
     /**
      * @return distance from target
      */
     public OptionalDouble getTargetDistance(double targetHeight) {
-        if (!hasTargets()) {
+        var pitch = getPitch();
+        if (!hasTargets() || pitch.isEmpty()) {
             return OptionalDouble.empty();
         }
-        double totalPitch = VisionConstants.CAMERA_PITCH + getPitch().getRadians();
+        double totalPitch = VisionConstants.CAMERA_PITCH + pitch.get().getRadians();
         double error = VisionConstants.CAMERA_HEIGHT - targetHeight;
         return OptionalDouble.of(Math.abs(error / Math.tan(totalPitch)));
+    }
+
+    public OptionalDouble getTargetDistance() {
+        if (getPipeline() == Pipeline.REFLECTIVE_TAPE_MIDDLE_PIPELINE) {
+            return getTargetDistance(58.5);
+        } else if (getPipeline() == Pipeline.REFLECTIVE_TAPE_TOP_PIPELINE) {
+            return getTargetDistance(110);
+        }
+        return OptionalDouble.empty();
     }
 
     /**
@@ -113,9 +130,21 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
      */
     public Optional<Rotation2d> getYaw() {
         if (hasTargets()) {
-            return Optional.of(Rotation2d.fromDegrees(ts.get()));
+            double yaw = 0;
+            if (getPipeline() == Pipeline.APRIL_TAG_PIPELINE) {
+                yaw = VisionConstants.CAMERA_YAW.getDegrees() - ty.get();
+            } else {
+                yaw = ty.get();
+            }
+            return Optional.of(Rotation2d.fromDegrees(yaw));
         }
         return Optional.empty();
+    }
+
+    public Optional<Rotation2d> getAbsoluteYaw(Rotation2d gyroAngle) {
+        var yaw = getYaw();
+
+        return yaw.map(rotation2d -> VisionConstants.CAMERA_YAW.plus(gyroAngle).plus(rotation2d));
     }
 
     /**
@@ -189,9 +218,13 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public Optional<Pose2d> getBotPose() {
         long id = getTagId();
         if (id > 0 && id < 9) {
+            var targetPose = aprilTagFieldLayout.getTagPose((int) id);
+//            return Optional.of(
+//                    VisionConstants.CENTER_POSE.plus(
+//                            new Transform2d(new Translation2d(botPose.get()[0], botPose.get()[1]), Rotation2d.fromDegrees(botPose.get()[5])))
+//            );
             return Optional.of(
-                    VisionConstants.CENTER_POSE.plus(
-                            new Transform2d(new Translation2d(botPose.get()[0], botPose.get()[1]), Rotation2d.fromDegrees(botPose.get()[5])))
+                    new Pose2d(botPose.get()[2], -botPose.get()[0], Rotation2d.fromDegrees(botPose.get()[4]))
             );
         }
         return Optional.empty();
@@ -226,7 +259,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
 
     public enum Pipeline {
         APRIL_TAG_PIPELINE(0),
-        REFLECTIVE_TAPE_PIPELINE(1);
+        REFLECTIVE_TAPE_MIDDLE_PIPELINE(2),
+        REFLECTIVE_TAPE_TOP_PIPELINE(3);
 
         public final int index;
 
@@ -235,10 +269,14 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         }
 
         public static Pipeline fromIndex(int index) {
-            if (index == REFLECTIVE_TAPE_PIPELINE.index) {
-                return REFLECTIVE_TAPE_PIPELINE;
+            switch (index) {
+                case 2:
+                    return REFLECTIVE_TAPE_MIDDLE_PIPELINE;
+                case 3:
+                    return REFLECTIVE_TAPE_TOP_PIPELINE;
+                default:
+                    return APRIL_TAG_PIPELINE;
             }
-            return APRIL_TAG_PIPELINE;
         }
     }
 }

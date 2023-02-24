@@ -18,8 +18,8 @@ public class MiddleConeHighEngage extends SequentialCommandGroup {
     public MiddleConeHighEngage() {
         Limelight limelight = Limelight.getInstance();
         addCommands(
-                new InstantCommand(limelight::setTapePipeline, limelight),
-                new UpperScoring(),
+                new InstantCommand(limelight::setTapeMiddlePipeline, limelight),
+//                new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanne/MiddleConeHighEngage blue"),
                 new BalanceOnStation()
         );

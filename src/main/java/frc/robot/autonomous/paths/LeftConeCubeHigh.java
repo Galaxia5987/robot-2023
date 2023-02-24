@@ -17,13 +17,13 @@ public class LeftConeCubeHigh extends SequentialCommandGroup {
     public LeftConeCubeHigh() {
         Limelight limelight = Limelight.getInstance();
         addCommands(
-                new InstantCommand(limelight::setTapePipeline, limelight),
-                new UpperScoring(),
+                new InstantCommand(limelight::setTapeMiddlePipeline, limelight),
+//                new UpperScoring(),
                 FollowPath.loadTrajectory("pathplanner/LeftConeCubeHigh blue 1"),
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
                 new PickUpCube(),
-                FollowPath.loadTrajectory("pathplanner/LeftConeCubeHigh blue 2"),
-                new UpperScoring()
+                FollowPath.loadTrajectory("pathplanner/LeftConeCubeHigh blue 2")
+//                new UpperScoring()
         );
     }
 }

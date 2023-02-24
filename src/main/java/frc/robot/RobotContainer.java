@@ -23,7 +23,10 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.commands.IntakeDefaultCommand;
+import frc.robot.subsystems.intake.commands.Retract;
+import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
 
@@ -31,6 +34,7 @@ public class RobotContainer {
     private static RobotContainer INSTANCE = null;
     //    private final Leds led = Leds.getInstance();
     private final Arm arm = Arm.getInstance();
+    private final Leds leds = Leds.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
     private final SwerveDrive swerveSubsystem = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
@@ -85,12 +89,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION));
-        y.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING));
-        x.whileTrue(new ConditionalCommand(
-                new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1, 0.05),
-                new InstantCommand(),
-                () -> arm.getElbowJointAngle().getDegrees() > 180)
-                    .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2)));
+        y.whileTrue(new UpperScoring(() -> -leftJoystick.getY(),
+                () -> limelight.getPipeline() != Limelight.Pipeline.APRIL_TAG_PIPELINE));
+        x.whileTrue(new MidScoring(() -> -leftJoystick.getY(),
+                () -> limelight.getPipeline() != Limelight.Pipeline.APRIL_TAG_PIPELINE));
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
 
@@ -100,14 +102,19 @@ public class RobotContainer {
 
         xboxLeftTrigger.onTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
-        xboxRightTrigger.onTrue(new Feed(true).unless(arm::armIsOutOfFrame))
+        xboxRightTrigger.onTrue(new Feed(false).unless(arm::armIsOutOfFrame))
                 .onFalse(new ReturnIntake());
 
-        start.onTrue(new InstantCommand(limelight::togglePipeline));
+        start.onTrue(new InstantCommand(limelight::togglePipeline)
+                .andThen(new InstantCommand(() -> {
+                    if (limelight.getPipeline() == Limelight.Pipeline.APRIL_TAG_PIPELINE) {
+                        leds.setPurple();
+                    } else {
+                        leds.setYellow();
+                    }
+                })));
 
         rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
-
-        leftJoystickTrigger.whileTrue(new BalanceOnStation());
     }
 
 

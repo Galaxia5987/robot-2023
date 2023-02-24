@@ -18,6 +18,8 @@ import frc.robot.commandgroups.ReturnIntake;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.leds.Leds;
+import frc.robot.subsystems.vision.Limelight;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -76,6 +78,12 @@ public class Robot extends LoggedRobot {
         SmartDashboard.putNumber("Rotation_Ki", SwerveConstants.AUTO_ROTATION_Ki);
         SmartDashboard.putNumber("Rotation_Kd", SwerveConstants.AUTO_ROTATION_Kd);
         SmartDashboard.putNumber("Rotation_Kf", SwerveConstants.AUTO_ROTATION_Kf);
+
+        if (Limelight.getInstance().getPipeline() == Limelight.Pipeline.APRIL_TAG_PIPELINE) {
+            Leds.getInstance().setPurple();
+        } else {
+            Leds.getInstance().setYellow();
+        }
     }
 
     /**

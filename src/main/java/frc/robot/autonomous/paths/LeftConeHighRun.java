@@ -17,8 +17,8 @@ public class LeftConeHighRun extends SequentialCommandGroup {
     public LeftConeHighRun() {
         Limelight limelight = Limelight.getInstance();
         addCommands(
-                new InstantCommand(limelight::setTapePipeline, limelight),
-                new UpperScoring(),
+                new InstantCommand(limelight::setTapeMiddlePipeline, limelight),
+//                new UpperScoring(),
                 FollowPath.loadTrajectory("pathplanner/LeftConeHighRun blue")
         );
     }

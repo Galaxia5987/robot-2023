@@ -36,8 +36,11 @@ public class ArmConstants { //TODO: find all constant values
     public static final double TICKS_PER_RADIAN_ELBOW = ELBOW_FALCON_TICKS_PER_REVOLUTION / (Math.PI * 2);
     public static final TalonFXInvertType MAIN_CLOCKWISE = TalonFXInvertType.Clockwise;
     public static final TalonFXInvertType AUX_CLOCKWISE = TalonFXInvertType.Clockwise;
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.521346148760737;
-    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.45973984667891277;
+
+    public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees] TODO: check real values
+    public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.419 - SHOULDER_ZERO_POSITION / 360.0;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.572 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
     public static final double shoulderP = 0.03;
@@ -63,8 +66,6 @@ public class ArmConstants { //TODO: find all constant values
     public static final Translation2d IN_ROBOT = new Translation2d(-0.362, 0.1);
     public static final Translation2d OUT_ROBOT2 = new Translation2d(-0.4508, 0.3976);
     public static final Translation2d FLOOR_SCORING = new Translation2d();
-    public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees] TODO: check real values
-    public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
 
     public static final SystemConstants.JointConstants SHOULDER_JOINT_CONSTANTS = new SystemConstants.JointConstants(
             SHOULDER_MASS, SHOULDER_LENGTH, SHOULDER_MOMENT_OF_INERTIA, SHOULDER_CENTER_OF_MASS_RADIUS, SHOULDER_GEARING, SHOULDER_NUMBER_OF_MOTORS);

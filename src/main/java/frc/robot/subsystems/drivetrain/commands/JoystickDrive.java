@@ -1,9 +1,13 @@
 package frc.robot.subsystems.drivetrain.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Ports;
@@ -11,11 +15,13 @@ import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
 import frc.robot.utils.controllers.PIDFController;
 
 public class JoystickDrive extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
+    private final Limelight limelight = Limelight.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
 
     private final Joystick leftJoystick;
@@ -28,11 +34,19 @@ public class JoystickDrive extends CommandBase {
     private boolean lastOmegaZero = true;
     private Rotation2d savedAngle;
 
+    private final PIDController yController;
+    private final ProfiledPIDController rotationController;
+
     private final PIDFController adjustController = new PIDFController(5, 0, 0, 0);
 
     public JoystickDrive(Joystick leftJoystick, Joystick rightJoystick) {
         this.leftJoystick = leftJoystick;
         this.rightJoystick = rightJoystick;
+        yController = new PIDController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd);
+        rotationController = new ProfiledPIDController(
+                SwerveConstants.TARGET_ROTATION_Kp,
+                SwerveConstants.TARGET_ROTATION_Ki,
+                SwerveConstants.TARGET_ROTATION_Kd, new TrapezoidProfile.Constraints(10, 5));
         addRequirements(swerveDrive);
     }
 
@@ -62,6 +76,14 @@ public class JoystickDrive extends CommandBase {
                 savedAngle = gyroscope.getYaw();
             }
 
+//            Rotation2d robotAngle = gyroscope.getYaw();
+//            var absoluteYaw = limelight.getAbsoluteYaw(robotAngle);
+//            var yaw = limelight.getYaw();
+//
+//            if (yaw.isPresent() && absoluteYaw.isPresent()) {
+//                omega = rotationController.calculate(yaw.get().getRadians(), Math.toRadians(1.44));
+//            }
+//
             DriveSignal signal = new DriveSignal(
                     vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                     vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,

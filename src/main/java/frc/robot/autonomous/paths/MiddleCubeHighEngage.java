@@ -19,7 +19,7 @@ public class MiddleCubeHighEngage extends SequentialCommandGroup {
         Limelight limelight = Limelight.getInstance();
         addCommands(
                 new InstantCommand(limelight::setAprilTagsPipeline, limelight),
-                new UpperScoring(),
+//                new UpperScoring(),
                 FollowPath.loadTrajectory(".pathplanne/MiddleCubeHighEngage blue"),
                 new BalanceOnStation()
         );

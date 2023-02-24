@@ -29,11 +29,13 @@ public class Leds extends SubsystemBase {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
             ledBuffer.setLED(i, Color.kYellow);
         }
+        leds.setData(ledBuffer);
     }
 
     public void setPurple() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
             ledBuffer.setLED(i, Color.kPurple);
         }
+        leds.setData(ledBuffer);
     }
 }

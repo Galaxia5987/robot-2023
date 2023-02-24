@@ -22,14 +22,14 @@ public class UpperScoring extends SequentialCommandGroup {
                         new InstantCommand(limelight::setTapeTopPipeline),
                         new InstantCommand(limelight::setAprilTagsPipeline),
                         cone
-                )
+                ),
 
-//                new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING)
-//                        .alongWith(new ConditionalCommand(
-//                                new AdjustToTarget(Math.toRadians(10.07), Math.toRadians(16.62 + 10.07)),
-//                                new AdjustToAprilTag(xSupplier),
-//                                cone
-//                        ))
+                new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING)
+                        .alongWith(new ConditionalCommand(
+                                new AdjustToTarget(Math.toRadians(10.07), Math.toRadians(16.62 + 10.07)),
+                                new AdjustToAprilTag(xSupplier),
+                                cone
+                        ))
         );
     }
 }

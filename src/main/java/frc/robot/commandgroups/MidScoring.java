@@ -24,19 +24,19 @@ public class MidScoring extends SequentialCommandGroup {
                         new InstantCommand(limelight::setTapeMiddlePipeline),
                         new InstantCommand(limelight::setAprilTagsPipeline),
                         cone
-                )
+                ),
 
 
-//                new ConditionalCommand(
-//                        new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1, 0.05),
-//                        new InstantCommand(),
-//                        () -> arm.getElbowJointAngle().getDegrees() > 180)
-//                        .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2))
-//                        .alongWith(new ConditionalCommand(
-//                                new AdjustToTarget(Math.toRadians(1.44), Math.toRadians(16.62 + 1.44)),
-//                                new AdjustToAprilTag(xSupplier),
-//                                cone
-//                        ))
+                new ConditionalCommand(
+                        new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING1, 0.05),
+                        new InstantCommand(),
+                        () -> arm.getElbowJointAngle().getDegrees() > 180)
+                        .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2))
+                        .alongWith(new ConditionalCommand(
+                                new AdjustToTarget(Math.toRadians(1.44), Math.toRadians(16.62 + 1.44)),
+                                new AdjustToAprilTag(xSupplier),
+                                cone
+                        ))
         );
     }
 }

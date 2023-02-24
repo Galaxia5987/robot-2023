@@ -63,7 +63,7 @@ public class ArmConstants { //TODO: find all constant values
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.125, 0.641);
     public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.667, 0.481);
     public static final Translation2d OUT_ROBOT1 = new Translation2d(-0.392, 0.0);
-    public static final Translation2d IN_ROBOT = new Translation2d(-0.362, 0.1);
+    public static final Translation2d IN_ROBOT = new Translation2d(-0.332, 0.1);
     public static final Translation2d OUT_ROBOT2 = new Translation2d(-0.4508, 0.3976);
     public static final Translation2d FLOOR_SCORING = new Translation2d();
 

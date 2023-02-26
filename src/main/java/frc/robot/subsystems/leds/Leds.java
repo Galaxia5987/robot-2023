@@ -5,12 +5,15 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
+import frc.robot.subsystems.vision.Limelight;
 
 
 public class Leds extends SubsystemBase {
     public static Leds INSTANCE;
     public AddressableLED leds = new AddressableLED(Ports.Leds.LED);
     public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LedConstants.LED_LENGTH);
+
+    private Color color = Color.kPurple;
 
     private Leds() {
         leds.setLength(ledBuffer.getLength());
@@ -26,15 +29,29 @@ public class Leds extends SubsystemBase {
     }
 
     public void setYellow() {
-        for (int i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setLED(i, Color.kYellow);
-        }
-        leds.setData(ledBuffer);
+        color = Color.kYellow;
     }
 
     public void setPurple() {
+        color = Color.kPurple;
+    }
+
+    public void toggle() {
+        if (color == Color.kYellow) {
+            color = Color.kPurple;
+        } else {
+            color = Color.kYellow;
+        }
+    }
+
+    public boolean inConeMode() {
+        return color == Color.kYellow;
+    }
+
+    @Override
+    public void periodic() {
         for (int i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setLED(i, Color.kPurple);
+            ledBuffer.setLED(i, color);
         }
         leds.setData(ledBuffer);
     }

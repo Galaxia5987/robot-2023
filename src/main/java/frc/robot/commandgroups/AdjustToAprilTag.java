@@ -1,8 +1,10 @@
 package frc.robot.commandgroups;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveSignal;
+import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
@@ -16,8 +18,8 @@ public class AdjustToAprilTag extends CommandBase {
     private final Limelight limelight = Limelight.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
 
-    private final PIDFController yController = new PIDFController(10, 0, 0, 0.5);
-    private final PIDFController thetaController = new PIDFController(16.0, 0, 0, 0);
+    private final PIDFController yController = new PIDFController(3, 0, 0.4, 0.7);
+    private final PIDFController thetaController = new PIDFController(4.0, 0, 0, 1);
 
     private final DoubleSupplier xSupplier;
 
@@ -25,6 +27,9 @@ public class AdjustToAprilTag extends CommandBase {
 
     public AdjustToAprilTag(DoubleSupplier xSupplier){
         this.xSupplier = xSupplier;
+        addRequirements(swerveDrive);
+
+        yController.setTolerance(0.03);
     }
 
     @Override
@@ -40,7 +45,8 @@ public class AdjustToAprilTag extends CommandBase {
 
         swerveDrive.drive(
                 new DriveSignal(
-                        0,
+                        MathUtil.applyDeadband(xSupplier.getAsDouble(), 0.1)
+                        * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                         yVelocity,
                         omegaVelocity,
                         new Translation2d(),

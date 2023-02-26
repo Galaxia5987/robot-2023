@@ -18,12 +18,11 @@ public class GetArmIntoRobot extends SequentialCommandGroup {
         addCommands(
                 new ConditionalCommand(
                         new InstantCommand(),
-                        new SetArmsPositionAngular(() -> ArmConstants.IN_ROBOT, 0.05),
+                        new SetArmsPositionAngular(() -> ArmConstants.IN_ROBOT1, 0.15).andThen(new SetArmsPositionAngular(() -> ArmConstants.IN_ROBOT2, 0.1)),
                         arm::armIsInRobot
                 ),
                 new SetShoulderAngle(129).alongWith(new InstantCommand(arm::stop)),
-                new SetElbowAngle(329),
-                new HoldArmPosition()
+                new SetElbowAngle(329)
         );
     }
 }

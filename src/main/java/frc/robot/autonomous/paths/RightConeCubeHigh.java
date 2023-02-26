@@ -1,10 +1,22 @@
 package frc.robot.autonomous.paths;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.PickUpCube;
+import frc.robot.commandgroups.ReturnArm;
+import frc.robot.commandgroups.ReturnIntake;
 import frc.robot.commandgroups.UpperScoring;
+import frc.robot.subsystems.drivetrain.SwerveConstants;
+import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.gripper.Gripper;
+import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.leds.PurpleLed;
+import frc.robot.subsystems.leds.YellowLed;
 import frc.robot.subsystems.vision.Limelight;
 
 /**
@@ -17,15 +29,38 @@ import frc.robot.subsystems.vision.Limelight;
 public class RightConeCubeHigh extends SequentialCommandGroup {
 
     public RightConeCubeHigh() {
-        Limelight limelight = Limelight.getInstance();
+        Gyroscope gyroscope = Gyroscope.getInstance();
+        SwerveDrive swerveDrive = SwerveDrive.getInstance();
+        Gripper gripper = Gripper.getInstance();
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("RightConeCubeHigh blue 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+
         addCommands(
-                new InstantCommand(limelight::setTapeMiddlePipeline, limelight),
-//                new UpperScoring(),
-                FollowPath.loadTrajectory("pathplanner/RightConeCubeHigh blue 1"),
-                new InstantCommand(limelight::setAprilTagsPipeline, limelight),
-                new PickUpCube(),
-                FollowPath.loadTrajectory("pathplanner/RightConeCubeHigh blue 2")
-//                new UpperScoring()
+                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
+                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
+
+                new YellowLed(),
+
+                new InstantCommand(gripper::close, gripper).withTimeout(1),
+
+                new UpperScoring().withTimeout(3.0),
+
+                new InstantCommand(gripper::open, gripper),
+
+                new PurpleLed(),
+
+                FollowPath.loadTrajectory("RightConeCubeHigh blue 1").alongWith(
+                        new PickUpCube().withTimeout(4)),
+
+                FollowPath.loadTrajectory("RightConeCubeHigh blue 2")
+                        .alongWith(new ReturnIntake()
+                                .andThen(new InstantCommand(gripper::close, gripper))
+                                .andThen(new ReturnArm())),
+
+                new UpperScoring().withTimeout(2),
+
+                new InstantCommand(gripper::open, gripper),
+
+                new ReturnArm()
         );
     }
 }

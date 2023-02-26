@@ -12,7 +12,7 @@ public class FloorScoring extends SequentialCommandGroup {
     public FloorScoring() {
         Gripper gripper = Gripper.getInstance();
         addCommands(
-                new AdjustToTarget(0, 0),
+                new AdjustToTape(() -> 0, 0, 0),
                 new SetArmsPositionAngular(() -> ArmConstants.FLOOR_SCORING, 0.02),
                 new InstantCommand(gripper::open, gripper),
                 new WaitCommand(ArmConstants.WAIT_TIME),

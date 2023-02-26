@@ -1,6 +1,6 @@
 package frc.robot.commandgroups;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,9 +15,9 @@ import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.controllers.PIDFController;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.Optional;
+import java.util.function.DoubleSupplier;
 
-public class AdjustToTarget extends CommandBase {
+public class AdjustToTape extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
     private final Limelight limelight = Limelight.getInstance();
@@ -29,7 +29,10 @@ public class AdjustToTarget extends CommandBase {
     private final double desiredYaw;
     private final double desiredAbsoluteYaw;
 
-    public AdjustToTarget(double desiredYaw, double desiredAbsoluteYaw) {
+    private final DoubleSupplier xSupplier;
+
+    public AdjustToTape(DoubleSupplier xSupplier, double desiredYaw, double desiredAbsoluteYaw) {
+        this.xSupplier = xSupplier;
         this.desiredYaw = desiredYaw;
         this.desiredAbsoluteYaw = desiredAbsoluteYaw;
         yController = new PIDFController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
@@ -42,7 +45,7 @@ public class AdjustToTarget extends CommandBase {
 
     @Override
     public void initialize() {
-        yController.setTolerance(0.01);
+        yController.setTolerance(1.0);
         rotationController.setTolerance(0.01);
     }
 
@@ -62,6 +65,9 @@ public class AdjustToTarget extends CommandBase {
             inputs.outputOmega = speeds.omegaRadiansPerSecond;
         }
 
+        speeds.vxMetersPerSecond = MathUtil.applyDeadband(xSupplier.getAsDouble(), 0.1)
+                * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND;
+
         swerveDrive.drive(new DriveSignal(speeds, new Translation2d(), true));
 
         Logger.getInstance().processInputs("AdjustToTarget", inputs);
@@ -74,6 +80,6 @@ public class AdjustToTarget extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return yController.atSetpoint() && rotationController.atSetpoint();
+        return false;
     }
 }

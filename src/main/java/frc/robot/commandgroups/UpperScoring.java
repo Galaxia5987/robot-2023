@@ -6,30 +6,21 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
-import frc.robot.subsystems.gripper.Gripper;
+import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
-
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 public class UpperScoring extends SequentialCommandGroup {
 
-    public UpperScoring(DoubleSupplier xSupplier, BooleanSupplier cone) {
-        Limelight limelight = Limelight.getInstance();
-
+    public UpperScoring() {
         addCommands(
                 new ConditionalCommand(
-                        new InstantCommand(limelight::setTapeTopPipeline),
-                        new InstantCommand(limelight::setAprilTagsPipeline),
-                        cone
+                        new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING1, 0.05)
+                                .andThen(new WaitCommand(0.3)),
+                        new InstantCommand(),
+                        Leds.getInstance()::inConeMode
                 ),
 
-                new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING)
-                        .alongWith(new ConditionalCommand(
-                                new AdjustToTarget(Math.toRadians(10.07), Math.toRadians(16.62 + 10.07)),
-                                new AdjustToAprilTag(xSupplier),
-                                cone
-                        ))
+                new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING2)
         );
     }
 }

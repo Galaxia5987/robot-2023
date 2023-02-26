@@ -5,15 +5,14 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.pathplanner.lib.auto.PIDConstants;
 import frc.robot.autonomous.DrivetrainFeedforwardConstants;
 import frc.robot.utils.controllers.PIDFConstants;
+import frc.robot.utils.valuetuner.WebConstant;
 
 public class SwerveConstants {
     public static final double TICKS_PER_ROTATION = 2048;
-    public static final int[] OFFSETS = {12338, 6406, 15057, 10847};
+    public static final int[] OFFSETS = {12243, 6332, 14909, 10817};
 
     public static final double DRIVETRAIN_TRACK_WIDTH_METERS = 0.51594;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.66594;
-    public static final double DRIVETRAIN_TOTAL_LENGTH = 832 / 1000.0;
-    public static final double DRIVETRAIN_TOTAL_WIDTH = 682 / 1000.0;
 
     public static final double DRIVE_REDUCTION = (1 / 2.0) * (22.0 / 24.0) * (15.0 / 45.0);
     public static final double ANGLE_GEAR_RATIO = (14.0 / 72.0) * 0.5;
@@ -23,7 +22,7 @@ public class SwerveConstants {
             true, 40, 2, 0.02);
     public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG = new SupplyCurrentLimitConfiguration(
             true, 40, 2, 0.02);
-    public static final double NEUTRAL_DEADBAND = 0.175;
+    public static final double NEUTRAL_DEADBAND = 0.1;
 
     // kP, kI, kD, kF, sCurveStrength, cruiseVelocity, acceleration, allowableError,
     // maxIntegralAccum, peakOutput
@@ -34,29 +33,31 @@ public class SwerveConstants {
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
             DRIVE_REDUCTION *
             WHEEL_DIAMETER * Math.PI;
-    public static final double MAX_LINEAR_ACCELERATION = MAX_VELOCITY_METERS_PER_SECOND / 2;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 13.0;
+
+   public static final double MAX_VELOCITY_AUTO = 4.0;
+   public static final double MAX_ACCELERATION_AUTO = 2.5;
 
     public static final double XY_SLEW_RATE_LIMIT = 3.0;
     public static final double ROTATION_SLEW_RATE_LIMIT = 6.0;
 
-
-    public static double SMOOTHING_FACTOR = 2;
-
-    public static double TORNADO_SPIN_DISTANCE = 0.4;
-
-    public static double AUTO_XY_Kp = 4.0;
-    public static double AUTO_XY_Ki = 3.0;
-    public static double AUTO_XY_Kd = 0.0;
-    public static double AUTO_ROTATION_Kp = 8.0;
+    public static double AUTO_X_Kp = 3.20;
+    public static double AUTO_X_Ki = 0.0;
+    public static double AUTO_X_Kd = 0.73;
+    public static double AUTO_X_Kf = 0.35;
+    public static double AUTO_Y_Kp = 3.20;
+    public static double AUTO_Y_Ki = 0.0;
+    public static double AUTO_Y_Kd = 0.6;
+    public static double AUTO_Y_Kf = 0.35;
+    public static double AUTO_ROTATION_Kp = 15;
     public static double AUTO_ROTATION_Ki = 0.0;
     public static double AUTO_ROTATION_Kd = 0.0;
-    public static double AUTO_ROTATION_Kf = 0.0;
-    public static double TARGET_XY_Kp = 4.0;
+    public static double AUTO_ROTATION_Kf = 0.8;
+    public static double TARGET_XY_Kp = 8.0;
     public static double TARGET_XY_Ki = 0.0;
-    public static double TARGET_XY_Kd = 0.0;
-    public static double TARGET_XY_Kf = 0.7;
-    public static double TARGET_ROTATION_Kp = 16.0;
+    public static double TARGET_XY_Kd = 0.3;
+    public static double TARGET_XY_Kf = 0.0;
+    public static double TARGET_ROTATION_Kp = 10.0;
     public static double TARGET_ROTATION_Ki = 0.0;
     public static double TARGET_ROTATION_Kd = 0.0;
     public static double TARGET_ROTATION_Kf = 0.0;
@@ -73,8 +74,11 @@ public class SwerveConstants {
     public static DrivetrainFeedforwardConstants ROTATION_FF_CONSTANTS = new DrivetrainFeedforwardConstants(
             AUTO_ROTATION_VELOCITY_FEEDFORWARD, AUTO_ROTATION_ACCELERATION_FEEDFORWARD, AUTO_ROTATION_STATIC_FEEDFORWARD
     );
-    public static PIDConstants AUTO_TRANSLATION_PID_CONSTANTS = new PIDConstants(
-            AUTO_XY_Kp, AUTO_XY_Ki, AUTO_XY_Kd
+    public static PIDConstants AUTO_TRANSLATION_PID_CONSTANTS_X = new PIDConstants(
+            AUTO_X_Kp, AUTO_X_Ki, AUTO_X_Kd, AUTO_X_Kf
+    );
+    public static PIDConstants AUTO_TRANSLATION_PID_CONSTANTS_Y = new PIDConstants(
+            AUTO_Y_Kp, AUTO_Y_Ki, AUTO_Y_Kd, AUTO_Y_Kf
     );
     public static PIDFConstants AUTO_ROTATION_PID_CONSTANTS = new PIDFConstants(
             AUTO_ROTATION_Kp, AUTO_ROTATION_Ki, AUTO_ROTATION_Kd, AUTO_ROTATION_Kf

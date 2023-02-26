@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.utils.motors.PIDTalon;
 
@@ -38,7 +39,12 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         driveMotor.configFactoryDefault();
         angleMotor.configFactoryDefault();
 
-        // TODO: check voltage compensation and ramp rate
+        driveMotor.enableVoltageCompensation(true);
+        driveMotor.configVoltageCompSaturation(10);
+
+        angleMotor.enableVoltageCompensation(true);
+        angleMotor.configVoltageCompSaturation(10);
+
         driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
         driveMotor.setInverted(driveInverted);
         driveMotor.setNeutralMode(NeutralMode.Brake);

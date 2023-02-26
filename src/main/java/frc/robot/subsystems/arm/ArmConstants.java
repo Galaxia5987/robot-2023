@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.utils.math.ArmLinearProfile;
 
-public class ArmConstants { //TODO: find all constant values
+public class ArmConstants {
 
     public static final int WAIT_TIME = 0;
 
@@ -37,33 +37,39 @@ public class ArmConstants { //TODO: find all constant values
     public static final TalonFXInvertType MAIN_CLOCKWISE = TalonFXInvertType.Clockwise;
     public static final TalonFXInvertType AUX_CLOCKWISE = TalonFXInvertType.Clockwise;
 
-    public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees] TODO: check real values
+    public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees]
     public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
     public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.419 - SHOULDER_ZERO_POSITION / 360.0;
     public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.572 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
-    public static final double shoulderP = 0.03;
+    public static final double shoulderP = 0.02;
     public static final double shoulderI = 0.0;
     public static final double shoulderD = 0.0;
-    public static final double elbowP = 0.07;
-    public static final double elbowI = 0.000001;
+    public static final double elbowP = 0.02;
+    public static final double elbowI = 0.0;
     public static final double elbowD = 0.0;
 
-    public static final double SHOULDER_FEED_FORWARD = 0.02;
-    public static final double ELBOW_FEED_FORWARD = 0.02;
+
+
+   public static final double SHOULDER_FEED_FORWARD = 0.06;
+//    public static final double SHOULDER_FEED_FORWARD = 0.02;
+public static final double ELBOW_FEED_FORWARD = 0.04;
+//    public static final double ELBOW_FEED_FORWARD = 0.02;
 
     //arm positions
     public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.467, 0.627);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.467, 0.677);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
-    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.189, 0.925);
+    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.105, 0.834);
+    public static final Translation2d UPPER_CONE_SCORING2 = new Translation2d(1.227, 0.87);
     public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.809, 0.62);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.125, 0.641);
     public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.667, 0.481);
     public static final Translation2d OUT_ROBOT1 = new Translation2d(-0.392, 0.0);
-    public static final Translation2d IN_ROBOT = new Translation2d(-0.332, 0.1);
+    public static final Translation2d IN_ROBOT1 = new Translation2d(-0.32, 0.0101);
+    public static final Translation2d IN_ROBOT2 = new Translation2d(-0.34, -0.13);
     public static final Translation2d OUT_ROBOT2 = new Translation2d(-0.4508, 0.3976);
     public static final Translation2d FLOOR_SCORING = new Translation2d();
 

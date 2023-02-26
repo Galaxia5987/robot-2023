@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -17,9 +18,11 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commandgroups.ReturnIntake;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
+import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
+import frc.robot.utils.valuetuner.NetworkTableConstant;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -34,7 +37,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-    public static boolean debug = false;
+    public static boolean debug = true;
+    private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     private RobotContainer robotContainer;
@@ -50,6 +54,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void robotInit() {
 //        compressor.disable();
+        PathPlannerServer.startServer(5811);
         robotContainer = RobotContainer.getInstance();
         autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -70,20 +75,13 @@ public class Robot extends LoggedRobot {
 
         Logger.getInstance().start(); // Start logging! No more data receivers, replay sources, or metadata values may be added.
 
-        SmartDashboard.putNumber("Kp", SwerveConstants.AUTO_XY_Kp);
-        SmartDashboard.putNumber("Ki", SwerveConstants.AUTO_XY_Ki);
-        SmartDashboard.putNumber("Kd", SwerveConstants.AUTO_XY_Kd);
-
         SmartDashboard.putNumber("Rotation_Kp", SwerveConstants.AUTO_ROTATION_Kp);
         SmartDashboard.putNumber("Rotation_Ki", SwerveConstants.AUTO_ROTATION_Ki);
         SmartDashboard.putNumber("Rotation_Kd", SwerveConstants.AUTO_ROTATION_Kd);
         SmartDashboard.putNumber("Rotation_Kf", SwerveConstants.AUTO_ROTATION_Kf);
 
-        if (Limelight.getInstance().getPipeline() == Limelight.Pipeline.APRIL_TAG_PIPELINE) {
-            Leds.getInstance().setPurple();
-        } else {
-            Leds.getInstance().setYellow();
-        }
+        Leds.getInstance().setPurple();
+        Limelight.getInstance().setAprilTagsPipeline();
     }
 
     /**

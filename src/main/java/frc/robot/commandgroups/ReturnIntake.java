@@ -12,7 +12,7 @@ public class ReturnIntake extends SequentialCommandGroup {
 
         addCommands(
                 new Retract(true),
-                intake.run(0)
+                new InstantCommand(() -> intake.setPower(0))
         );
     }
 }

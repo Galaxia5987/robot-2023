@@ -1,17 +1,11 @@
 package frc.robot.subsystems.leds;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class PurpleLed extends CommandBase {
-    private final  Leds leds = Leds.getInstance();
+public class PurpleLed extends InstantCommand {
 
     public PurpleLed() {
-        addRequirements(leds);
-    }
-
-    @Override
-    public void execute() {
-        leds.setPurple();
+        super(Leds.getInstance()::setPurple);
     }
 
 }

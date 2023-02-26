@@ -22,8 +22,6 @@ public class ArmXboxControl extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setCurrentCommand(this);
-
         double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.05);
         double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.05);
 

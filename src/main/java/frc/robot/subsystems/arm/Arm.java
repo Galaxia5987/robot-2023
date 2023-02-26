@@ -41,12 +41,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     private double elbowFeedforward;
 
     private Command lastCommand;
-    private Command currentCommand;
     private boolean changedToDefaultCommand = false;
-
-    public void setCurrentCommand(Command currentCommand) {
-        this.currentCommand = currentCommand;
-    }
 
     private Arm() {
         super(new ArmInputsAutoLogged());
@@ -58,10 +53,16 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         shoulderMainMotor.setInverted(TalonFXInvertType.CounterClockwise);
         elbowMainMotor.setInverted(ArmConstants.MAIN_CLOCKWISE);
 
-        configureMainMotor(shoulderMainMotor, ArmConstants.shoulderP, ArmConstants.shoulderI, ArmConstants.shoulderD);
+        configureMainMotor(shoulderMainMotor,
+                ArmConstants.shoulderP,
+                ArmConstants.shoulderI,
+                ArmConstants.shoulderD);
         configureAuxMotor(shoulderAuxMotor, shoulderMainMotor);
 
-        configureMainMotor(elbowMainMotor, ArmConstants.elbowP, ArmConstants.elbowI, ArmConstants.elbowD);
+        configureMainMotor(elbowMainMotor,
+                ArmConstants.elbowP,
+                ArmConstants.elbowI,
+                ArmConstants.elbowD);
         configureAuxMotor(elbowAuxMotor, elbowMainMotor);
 
 //        shoulderMainMotor.config_IntegralZone(0, 0.0001);
@@ -70,8 +71,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 //        elbowMainMotor.config_IntegralZone(0, 0.0001);
 //        elbowMainMotor.setIntegralAccumulator(2 / 3.0 * ArmConstants.ELBOW_FALCON_TICKS_PER_REVOLUTION / 360.0);
 
-        shoulderMainMotor.configClosedLoopPeakOutput(0, 0.4);
-        elbowMainMotor.configClosedLoopPeakOutput(0, 0.4);
+//        shoulderMainMotor.configClosedLoopPeakOutput(0, 0.5);
+//        elbowMainMotor.configClosedLoopPeakOutput(0, 0.5);
 
         for (int i = 1; i <= 17; i++) {
             shoulderAuxMotor.setStatusFramePeriod(i, 500);
@@ -98,6 +99,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         auxMotor.follow(mainMotor);
         auxMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         auxMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_SATURATION);
+        mainMotor.configNeutralDeadband(0);
         auxMotor.setNeutralMode(NeutralMode.Brake);
         auxMotor.setInverted(TalonFXInvertType.FollowMaster);
     }
@@ -109,6 +111,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         mainMotor.enableVoltageCompensation(ArmConstants.ENABLE_VOLT_COMPENSATION);
         mainMotor.configVoltageCompSaturation(ArmConstants.VOLT_COMP_SATURATION);
         mainMotor.setNeutralMode(NeutralMode.Brake);
+        mainMotor.configNeutralDeadband(0);
 
         mainMotor.config_kP(0, kP);
         mainMotor.config_kI(0, kI);
@@ -268,6 +271,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     @Override
     public void periodic() {
         double t = Timer.getFPGATimestamp();
+        var currentCommand = getCurrentCommand();
 
         changedToDefaultCommand = !(lastCommand instanceof ArmXboxControl) && currentCommand instanceof ArmXboxControl;
         lastCommand = currentCommand;
@@ -286,6 +290,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
                         .plus(getShoulderJointAngle())
                         .minus(Rotation2d.fromDegrees(180))
                         .getCos() * ArmConstants.ELBOW_ARM_LENGTH;
+
+
     }
 
     @Override

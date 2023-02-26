@@ -30,10 +30,11 @@ public class SetArmsPositionAngular extends CommandBase {
         this.elbowAngle = () -> Math.toDegrees(solution.get().elbowAngle);
         this.deadBand = deadBand;
         this.positionSupplier = positionSupplier;
+        addRequirements(arm);
     }
 
     public SetArmsPositionAngular(Supplier<Translation2d> positionSupplier) {
-        this(positionSupplier, 0.02);
+        this(positionSupplier, 0.05);
     }
 
     public SetArmsPositionAngular(Supplier<Translation2d> positionSupplier, double deadBand, double finalShoulderVelocity, double finalElbowVelocity) {
@@ -46,10 +47,10 @@ public class SetArmsPositionAngular extends CommandBase {
     public void initialize() {
         double currentShoulderAngle = arm.getShoulderJointAngle().getDegrees();
         double currentElbowAngle = arm.getElbowJointAngle().getDegrees();
-        shoulderProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(180, 90),
+        shoulderProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(360, 240),
                 new TrapezoidProfile.State(shoulderAngle.getAsDouble(), finalShoulderVelocity),
                 new TrapezoidProfile.State(currentShoulderAngle, 0));
-        elbowProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(270, 110),
+        elbowProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(480, 480),
                 new TrapezoidProfile.State(elbowAngle.getAsDouble(), finalElbowVelocity),
                 new TrapezoidProfile.State(currentElbowAngle, 0));
 
@@ -59,8 +60,6 @@ public class SetArmsPositionAngular extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setCurrentCommand(this);
-
         double time = timer.get();
         double shoulderSetpoint = shoulderProfile.calculate(time).position;
         double elbowSetpoint = elbowProfile.calculate(time).position;

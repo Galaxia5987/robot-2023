@@ -1,31 +1,24 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathPlanner;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autonomous.FollowPath;
+import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
-import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
+import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.commands.IntakeDefaultCommand;
-import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
@@ -39,7 +32,7 @@ public class RobotContainer {
     private final SwerveDrive swerveSubsystem = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
     private final Intake intake = Intake.getInstance();
-    private final Gripper gripper = Gripper.getInstance();
+   private final Gripper gripper = Gripper.getInstance();
     private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
     private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
@@ -56,6 +49,8 @@ public class RobotContainer {
     private final JoystickButton leftJoystickTopBottom = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
     private final JoystickButton rightJoystickTrigger = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TRIGGER);
     private final JoystickButton rightJoystickTopBottom = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
+    private final JoystickButton rightJoystickTopRight = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_RIGHT_BUTTON);
+    private final JoystickButton rightJoystickTopLeft = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_LEFT_BUTTON);
     private final Trigger leftPOV = new Trigger(() -> xboxController.getPOV() == 270);
     private final Trigger rightPOV = new Trigger(() -> xboxController.getPOV() == 90);
     private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0));
@@ -88,33 +83,31 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+
         b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION));
-        y.whileTrue(new UpperScoring(() -> -leftJoystick.getY(),
-                () -> limelight.getPipeline() != Limelight.Pipeline.APRIL_TAG_PIPELINE));
-        x.whileTrue(new MidScoring(() -> -leftJoystick.getY(),
-                () -> limelight.getPipeline() != Limelight.Pipeline.APRIL_TAG_PIPELINE));
+        y.whileTrue(new UpperScoring());
+        x.whileTrue(new MidScoring());
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
 
-
-        downPOV.whileTrue(new GetArmIntoRobot());
-        upPOV.whileTrue(new GetArmOutOfRobot());
-
-        xboxLeftTrigger.onTrue(new PickUpCube())
+        xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
-        xboxRightTrigger.onTrue(new Feed(false).unless(arm::armIsOutOfFrame))
-                .onFalse(new ReturnIntake());
+        xboxRightTrigger.whileTrue(new ReturnIntake()
+                .andThen(new RunCommand(() -> intake.setAnglePower(0.05))))
+                .onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
 
-        start.onTrue(new InstantCommand(limelight::togglePipeline)
-                .andThen(new InstantCommand(() -> {
-                    if (limelight.getPipeline() == Limelight.Pipeline.APRIL_TAG_PIPELINE) {
-                        leds.setPurple();
-                    } else {
-                        leds.setYellow();
-                    }
-                })));
+        start.onTrue(new InstantCommand(leds::toggle));
 
         rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        rightJoystickTopBottom.whileTrue(new AdjustToTargetDumb(
+                AdjustToTargetDumb.Position.MIDDLE
+        ));
+        rightJoystickTopLeft.whileTrue(new AdjustToTargetDumb(
+                AdjustToTargetDumb.Position.LEFT
+        ));
+        rightJoystickTopRight.whileTrue(new AdjustToTargetDumb(
+                AdjustToTargetDumb.Position.RIGHT
+        ));
     }
 
 
@@ -124,17 +117,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        var trajectory = PathPlanner.loadPath("Onward", 5, 3);
-        return new FollowPath(
-                trajectory,
-                swerveSubsystem::getPose,
-                swerveSubsystem.getKinematics(),
-                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-                new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-                swerveSubsystem::setStates,
-                true,
-                swerveSubsystem
-        );
+        return new MiddleConeHighEngage();
     }
 }

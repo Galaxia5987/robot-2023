@@ -52,7 +52,7 @@ public class JoystickDrive extends CommandBase {
 
     @Override
     public void execute() {
-        if (leftJoystick.getRawButton(Ports.UI.JOYSTICK_TOP_RIGHT_BUTTON)) {
+        if (leftJoystick.getRawButton(Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON)) {
             swerveDrive.lock();
         } else {
             double vx = -leftJoystick.getY();
@@ -85,8 +85,8 @@ public class JoystickDrive extends CommandBase {
 //            }
 //
             DriveSignal signal = new DriveSignal(
-                    vx * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                    vy * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                    vx * SwerveConstants.MAX_VELOCITY_AUTO,
+                    vy * SwerveConstants.MAX_VELOCITY_AUTO,
                     omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                     new Translation2d(),
                     !leftJoystick.getTop());

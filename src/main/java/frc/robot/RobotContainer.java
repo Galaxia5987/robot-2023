@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
+import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
@@ -84,9 +85,12 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        b.whileTrue(new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION));
-        y.whileTrue(new UpperScoring());
-        x.whileTrue(new MidScoring());
+        b.whileTrue(new FeederPosition()
+                .alongWith(new ReturnIntake()));
+        y.whileTrue(new UpperScoring()
+                .alongWith(new ReturnIntake()));
+        x.whileTrue(new MidScoring()
+                .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
 
@@ -112,11 +116,12 @@ public class RobotContainer {
 
 
     /**
+     *
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new MiddleConeHighEngage();
+        return new RightConeCubeHigh();
     }
 }

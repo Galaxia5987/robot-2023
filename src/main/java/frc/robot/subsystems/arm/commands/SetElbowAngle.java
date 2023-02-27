@@ -22,7 +22,7 @@ public class SetElbowAngle extends CommandBase {
     @Override
     public void initialize() {
         double startAngle = AngleUtil.normalize(arm.getElbowJointAngle().getDegrees());
-        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(180, 270),
+        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(360, 1080),
                 new TrapezoidProfile.State(angle, 0),
                 new TrapezoidProfile.State(startAngle, 0));
         timer.start();

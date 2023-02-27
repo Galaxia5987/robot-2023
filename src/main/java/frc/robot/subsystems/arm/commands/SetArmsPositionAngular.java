@@ -47,10 +47,10 @@ public class SetArmsPositionAngular extends CommandBase {
     public void initialize() {
         double currentShoulderAngle = arm.getShoulderJointAngle().getDegrees();
         double currentElbowAngle = arm.getElbowJointAngle().getDegrees();
-        shoulderProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(360, 240),
+        shoulderProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(180, 540),
                 new TrapezoidProfile.State(shoulderAngle.getAsDouble(), finalShoulderVelocity),
                 new TrapezoidProfile.State(currentShoulderAngle, 0));
-        elbowProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(480, 480),
+        elbowProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(360, 1080),
                 new TrapezoidProfile.State(elbowAngle.getAsDouble(), finalElbowVelocity),
                 new TrapezoidProfile.State(currentElbowAngle, 0));
 

@@ -39,8 +39,8 @@ public class ArmConstants {
 
     public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees]
     public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.419 - SHOULDER_ZERO_POSITION / 360.0;
-    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.572 - ELBOW_ZERO_POSITION / 360.0;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.41758438543961 - SHOULDER_ZERO_POSITION / 360.0;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.569573389239335 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
     public static final double shoulderP = 0.02;
@@ -58,15 +58,16 @@ public static final double ELBOW_FEED_FORWARD = 0.04;
 //    public static final double ELBOW_FEED_FORWARD = 0.02;
 
     //arm positions
-    public static final Translation2d ABOVE_GAME_PIECE = new Translation2d();
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.467, 0.677);
+    public static final Translation2d STARTING_POSITION = new Translation2d(-0.4, 0.06);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.437, 0.797);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
-    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.105, 0.834);
-    public static final Translation2d UPPER_CONE_SCORING2 = new Translation2d(1.227, 0.87);
-    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.809, 0.62);
+    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
+    public static final Translation2d UPPER_CONE_SCORING2 = new Translation2d(1.18, 0.94);
+    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.6945, 0.475);
+    public static final Translation2d MIDDLE_CONE_SCORING3 = new Translation2d(0.809, 0.76);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);
-    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.125, 0.641);
-    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.667, 0.481);
+    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.155, 0.741);
+    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.777, 0.481);
     public static final Translation2d OUT_ROBOT1 = new Translation2d(-0.392, 0.0);
     public static final Translation2d IN_ROBOT1 = new Translation2d(-0.32, 0.0101);
     public static final Translation2d IN_ROBOT2 = new Translation2d(-0.34, -0.13);

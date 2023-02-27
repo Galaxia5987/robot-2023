@@ -151,10 +151,19 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      * @param angle desired angle. [degrees]
      */
     public void setShoulderJointAngle(double angle) {
+        setShoulderJointAngle(angle, false);
+    }
+
+    /**
+     * Sets the angle of the shoulder joint.
+     *
+     * @param angle desired angle. [degrees]
+     */
+    public void setShoulderJointAngle(double angle, boolean useFF) {
         angle = AngleUtil.normalize(angle);
         double error = unitModelShoulder.toTicks(Math.toRadians(angle)) - unitModelShoulder.toTicks(getShoulderJointAngle().getRadians());
         shoulderMainMotor.set(TalonFXControlMode.Position, shoulderMainMotor.getSelectedSensorPosition() + error,
-                DemandType.ArbitraryFeedForward, shoulderFeedforward);
+                DemandType.ArbitraryFeedForward, useFF ? shoulderFeedforward : 0);
         loggerInputs.shoulderSetpoint = angle;
         loggerInputs.shoulderError = error;
     }
@@ -174,10 +183,19 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      * @param angle desired angle. [degrees]
      */
     public void setElbowJointAngle(double angle) {
+        setElbowJointAngle(angle, false);
+    }
+
+    /**
+     * Sets the angle of the elbow joint.
+     *
+     * @param angle desired angle. [degrees]
+     */
+    public void setElbowJointAngle(double angle, boolean useFF) {
         angle = AngleUtil.normalize(angle);
         double error = unitModelElbow.toTicks(Math.toRadians(angle)) - unitModelElbow.toTicks(getElbowJointAngle().getRadians());
         elbowMainMotor.set(TalonFXControlMode.Position, elbowMainMotor.getSelectedSensorPosition() + error,
-                DemandType.ArbitraryFeedForward, elbowFeedforward);
+                DemandType.ArbitraryFeedForward, useFF ? elbowFeedforward : 0);
         loggerInputs.elbowSetpoint = angle;
         loggerInputs.elbowError = error;
     }

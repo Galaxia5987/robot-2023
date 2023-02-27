@@ -38,7 +38,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
     public static boolean debug = true;
-    private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     private RobotContainer robotContainer;

@@ -20,6 +20,7 @@ import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.YellowLed;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
@@ -30,9 +31,9 @@ import frc.robot.utils.AllianceFlipUtil;
  * In this path the robot places a cone in the middle grid
  * in the part that is closer to the feeder and goes to the charge station.
  */
-public class MiddleConeHighEngage extends SequentialCommandGroup {
+public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
 
-    public MiddleConeHighEngage() {
+    public MiddleConeHighCommunityEngage() {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gyroscope gyroscope = Gyroscope.getInstance();
         Gripper gripper = Gripper.getInstance();
@@ -48,7 +49,7 @@ public class MiddleConeHighEngage extends SequentialCommandGroup {
 
                 new InstantCommand(gripper::open),
 
-                new DriveTillPitch(-10.5, 1)
+                new DriveTillPitch(10.5, 1)
                         .alongWith(new ReturnArm()),
 
                 new RunCommand(() -> swerveDrive.drive(
@@ -59,7 +60,20 @@ public class MiddleConeHighEngage extends SequentialCommandGroup {
                                 new Translation2d(),
                                 true
                         )
-                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(1.65),
+                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(1),
+
+                new DriveTillPitch(10.5, -1)
+                        .alongWith(new Retract(false)),
+
+                new RunCommand(() -> swerveDrive.drive(
+                        new DriveSignal(
+                                -1,
+                                0,
+                                0,
+                                new Translation2d(),
+                                true
+                        )
+                ), swerveDrive).withTimeout(1.35),
 
                 new RunCommand(swerveDrive::lock)
         );

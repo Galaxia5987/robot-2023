@@ -30,18 +30,21 @@ public class MiddleConeHighCommunityFeedEngage extends SequentialCommandGroup {
         Intake intake = Intake.getInstance();
         Gripper gripper = Gripper.getInstance();
         Arm arm = Arm.getInstance();
-
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("RightConeCubeHigh blue 1",
+                new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO,
+                        SwerveConstants.MAX_ACCELERATION_AUTO));
         addCommands(
 
                 new AutonUpperScoring(true),
 
-                new InstantCommand(gripper::open).withTimeout(3).andThen(gripper::close),
-                new GetArmIntoRobot(),
-                new DriveTillPitch(-10.5, 1).andThen(new DriveTillPitch(0, 1))
-                        .andThen(new DriveTillPitch(10.5, 1)).andThen(new DriveTillPitch(0, 1)),
-                new InstantCommand(()-> swerveDrive.drive(new DriveSignal(1, 0, 0, new Translation2d(0,0),false))).alongWith(new PickUpCube()).withTimeout(3),
-                new DriveTillPitch(10.5, -1).andThen(new DriveTillPitch(0, -1)),
-                new InstantCommand(()-> swerveDrive.lock())
-        );
+//                new InstantCommand(gripper::open).withTimeout(3).andThen(gripper::close),
+//                new GetArmIntoRobot(),
+//                new DriveTillPitch(-10.5, 1).andThen(new DriveTillPitch(0, 1))
+//                        .andThen(new DriveTillPitch(10.5, 1)).andThen(new DriveTillPitch(0, 1)),
+//                new InstantCommand(()-> swerveDrive.drive(new DriveSignal(1, 0, 0, new Translation2d(0,0),false))).alongWith(new PickUpCube()).withTimeout(3),
+//                new DriveTillPitch(10.5, -1).andThen(new DriveTillPitch(0, -1)).andThen(new DriveTillPitch(-10.5, -1)).andThen(new DriveTillPitch(0, -1)),
+//                new InstantCommand(()-> swerveDrive.drive(new DriveSignal(1, 0, 0, new Translation2d(0,0),false))).alongWith(new PickUpCube()).withTimeout(3),
+
+                );
     }
 }

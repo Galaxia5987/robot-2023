@@ -1,13 +1,15 @@
 package frc.robot.subsystems.gripper;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
 public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     private static Gripper INSTANCE;
-
+    private final AnalogInput distance = new AnalogInput(0);
     private final Solenoid gripperSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID);
 
     private Gripper() {
@@ -52,6 +54,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
         return gripperSolenoid.get();
     }
 
+
     @Override
     public String getSubsystemName() {
         return "Gripper";
@@ -60,5 +63,10 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     @Override
     public void updateInputs() {
         loggerInputs.isOpen = isOpen();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Distance sensor", distance.getValue());
     }
 }

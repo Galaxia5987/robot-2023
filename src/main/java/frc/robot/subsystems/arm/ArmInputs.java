@@ -23,4 +23,5 @@ public class ArmInputs {
     public double elbowError = 0;
     public double shoulderOutputVoltage = 0;
     public double[] finalSetpointAngles = new double[2];
+    public double ySetpoint = 0;
 }

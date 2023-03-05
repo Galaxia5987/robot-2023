@@ -9,7 +9,7 @@ import frc.robot.utils.valuetuner.WebConstant;
 
 public class SwerveConstants {
     public static final double TICKS_PER_ROTATION = 2048;
-    public static final int[] OFFSETS = {12243, 6332, 14909, 10817};
+    public static final int[] OFFSETS = {12250, 6239, 15002, 10710};
 
     public static final double DRIVETRAIN_TRACK_WIDTH_METERS = 0.51594;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.66594;

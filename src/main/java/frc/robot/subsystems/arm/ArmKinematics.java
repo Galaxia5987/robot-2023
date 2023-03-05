@@ -11,12 +11,12 @@ import frc.robot.utils.math.AngleUtil;
  * There is a table of contents containing the kinematics section, and the inverse kinematics section.
  */
 public class ArmKinematics {
-    private final double length1;
-    private final double length2;
+    private final double l1;
+    private final double l2;
 
     public ArmKinematics(double length1, double length2) {
-        this.length1 = length1;
-        this.length2 = length2;
+        this.l1 = length1;
+        this.l2 = length2;
     }
 
     /**
@@ -27,8 +27,8 @@ public class ArmKinematics {
      * @return the position of the end effector. ([m, [m])
      */
     public Translation2d forwardKinematics(double shoulderAngle, double elbowAngle) {
-        double x = length1 * Math.cos(shoulderAngle) + length2 * Math.cos(elbowAngle);
-        double y = length1 * Math.sin(shoulderAngle) + length2 * Math.sin(elbowAngle);
+        double x = l1 * Math.cos(shoulderAngle) + l2 * Math.cos(elbowAngle);
+        double y = l1 * Math.sin(shoulderAngle) + l2 * Math.sin(elbowAngle);
         return new Translation2d(x, y);
     }
 
@@ -44,10 +44,10 @@ public class ArmKinematics {
             y = -y;
         }
 
-        c2 = (x * x + y * y - length1 * length1 - length2 * length2) / (2 * length1 * length2);
+        c2 = (x * x + y * y - l1 * l1 - l2 * l2) / (2 * l1 * l2);
         s2 = Math.sqrt(1 - c2 * c2);
-        K1 = length1 + length2 * c2;
-        K2 = length2 * s2;
+        K1 = l1 + l2 * c2;
+        K2 = l2 * s2;
         psi = Math.atan2(y, x) - Math.atan2(K2, K1);
         theta = Math.atan2(s2, c2);
         theta = theta + psi;
@@ -58,6 +58,27 @@ public class ArmKinematics {
         }
 
         return new InverseKinematicsSolution(psi, theta - psi - Math.PI);
+    }
+
+    public InverseKinematicsSolution mirror(InverseKinematicsSolution solution) {
+        var position = forwardKinematics(solution.shoulderAngle, solution.elbowAngle);
+        double positionAngle = Math.atan2(position.getY(), position.getX());
+        return new InverseKinematicsSolution(positionAngle - solution.shoulderAngle, -solution.elbowAngle);
+    }
+
+    public InverseKinematicsSolution getVelocities(Translation2d currentPosition, Translation2d desiredVelocity) {
+        double x = currentPosition.getX();
+        double y = currentPosition.getY();
+        double vx = desiredVelocity.getX();
+        double vy = desiredVelocity.getY();
+        double k = (x * x + y * y - l1 * l1 - l2 * l2) / (2 * l1) + l1;
+        double v = 2 * x * vx + 2 * y * vy;
+        double psiDot = (k * k * v / (2 * l1 * Math.pow(1 - k * k, 1.5)) +
+                v / (2 * l1 * Math.sqrt(1 - k * k))) /
+                ((k * k) / (1 - k * k) + 1);
+        double thetaDot = v / Math.sqrt((l2 * l2 - x * x - y * y + l1 * l1 + 2) * (-l2 * l2 + x * x + y * y - l1 * l1 + 2));
+
+        return new InverseKinematicsSolution(psiDot, thetaDot);
     }
 
     /**

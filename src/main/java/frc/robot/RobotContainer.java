@@ -11,9 +11,7 @@ import frc.robot.commandgroups.*;
 import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.arm.commands.ArmAxisXboxControlDumb;
-import frc.robot.subsystems.arm.commands.ArmXboxControl;
-import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
+import frc.robot.subsystems.arm.commands.*;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
@@ -81,7 +79,9 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(
                 new JoystickDrive(leftJoystick, rightJoystick)
         );
-        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1));
+        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));
+//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+
     }
 
     private void configureButtonBindings() {
@@ -94,6 +94,7 @@ public class RobotContainer {
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
+        rb.whileTrue(new ArmAxisControl(0.3, 0.02,0));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());

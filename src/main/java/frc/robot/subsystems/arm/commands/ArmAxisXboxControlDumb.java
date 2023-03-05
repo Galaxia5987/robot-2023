@@ -1,26 +1,69 @@
 package frc.robot.subsystems.arm.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.utils.Utils;
 
 public class ArmAxisXboxControlDumb extends CommandBase {
     private final Arm arm = Arm.getInstance();
     private final XboxController xboxController;
     private final Double multiplier;
+    private final double value;
 
-    public ArmAxisXboxControlDumb(XboxController xboxController, double multiplier) {
+    private double shoulderHoldAngle;
+    private double elbowHoldAngle;
+    private boolean lastJoysticksZero;
+
+    private Translation2d position = new Translation2d(0, 0);
+    private Translation2d initialPosition = new Translation2d(0, 0);
+    private double lastPositionSign = 0;
+
+    private boolean lastPassedMaximum = false;
+
+    public ArmAxisXboxControlDumb(XboxController xboxController, double multiplier, double value) {
         this.xboxController = xboxController;
         this.multiplier = multiplier;
+        this.value = value;
         addRequirements(arm);
     }
 
     @Override
     public void execute() {
         var currentPosition = arm.getEndPosition();
-        if (currentPosition.getY()> ArmConstants.END_POSITION_LOWER_Y_LIMIT&&currentPosition.getY()<ArmConstants.END_POSITION_UPPER_Y_LIMIT&&currentPosition.getX()>ArmConstants.END_POSITION_LOWER_X_LIMIT&&currentPosition.getX()<ArmConstants.END_POSITION_UPPER_X_LIMIT)
-            arm.setEndPosition(new Translation2d(currentPosition.getX()+ xboxController.getLeftX()*multiplier, currentPosition.getY()+xboxController.getRightY()*multiplier));
+        double powerX = xboxController.getLeftX();
+        double powerY = -xboxController.getLeftY();
+        powerY = MathUtil.applyDeadband(powerY, 0.2);
+        powerX = MathUtil.applyDeadband(powerX, 0.2);
+        boolean joysticksZero = Utils.epsilonEquals(powerX, 0) && Utils.epsilonEquals(powerY, 0);
+        boolean passedMaximum = position.getNorm() > ArmConstants.SHOULDER_ARM_LENGTH + ArmConstants.ELBOW_ARM_LENGTH - 0.1;
+
+//        if (xboxController.getRightBumper()){
+//            powerX = value;
+//        }
+        if ((lastJoysticksZero && !joysticksZero)) {
+            initialPosition = currentPosition;
+            position = initialPosition;
+        }
+        if ((!lastJoysticksZero && joysticksZero) || arm.changedToDefaultCommand() || Robot.justEnabled() ||
+                (!lastPassedMaximum && passedMaximum)) {
+            shoulderHoldAngle = arm.getShoulderJointAngle().getDegrees();
+            elbowHoldAngle = arm.getElbowJointAngle().getDegrees();
+        }
+        if (joysticksZero || passedMaximum) {
+            arm.setShoulderJointAngle(shoulderHoldAngle, true);
+            arm.setElbowJointAngle(elbowHoldAngle, true);
+        } else {
+            position = position.plus(new Translation2d(powerX * multiplier, powerY * multiplier));
+
+            arm.setEndPosition(position, true);
+        }
+
+        lastJoysticksZero = joysticksZero;
+        lastPassedMaximum = passedMaximum;
     }
 }

@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.subsystems.arm.commands.ArmAxisXboxControlDumb;
+import frc.robot.subsystems.arm.commands.ArmAxisXboxControlSmart;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.utils.math.AngleUtil;
 import frc.robot.utils.units.UnitModel;
@@ -42,6 +44,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
 
     private Command lastCommand;
     private boolean changedToDefaultCommand = false;
+
+    private double ySetpoint = 0;
 
     private Arm() {
         super(new ArmInputsAutoLogged());
@@ -216,10 +220,20 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      *
      * @param armLocation Translation2d of the desired location.
      */
-    public void setEndPosition(Translation2d armLocation) {
+    public void setEndPosition(Translation2d armLocation, boolean useFF) {
         var angles = kinematics.inverseKinematics(armLocation);
-        setShoulderJointAngle(Math.toDegrees(angles.shoulderAngle));
-        setElbowJointAngle(Math.toDegrees(angles.elbowAngle));
+        setShoulderJointAngle(Math.toDegrees(angles.shoulderAngle), useFF);
+        setElbowJointAngle(Math.toDegrees(angles.elbowAngle), useFF);
+        ySetpoint = armLocation.getY();
+    }
+
+    /**
+     * Sets the position of the end of the arm.
+     *
+     * @param armLocation Translation2d of the desired location.
+     */
+    public void setEndPosition(Translation2d armLocation) {
+        setEndPosition(armLocation, false);
     }
 
     /**
@@ -269,6 +283,12 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         return getEndPosition().getY() < 0 && getShoulderJointAngle().getDegrees() > 90;
     }
 
+    public void setVelocity(Translation2d velocity) {
+        var armVelocities = kinematics.getVelocities(getEndPosition(), velocity);
+        setShoulderJointPower(armVelocities.shoulderAngle / Math.PI);
+        setElbowJointPower(armVelocities.elbowAngle / (2 * Math.PI));
+    }
+
     public boolean changedToDefaultCommand() {
         return changedToDefaultCommand;
     }
@@ -291,7 +311,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         double t = Timer.getFPGATimestamp();
         var currentCommand = getCurrentCommand();
 
-        changedToDefaultCommand = !(lastCommand instanceof ArmXboxControl) && currentCommand instanceof ArmXboxControl;
+        changedToDefaultCommand = !(lastCommand instanceof ArmXboxControl || lastCommand instanceof ArmAxisXboxControlDumb)
+                && (currentCommand instanceof ArmXboxControl || currentCommand instanceof ArmAxisXboxControlDumb);
         lastCommand = currentCommand;
 
         if (currentCommand != null) {
@@ -328,6 +349,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
         ArmKinematics.InverseKinematicsSolution kinematicsSolution = kinematics.inverseKinematics(position);
         loggerInputs.inverseKinematicsSolution[0] = Math.toDegrees(kinematicsSolution.shoulderAngle);
         loggerInputs.inverseKinematicsSolution[1] = Math.toDegrees(kinematicsSolution.elbowAngle);
+        loggerInputs.ySetpoint = ySetpoint;
 
         loggerInputs.feedforward[0] = shoulderFeedforward;
         loggerInputs.feedforward[1] = elbowFeedforward;

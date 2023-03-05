@@ -12,9 +12,9 @@ public class DriveTillPitch extends CommandBase {
     private final Gyroscope gyroscope = Gyroscope.getInstance();
 
     private final double desiredPitch;
-    private final double xVelocity;
+    private final int xVelocity;
 
-    public DriveTillPitch(double desiredPitch, double xVelocity) {
+    public DriveTillPitch(double desiredPitch, int xVelocity) {
         this.desiredPitch = desiredPitch;
         this.xVelocity = xVelocity;
         addRequirements(swerveDrive);

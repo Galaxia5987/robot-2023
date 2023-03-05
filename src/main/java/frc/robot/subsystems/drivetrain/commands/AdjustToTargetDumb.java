@@ -75,7 +75,7 @@ public class AdjustToTargetDumb extends CommandBase {
     }
 
     public enum Position {
-        RIGHT(new Translation2d(-0.75, 0.62)),
+        RIGHT(new Translation2d(-0.75, 0.69)),
         LEFT(new Translation2d(-0.75, -0.48)),
         MIDDLE(new Translation2d(-0.75, 0.13));
 

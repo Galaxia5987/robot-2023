@@ -39,8 +39,8 @@ public class ArmConstants {
 
     public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees]
     public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.4183747854593696 - SHOULDER_ZERO_POSITION / 360.0;
-    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.5719791142994779 - ELBOW_ZERO_POSITION / 360.0;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.41758438543961 - SHOULDER_ZERO_POSITION / 360.0;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.569573389239335 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
     public static final double shoulderP = 0.02;
@@ -59,7 +59,7 @@ public static final double ELBOW_FEED_FORWARD = 0.04;
 
     //arm positions
     public static final Translation2d STARTING_POSITION = new Translation2d(-0.4, 0.06);
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.43, 0.801);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.437, 0.797);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
     public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
     public static final Translation2d UPPER_CONE_SCORING2 = new Translation2d(1.18, 0.94);

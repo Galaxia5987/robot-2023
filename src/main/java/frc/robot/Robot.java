@@ -37,7 +37,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-    public static boolean debug = false;
+    public static boolean debug = true;
     private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     private RobotContainer robotContainer;

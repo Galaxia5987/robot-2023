@@ -21,9 +21,9 @@ public class UpperScoring extends SequentialCommandGroup {
                 ),
 
                 new ConditionalCommand(
-                        new SetElbowAngle(178)
+                        new SetElbowAngle(170)
                                 .raceWith(new RunCommand(() -> arm.setShoulderJointPower(-0.05))
-                                        .withTimeout(1.2)),
+                                        .withTimeout(1.5)),
                         new SetArmsPositionAngular(() -> ArmConstants.UPPER_CUBE_SCORING),
                         Leds.getInstance()::inConeMode
                 )

@@ -11,6 +11,7 @@ import frc.robot.commandgroups.*;
 import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.arm.commands.ArmAxisXboxControlDumb;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
@@ -80,7 +81,7 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(
                 new JoystickDrive(leftJoystick, rightJoystick)
         );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1));
     }
 
     private void configureButtonBindings() {

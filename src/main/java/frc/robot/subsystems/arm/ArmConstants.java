@@ -39,6 +39,10 @@ public class ArmConstants {
 
     public static final double ELBOW_ZERO_POSITION = 360 - 53.33; //[degrees]
     public static final double SHOULDER_ZERO_POSITION = 180 - 65.53; //[degrees]
+    public static final double END_POSITION_UPPER_Y_LIMIT = 0; //[cm]
+    public static final double END_POSITION_LOWER_Y_LIMIT = 0; //[cm]
+    public static final double END_POSITION_UPPER_X_LIMIT = 0; //[cm]
+    public static final double END_POSITION_LOWER_X_LIMIT = 0; //[cm]
     public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.41758438543961 - SHOULDER_ZERO_POSITION / 360.0;
     public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.569573389239335 - ELBOW_ZERO_POSITION / 360.0;
 

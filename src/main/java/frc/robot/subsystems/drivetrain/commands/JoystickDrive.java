@@ -49,9 +49,6 @@ public class JoystickDrive extends CommandBase {
             vy = Math.sin(angle) * magnitude;
             omega = MathUtil.applyDeadband(omega, 0.1);
 
-            vx = Math.copySign(vx * vx, vx);
-            vy = Math.copySign(vy * vy, vy);
-
             DriveSignal signal = new DriveSignal(
                     vx * SwerveConstants.MAX_VELOCITY_AUTO,
                     vy * SwerveConstants.MAX_VELOCITY_AUTO,

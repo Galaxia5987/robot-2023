@@ -9,20 +9,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
-import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.GetArmIntoRobot;
 import frc.robot.commandgroups.ReturnArm;
-import frc.robot.commandgroups.UpperScoring;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.BalanceOnStation;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
-import frc.robot.subsystems.leds.YellowLed;
-import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
 
 /**
@@ -31,13 +26,13 @@ import frc.robot.utils.AllianceFlipUtil;
  * In this path the robot places a cone in the middle grid
  * in the part that is closer to the feeder and goes to the charge station.
  */
-public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
+public class MiddleConeHighCommunityEngageRed extends SequentialCommandGroup {
 
-    public MiddleConeHighCommunityEngage() {
+    public MiddleConeHighCommunityEngageRed() {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gyroscope gyroscope = Gyroscope.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage blue", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage red", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
                 new InstantCommand(() -> swerveDrive.resetOdometry(
@@ -73,7 +68,7 @@ public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
                                 new Translation2d(),
                                 true
                         )
-                ), swerveDrive).withTimeout(1.45),
+                ), swerveDrive).withTimeout(1.55),
 
                 new RunCommand(swerveDrive::lock)
         );

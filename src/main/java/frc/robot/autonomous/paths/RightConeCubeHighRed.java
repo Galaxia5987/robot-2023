@@ -19,23 +19,28 @@ import frc.robot.subsystems.leds.PurpleLed;
 import frc.robot.utils.AllianceFlipUtil;
 
 /**
- * This class contains all parts of the path LeftConeCubeHigh.
+ * This class contains all the parts to the path RightConeCubeHigh.
  * <p>
- * In this path the robot places a cone in the grid that is closest to the feeder,
- * goes to take a cube (the one closest to the feeder) and returns to place it.
+ * In this path the robot places a cone in the grid that is the furthest away from the feeder,
+ * goes to pick up a cube (the one furthest from the feeder)
+ * and returns to place it in the same grid.
  */
-public class LeftConeCubeHighBlue extends SequentialCommandGroup {
-    public LeftConeCubeHighBlue() {
+public class RightConeCubeHighRed extends SequentialCommandGroup {
+
+    public RightConeCubeHighRed(DriverStation.Alliance alliance) {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftConeCubeHigh blue 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("RightConeCubeHigh red 1",
+                new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO,
+                        SwerveConstants.MAX_ACCELERATION_AUTO));
+
 
         addCommands(
+                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
                 new InstantCommand(() -> swerveDrive.resetOdometry(
-                        AllianceFlipUtil.apply(DriverStation.getAlliance(), trajectory.getInitialPose()))),
-                new InstantCommand(()->gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
-                new InstantCommand(()-> swerveDrive.resetOdometry(trajectory.getInitialPose())),
+                        AllianceFlipUtil.apply(alliance,
+                                trajectory.getInitialPose()))),
 
                 new InstantCommand(gripper::close, gripper).withTimeout(1),
 
@@ -47,13 +52,14 @@ public class LeftConeCubeHighBlue extends SequentialCommandGroup {
 
                 new ReturnArm().withTimeout(1.5),
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh blue 1").alongWith(
-                        new PickUpCube()).withTimeout(4),
+                FollowPath.loadTrajectory("RightConeCubeHigh red 1")
+                        .alongWith(
+                                new PickUpCube().withTimeout(4.5)),
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh blue 2")
+                FollowPath.loadTrajectory("RightConeCubeHigh red 2")
                         .alongWith(new ReturnIntake()
-                                        .andThen(new InstantCommand(gripper::close, gripper))
-                                        .andThen(new ReturnArm())).withTimeout(3.5),
+                                .andThen(new InstantCommand(gripper::close, gripper))
+                                .andThen(new ReturnArm())).withTimeout(3.5),
 
                 new AutonUpperScoring(false),
 

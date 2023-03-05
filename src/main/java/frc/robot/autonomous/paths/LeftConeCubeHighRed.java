@@ -11,13 +11,11 @@ import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.PickUpCube;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.commandgroups.ReturnIntake;
-import frc.robot.commandgroups.UpperScoring;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.leds.PurpleLed;
-import frc.robot.subsystems.leds.YellowLed;
 import frc.robot.utils.AllianceFlipUtil;
 
 /**
@@ -26,12 +24,12 @@ import frc.robot.utils.AllianceFlipUtil;
  * In this path the robot places a cone in the grid that is closest to the feeder,
  * goes to take a cube (the one closest to the feeder) and returns to place it.
  */
-public class LeftConeCubeHigh extends SequentialCommandGroup {
-    public LeftConeCubeHigh() {
+public class LeftConeCubeHighRed extends SequentialCommandGroup {
+    public LeftConeCubeHighRed() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftConeCubeHigh blue 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftConeCubeHigh red 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
                 new InstantCommand(() -> swerveDrive.resetOdometry(
@@ -49,10 +47,10 @@ public class LeftConeCubeHigh extends SequentialCommandGroup {
 
                 new ReturnArm().withTimeout(1.5),
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh blue 1").alongWith(
+                FollowPath.loadTrajectory("LeftConeCubeHigh red 1").alongWith(
                         new PickUpCube()).withTimeout(4),
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh blue 2")
+                FollowPath.loadTrajectory("LeftConeCubeHigh red 2")
                         .alongWith(new ReturnIntake()
                                         .andThen(new InstantCommand(gripper::close, gripper))
                                         .andThen(new ReturnArm())).withTimeout(3.5),

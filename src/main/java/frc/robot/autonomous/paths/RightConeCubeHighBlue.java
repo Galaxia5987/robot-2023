@@ -3,11 +3,6 @@ package frc.robot.autonomous.paths;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -16,19 +11,12 @@ import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.PickUpCube;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.commandgroups.ReturnIntake;
-import frc.robot.commandgroups.UpperScoring;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.PurpleLed;
-import frc.robot.subsystems.leds.YellowLed;
-import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.AllianceFlipUtil;
-
-import java.util.HashMap;
-import java.util.function.Consumer;
 
 /**
  * This class contains all the parts to the path RightConeCubeHigh.
@@ -37,9 +25,9 @@ import java.util.function.Consumer;
  * goes to pick up a cube (the one furthest from the feeder)
  * and returns to place it in the same grid.
  */
-public class RightConeCubeHigh extends SequentialCommandGroup {
+public class RightConeCubeHighBlue extends SequentialCommandGroup {
 
-    public RightConeCubeHigh(DriverStation.Alliance alliance) {
+    public RightConeCubeHighBlue(DriverStation.Alliance alliance) {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();

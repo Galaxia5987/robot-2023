@@ -1,6 +1,9 @@
 package frc.robot.autonomous;
 
-public class DrivetrainFeedforwardConstants {
+public class
+
+
+DrivetrainFeedforwardConstants {
     private final double velocityConstant;
     private final double accelerationConstant;
     private final double staticConstant;

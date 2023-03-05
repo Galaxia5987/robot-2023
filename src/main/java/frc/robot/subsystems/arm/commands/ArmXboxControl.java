@@ -22,8 +22,8 @@ public class ArmXboxControl extends CommandBase {
 
     @Override
     public void execute() {
-        double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.05);
-        double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.05);
+        double powerSho = MathUtil.applyDeadband(-xboxController.getLeftY(), 0.2);
+        double powerEl = MathUtil.applyDeadband(-xboxController.getRightY(), 0.2);
 
         boolean joysticksZero = Utils.epsilonEquals(powerSho, 0) && Utils.epsilonEquals(powerEl, 0);
 
@@ -32,8 +32,8 @@ public class ArmXboxControl extends CommandBase {
             elbowHoldAngle = arm.getElbowJointAngle().getDegrees();
         }
         if (joysticksZero) {
-            arm.setShoulderJointAngle(shoulderHoldAngle);
-            arm.setElbowJointAngle(elbowHoldAngle);
+            arm.setShoulderJointAngle(shoulderHoldAngle, true);
+            arm.setElbowJointAngle(elbowHoldAngle, true);
         } else {
             arm.setShoulderJointPower(0.3 * powerSho);
             arm.setElbowJointPower(0.3 * powerEl);

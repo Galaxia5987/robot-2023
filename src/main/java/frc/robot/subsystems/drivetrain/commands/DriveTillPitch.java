@@ -12,18 +12,20 @@ public class DriveTillPitch extends CommandBase {
     private final Gyroscope gyroscope = Gyroscope.getInstance();
 
     private final double desiredPitch;
+    private final double xVelocity;
 
-    public DriveTillPitch(double desiredPitch) {
+    public DriveTillPitch(double desiredPitch, double xVelocity) {
         this.desiredPitch = desiredPitch;
+        this.xVelocity = xVelocity;
         addRequirements(swerveDrive);
     }
 
     @Override
     public void execute() {
         var signal = new DriveSignal(
-                2,
+                xVelocity,
                 0,
-                SwerveConstants.AUTO_ROTATION_Kf,
+                0,
                 new Translation2d(),
                 true
         );

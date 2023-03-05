@@ -27,26 +27,9 @@ public class JoystickDrive extends CommandBase {
     private final Joystick leftJoystick;
     private final Joystick rightJoystick;
 
-    private final SlewRateLimiter forwardLimiter = new SlewRateLimiter(SwerveConstants.XY_SLEW_RATE_LIMIT);
-    private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(SwerveConstants.XY_SLEW_RATE_LIMIT);
-    private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(SwerveConstants.ROTATION_SLEW_RATE_LIMIT);
-
-    private boolean lastOmegaZero = true;
-    private Rotation2d savedAngle;
-
-    private final PIDController yController;
-    private final ProfiledPIDController rotationController;
-
-    private final PIDFController adjustController = new PIDFController(5, 0, 0, 0);
-
     public JoystickDrive(Joystick leftJoystick, Joystick rightJoystick) {
         this.leftJoystick = leftJoystick;
         this.rightJoystick = rightJoystick;
-        yController = new PIDController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd);
-        rotationController = new ProfiledPIDController(
-                SwerveConstants.TARGET_ROTATION_Kp,
-                SwerveConstants.TARGET_ROTATION_Ki,
-                SwerveConstants.TARGET_ROTATION_Kd, new TrapezoidProfile.Constraints(10, 5));
         addRequirements(swerveDrive);
     }
 
@@ -59,10 +42,6 @@ public class JoystickDrive extends CommandBase {
             double vy = -leftJoystick.getX();
             double omega = -rightJoystick.getX();
 
-            vx = forwardLimiter.calculate(vx);
-            vy = strafeLimiter.calculate(vy);
-            omega = rotationLimiter.calculate(omega);
-
             double magnitude = Math.hypot(vx, vy);
             double angle = Math.atan2(vy, vx);
             magnitude = MathUtil.applyDeadband(magnitude, 0.1);
@@ -70,32 +49,16 @@ public class JoystickDrive extends CommandBase {
             vy = Math.sin(angle) * magnitude;
             omega = MathUtil.applyDeadband(omega, 0.1);
 
-            boolean omegaZero = Utils.epsilonEquals(omega, 0);
+            vx = Math.copySign(vx * vx, vx);
+            vy = Math.copySign(vy * vy, vy);
 
-            if (!lastOmegaZero && omegaZero) {
-                savedAngle = gyroscope.getYaw();
-            }
-
-//            Rotation2d robotAngle = gyroscope.getYaw();
-//            var absoluteYaw = limelight.getAbsoluteYaw(robotAngle);
-//            var yaw = limelight.getYaw();
-//
-//            if (yaw.isPresent() && absoluteYaw.isPresent()) {
-//                omega = rotationController.calculate(yaw.get().getRadians(), Math.toRadians(1.44));
-//            }
-//
             DriveSignal signal = new DriveSignal(
                     vx * SwerveConstants.MAX_VELOCITY_AUTO,
                     vy * SwerveConstants.MAX_VELOCITY_AUTO,
                     omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                     new Translation2d(),
                     !leftJoystick.getTop());
-            if (omegaZero && !Utils.epsilonEquals(magnitude, 0) && savedAngle != null) {
-//                signal.omega = adjustController.calculate(gyroscope.getYaw().getRadians(), savedAngle.getRadians());
-            }
             swerveDrive.drive(signal);
-
-            lastOmegaZero = omegaZero;
         }
     }
 }

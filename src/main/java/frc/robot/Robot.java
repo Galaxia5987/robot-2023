@@ -37,8 +37,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * project.
  */
 public class Robot extends LoggedRobot {
-    public static boolean debug = true;
-    private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
+    public static boolean debug = false;
     private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
     private RobotContainer robotContainer;
@@ -61,8 +60,8 @@ public class Robot extends LoggedRobot {
         Logger.getInstance().recordMetadata("ProjectName", "Robot-2023"); // Set a metadata value
 
         if (isReal()) {
-            Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-            Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+//            Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
+//            Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
             new PowerDistribution(1, PowerDistribution.ModuleType.kRev); // Enables power distribution logging
         } else {
             setUseTiming(false); // Run as fast as possible

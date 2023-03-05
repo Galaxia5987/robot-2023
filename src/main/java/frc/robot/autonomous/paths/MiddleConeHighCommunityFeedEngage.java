@@ -40,8 +40,8 @@ public class MiddleConeHighCommunityFeedEngage extends SequentialCommandGroup {
                 new DriveTillPitch(-10.5, 1).andThen(new DriveTillPitch(0, 1))
                         .andThen(new DriveTillPitch(10.5, 1)).andThen(new DriveTillPitch(0, 1)),
                 new InstantCommand(()-> swerveDrive.drive(new DriveSignal(1, 0, 0, new Translation2d(0,0),false))).alongWith(new PickUpCube()).withTimeout(3),
-                new DriveTillPitch(10.5, -1).andThen(new DriveTillPitch(0, -1))
-
+                new DriveTillPitch(10.5, -1).andThen(new DriveTillPitch(0, -1)),
+                new InstantCommand(()-> swerveDrive.lock())
         );
     }
 }

@@ -41,6 +41,10 @@ public class AdjustToTargetDumb extends CommandBase {
         finalPose = botPose.map(pose2d -> startPose.plus(new Transform2d(pose2d.getTranslation()
                 .minus(position.offset), new Rotation2d())));
 
+        if (finalPose.isPresent()) {
+            gyroscope.resetYaw(botPose.get().getRotation());
+        }
+
         Logger.getInstance().recordOutput("finalPose", finalPose.toString());
         Logger.getInstance().recordOutput("startPose", startPose.toString());
     }
@@ -71,8 +75,8 @@ public class AdjustToTargetDumb extends CommandBase {
     }
 
     public enum Position {
-        RIGHT(new Translation2d(-0.75, 0.69)),
-        LEFT(new Translation2d(-0.75, -0.51)),
+        RIGHT(new Translation2d(-0.75, 0.62)),
+        LEFT(new Translation2d(-0.75, -0.48)),
         MIDDLE(new Translation2d(-0.75, 0.13));
 
         public final Translation2d offset;

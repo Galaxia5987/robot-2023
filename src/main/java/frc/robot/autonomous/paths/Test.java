@@ -16,11 +16,11 @@ public class Test extends SequentialCommandGroup {
     public Test(){
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gyroscope gyroscope = Gyroscope.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("New New New Path", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("y axis 2", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
         new InstantCommand(()->gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
         new InstantCommand(()-> swerveDrive.resetOdometry(trajectory.getInitialPose())),
-        FollowPath.loadTrajectory("New New New Path"));
+        FollowPath.loadTrajectory("y axis 2"));
     }
 }

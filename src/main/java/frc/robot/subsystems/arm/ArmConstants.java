@@ -62,7 +62,7 @@ public class ArmConstants {
 
     //arm positions
     public static final Translation2d STARTING_POSITION = new Translation2d(-0.4, 0.06);
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.437, 0.767);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.437, 0.807);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
     public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
     public static final Translation2d UPPER_CONE_SCORING2 = new Translation2d(1.18, 0.94);

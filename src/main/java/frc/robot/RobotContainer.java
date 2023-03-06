@@ -79,7 +79,7 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(
                 new JoystickDrive(leftJoystick, rightJoystick)
         );
-        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
 //        arm.setDefaultCommand(new ArmXboxControl(xboxController));
 
     }
@@ -94,7 +94,10 @@ public class RobotContainer {
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
-        rb.whileTrue(new ArmAxisControl(0.3, 0.02,0));
+        leftPOV.whileTrue(new ArmAxisControl(0.3, 0.02,0));
+        rightPOV.whileTrue(new ArmAxisControl(0.3, -0.02,0));
+        downPOV.whileTrue(new ArmAxisControl(0.3, 0,-0.01));
+        upPOV.whileTrue(new ArmAxisControl(0.3, 0,0.01));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
@@ -124,6 +127,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new RightConeCubeHigh();
+        return new Test();
     }
 }

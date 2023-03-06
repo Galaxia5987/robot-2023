@@ -39,7 +39,7 @@ public class SwerveConstants {
    public static final double MAX_ACCELERATION_AUTO = 2.5;
 
     public static final double XY_SLEW_RATE_LIMIT = 3.0;
-    public static final double ROTATION_SLEW_RATE_LIMIT = 6.0;
+    public static final double ROTATION_SLEW_RATE_LIMIT = 4.5;
 
     public static double AUTO_X_Kp = 3.20;
     public static double AUTO_X_Ki = 0.0;

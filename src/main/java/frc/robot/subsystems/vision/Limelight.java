@@ -230,7 +230,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         }
         return Optional.empty();
     }
-    public Optional<Pose2d> getBotPoseOriented() {
+    public Optional<Pose2d> getBotPoseFieldOriented() {
         if (hasTargets()) {
             return Optional.of(
                     new Pose2d(botPoseFieldOriented.get()[0], -botPoseFieldOriented.get()[0], Rotation2d.fromDegrees(botPoseFieldOriented.get()[0])) //TODO: check index values :eggplant emoji.

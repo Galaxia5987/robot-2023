@@ -1,9 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -16,6 +13,7 @@ import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.arm.commands.ArmAxisXboxControlDumb;
 import frc.robot.subsystems.arm.commands.ArmAxisXboxControlSmart;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
+import frc.robot.utils.Utils;
 import frc.robot.utils.math.AngleUtil;
 import frc.robot.utils.units.UnitModel;
 import org.littletonrobotics.junction.Logger;
@@ -166,8 +164,12 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     public void setShoulderJointAngle(double angle, double ffMultiplier) {
         angle = AngleUtil.normalize(angle);
         double error = unitModelShoulder.toTicks(Math.toRadians(angle)) - unitModelShoulder.toTicks(getShoulderJointAngle().getRadians());
-        shoulderMainMotor.set(TalonFXControlMode.Position, shoulderMainMotor.getSelectedSensorPosition() + error,
-                DemandType.ArbitraryFeedForward, ffMultiplier * shoulderFeedforward);
+        if (shoulderEncoder.isConnected()) {
+            shoulderMainMotor.set(TalonFXControlMode.Position, shoulderMainMotor.getSelectedSensorPosition() + error,
+                    DemandType.ArbitraryFeedForward, ffMultiplier * shoulderFeedforward);
+        } else {
+            shoulderMainMotor.neutralOutput();
+        }
         loggerInputs.shoulderSetpoint = angle;
         loggerInputs.shoulderError = error;
     }
@@ -198,8 +200,12 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
     public void setElbowJointAngle(double angle, double ffMultiplier) {
         angle = AngleUtil.normalize(angle);
         double error = unitModelElbow.toTicks(Math.toRadians(angle)) - unitModelElbow.toTicks(getElbowJointAngle().getRadians());
-        elbowMainMotor.set(TalonFXControlMode.Position, elbowMainMotor.getSelectedSensorPosition() + error,
-                DemandType.ArbitraryFeedForward, ffMultiplier * elbowFeedforward);
+        if (elbowEncoder.isConnected()) {
+            elbowMainMotor.set(TalonFXControlMode.Position, elbowMainMotor.getSelectedSensorPosition() + error,
+                    DemandType.ArbitraryFeedForward, ffMultiplier * elbowFeedforward);
+        } else {
+            elbowMainMotor.neutralOutput();
+        }
         loggerInputs.elbowSetpoint = angle;
         loggerInputs.elbowError = error;
     }

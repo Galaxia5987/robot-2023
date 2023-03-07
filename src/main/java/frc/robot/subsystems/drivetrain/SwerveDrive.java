@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
@@ -16,8 +17,8 @@ import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
 
 public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private static SwerveDrive INSTANCE;
-    private Limelight limelight = Limelight.getInstance();
-    private Gyroscope gyroscope = Gyroscope.getInstance();
+    private final Limelight limelight = Limelight.getInstance();
+    private final Gyroscope gyroscope = Gyroscope.getInstance();
     private final SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(
             // Front left
             new Translation2d(DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
@@ -119,6 +120,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      */
     public void resetOdometry(Pose2d pose) {
         mOdometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
+        limelight.getBotPoseFieldOriented().ifPresent(pose2d -> poseEstimator.resetPosition(gyroscope.getYaw(), swerveModulePositions, pose));
+
     }
 
     /**
@@ -200,6 +203,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearLeft.getState(),
                 mRearRight.getState()
         ));
+        loggerInputs.estimatedPose = Utils.pose2dToArray(poseEstimator.getEstimatedPosition());
     }
 
     @Override
@@ -226,8 +230,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         mRearRight.vroom();
     }
 
-
-
     @Override
     public void periodic() {
         swerveModulePositions = new SwerveModulePosition[]{
@@ -244,9 +246,9 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mFrontRight.getEncoderTicks() + ", " +
                 mRearLeft.getEncoderTicks() + ", " +
                 mRearRight.getEncoderTicks() + "}");
-        poseEstimator.addVisionMeasurement(limelight.getBotPoseOriented().get(), 0.2);
+
+        limelight.getBotPoseFieldOriented().ifPresent(pose2d -> poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp()));
         poseEstimator.update(gyroscope.getYaw(), swerveModulePositions);
-        poseEstimator.getEstimatedPosition();
     }
 
     public enum Module {

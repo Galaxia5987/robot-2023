@@ -36,32 +36,36 @@ public class MiddleConeHighEngage extends SequentialCommandGroup {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gyroscope gyroscope = Gyroscope.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage blue", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("y axis 2", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
-        addCommands(
-                new InstantCommand(() -> swerveDrive.resetOdometry(
-                        AllianceFlipUtil.apply(DriverStation.getAlliance(), trajectory.getInitialPose()))),
+       addCommands(
+         //       new InstantCommand(
+                        //() -> swerveDrive.resetOdometry(
+//                        AllianceFlipUtil.apply(DriverStation.getAlliance(), trajectory.getInitialPose()))),
                 new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
                 new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
+                FollowPath.loadTrajectory("y axis 2"));
 
-                new AutonUpperScoring(true),
 
-                new InstantCommand(gripper::open),
 
-                new DriveTillPitch(-10.5, 1)
-                        .alongWith(new ReturnArm()),
-
-                new RunCommand(() -> swerveDrive.drive(
-                        new DriveSignal(
-                                1,
-                                0,
-                                0,
-                                new Translation2d(),
-                                true
-                        )
-                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(1.65),
-
-                new RunCommand(swerveDrive::lock)
-        );
+//                new AutonUpperScoring(true),
+//
+//                new InstantCommand(gripper::open),
+//
+//                new DriveTillPitch(-10.5, 1)
+//                        .alongWith(new ReturnArm()),
+//
+//                new RunCommand(() -> swerveDrive.drive(
+//                        new DriveSignal(
+//                                1,
+//                                0,
+//                                0,
+//                                new Translation2d(),
+//                                true
+//                        )
+//                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(1.65),
+//
+//                new RunCommand(swerveDrive::lock)
+        ;
     }
 }

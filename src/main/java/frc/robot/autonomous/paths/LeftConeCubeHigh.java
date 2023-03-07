@@ -41,7 +41,7 @@ public class LeftConeCubeHigh extends SequentialCommandGroup {
 
                 new InstantCommand(gripper::close, gripper).withTimeout(1),
 
-                new AutonUpperScoring(true),
+           //     new AutonUpperScoring(true),
 
                 new InstantCommand(gripper::open, gripper),
 
@@ -51,15 +51,15 @@ public class LeftConeCubeHigh extends SequentialCommandGroup {
                         new PickUpCube().withTimeout(4)),
 
                 FollowPath.loadTrajectory("LeftConeCubeHigh blue 2")
-                        .alongWith(new ReturnIntake()
-                                        .andThen(new InstantCommand(gripper::close, gripper))
-                                        .andThen(new ReturnArm())),
+//                        .alongWith(new ReturnIntake()
+                                        .andThen(new InstantCommand(gripper::close, gripper)),
+                                       // .andThen(new ReturnArm())),
 
-                new AutonUpperScoring(false),
+            //    new AutonUpperScoring(false),
 
-                new InstantCommand(gripper::open, gripper),
+                new InstantCommand(gripper::open, gripper)
 
-                new ReturnArm()
-        );
+             //   new ReturnArm()
+                        );
     }
 }

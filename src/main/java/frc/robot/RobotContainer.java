@@ -15,7 +15,9 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.commands.*;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
+import frc.robot.subsystems.drivetrain.commands.AdjustToTargetSmart;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
+import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
@@ -48,6 +50,8 @@ public class RobotContainer {
     private final Trigger xboxLeftTrigger = new Trigger(() -> xboxController.getLeftTriggerAxis() > 0.2);
     private final JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TRIGGER);
     private final JoystickButton leftJoystickTopBottom = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
+    private final JoystickButton leftJoystickTopRight = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TOP_RIGHT_BUTTON);
+    private final JoystickButton leftJoystickTopLeft = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TOP_LEFT_BUTTON);
     private final JoystickButton rightJoystickTrigger = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TRIGGER);
     private final JoystickButton rightJoystickTopBottom = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
     private final JoystickButton rightJoystickTopRight = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_RIGHT_BUTTON);
@@ -78,9 +82,9 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerveSubsystem.setDefaultCommand(
-                new JoystickDrive(leftJoystick, rightJoystick)
+                new XboxDrive(swerveSubsystem, xboxController)
         );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
 //        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));
     }
 
@@ -119,9 +123,10 @@ public class RobotContainer {
         ));
 
         rb.whileTrue(new ArmAxisControl(0.3, 0.02,0));
-        leftJoystickTopBottom.onTrue(new InstantCommand(() -> limelight
+        leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
+        leftJoystickTopLeft.whileTrue(new AdjustToTargetSmart(6));
     }
 
 

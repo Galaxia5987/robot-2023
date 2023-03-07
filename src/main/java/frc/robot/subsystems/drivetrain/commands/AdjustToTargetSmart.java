@@ -23,9 +23,8 @@ public class AdjustToTargetSmart extends CommandBase {
     private final int id;
     private Optional<Pose2d> setPointPose = Optional.empty();
 
-
-    private final PIDFController xController = new PIDFController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
-    private final PIDFController yController = new PIDFController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
+    private final PIDFController xController = new PIDFController(SwerveConstants.TARGET_X_Kp, SwerveConstants.TARGET_X_Ki, SwerveConstants.TARGET_X_Kd, SwerveConstants.TARGET_X_Kf);
+    private final PIDFController yController = new PIDFController(SwerveConstants.TARGET_Y_Kp, SwerveConstants.TARGET_Y_Ki, SwerveConstants.TARGET_Y_Kd, SwerveConstants.TARGET_Y_Kf);
     private final PIDFController rotationController = new PIDFController(SwerveConstants.TARGET_ROTATION_Kp, SwerveConstants.TARGET_ROTATION_Ki, SwerveConstants.TARGET_ROTATION_Kd, SwerveConstants.TARGET_ROTATION_Kf);
 
     public AdjustToTargetSmart(int id) {
@@ -42,14 +41,15 @@ public class AdjustToTargetSmart extends CommandBase {
     public void execute() {
         var pose = swerveDrive.getPose();
         if (setPointPose.isPresent()){
+            var setPointPose = this.setPointPose.get().plus(new Transform2d(new Translation2d(1.3, -0.15+0.56), new Rotation2d()));
             var speeds = new ChassisSpeeds(
-                    xController.calculate(pose.getX(), setPointPose.get().getX()),
-                    yController.calculate(pose.getY(), setPointPose.get().getY()),
-                    rotationController.calculate(gyroscope.getYaw().getRadians(), setPointPose.get().getRotation().getRadians())
+                    xController.calculate(pose.getX(), setPointPose.getX()),
+                    yController.calculate(pose.getY(), setPointPose.getY()),
+                    rotationController.calculate(gyroscope.getYaw().getRadians(), setPointPose.getRotation().getRadians())
             );
             swerveDrive.drive(new DriveSignal(
                     speeds,
-                    new Translation2d(setPointPose.get().getX(), setPointPose.get().getY()),
+                    new Translation2d(),
                     true
             ));
         }

@@ -226,7 +226,8 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.empty();
     }
     public Optional<Pose2d> getBotPoseFieldOriented() {
-        if (hasTargets()) {
+        var id = getTagId();
+        if (id > 0 && id < 9) {
             var botPoseResult = DriverStation.getAlliance() == DriverStation.Alliance.Blue ?
                     LimelightHelpers.getBotPose2d_wpiBlue("") :
                     LimelightHelpers.getBotPose2d_wpiRed("");

@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.pathplanner.lib.auto.PIDConstants;
 import frc.robot.autonomous.DrivetrainFeedforwardConstants;
 import frc.robot.utils.controllers.PIDFConstants;
-import frc.robot.utils.valuetuner.WebConstant;
 
 public class SwerveConstants {
     public static final double TICKS_PER_ROTATION = 2048;
@@ -53,11 +52,19 @@ public class SwerveConstants {
     public static double AUTO_ROTATION_Ki = 0.0;
     public static double AUTO_ROTATION_Kd = 0.0;
     public static double AUTO_ROTATION_Kf = 0.8;
-    public static double TARGET_XY_Kp = 6.0;
+    public static double TARGET_Y_Kp = 2.0;
+    public static double TARGET_Y_Ki = 0.0;
+    public static double TARGET_Y_Kd = 0.0;
+    public static double TARGET_Y_Kf = 0.4;
+    public static double TARGET_X_Kp = 2.0;
+    public static double TARGET_X_Ki = 0.0;
+    public static double TARGET_X_Kd = 0.0;
+    public static double TARGET_X_Kf = 0.0;
+    public static double TARGET_XY_Kp = 2.0;
     public static double TARGET_XY_Ki = 0.0;
-    public static double TARGET_XY_Kd = 0.3;
-    public static double TARGET_XY_Kf = 0.0;
-    public static double TARGET_ROTATION_Kp = 10.0;
+    public static double TARGET_XY_Kd = 0.0;
+    public static double TARGET_XY_Kf = 0.8;
+    public static double TARGET_ROTATION_Kp = 0.0;
     public static double TARGET_ROTATION_Ki = 0.0;
     public static double TARGET_ROTATION_Kd = 0.0;
     public static double TARGET_ROTATION_Kf = 0.0;

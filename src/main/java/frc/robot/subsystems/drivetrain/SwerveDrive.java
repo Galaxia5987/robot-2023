@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drivetrain;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -42,6 +43,13 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
+
+    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+            mKinematics,
+            new Rotation2d(),
+            swerveModulePositions,
+            new Pose2d()
+    );
 
     private SwerveDrive() {
         super(new SwerveDriveLogInputs());

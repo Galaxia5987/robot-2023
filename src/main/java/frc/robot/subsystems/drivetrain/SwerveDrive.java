@@ -134,7 +134,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      * @return the current pose of the robot.
      */
     public Pose2d getPose() {
-        return mOdometry.getPoseMeters();
+//        return mOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
     /**

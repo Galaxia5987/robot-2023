@@ -58,7 +58,7 @@ public class AdjustToTargetDumb extends CommandBase {
 
     @Override
     public void execute() {
-        if (setpointPose.isPresent()) {
+         if (setpointPose.isPresent()) {
             var pose = swerveDrive.getPose();
             var speeds = new ChassisSpeeds(
                     xController.calculate(pose.getX(), setpointPose.get().getX()),

@@ -243,6 +243,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         }
         return Optional.empty();
     }
+    public Optional<Pose2d> positionForId(int id) {
+        var pose = aprilTagFieldLayout.getTagPose(id);
+        return pose.map(Pose3d::toPose2d);
+    }
 
     @Override
     public String getSubsystemName() {

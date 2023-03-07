@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drivetrain;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -7,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
@@ -47,12 +49,15 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
+    private Pose2d lastLimelightPose = new Pose2d();
 
     private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
             mKinematics,
             new Rotation2d(),
             swerveModulePositions,
-            new Pose2d()
+            new Pose2d(),
+            VecBuilder.fill(0.1, 0.1, 0.1),
+            VecBuilder.fill(10.0, 10.0, 10.0)
     );
 
     private SwerveDrive() {
@@ -120,8 +125,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      */
     public void resetOdometry(Pose2d pose) {
         mOdometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
-        limelight.getBotPoseFieldOriented().ifPresent(pose2d -> poseEstimator.resetPosition(gyroscope.getYaw(), swerveModulePositions, pose));
-
+        poseEstimator.resetPosition(pose.getRotation(), swerveModulePositions, pose);
     }
 
     /**
@@ -247,8 +251,13 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearLeft.getEncoderTicks() + ", " +
                 mRearRight.getEncoderTicks() + "}");
 
-        limelight.getBotPoseFieldOriented().ifPresent(pose2d -> poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp()));
-        poseEstimator.update(gyroscope.getYaw(), swerveModulePositions);
+        limelight.getBotPoseFieldOriented().ifPresent(pose2d -> {
+            if (pose2d.minus(lastLimelightPose).getTranslation().getNorm() < 0.3) {
+                poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp());
+            }
+            lastLimelightPose = pose2d;
+        });
+        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(), swerveModulePositions);
     }
 
     public enum Module {

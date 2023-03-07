@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
 
 import static frc.robot.Ports.SwerveDrive.*;
@@ -15,6 +16,8 @@ import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
 
 public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private static SwerveDrive INSTANCE;
+    private Limelight limelight = Limelight.getInstance();
+    private Gyroscope gyroscope = Gyroscope.getInstance();
     private final SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(
             // Front left
             new Translation2d(DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
@@ -223,6 +226,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         mRearRight.vroom();
     }
 
+
+
     @Override
     public void periodic() {
         swerveModulePositions = new SwerveModulePosition[]{
@@ -239,6 +244,9 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mFrontRight.getEncoderTicks() + ", " +
                 mRearLeft.getEncoderTicks() + ", " +
                 mRearRight.getEncoderTicks() + "}");
+        poseEstimator.addVisionMeasurement(limelight.getBotPoseOriented().get(), 0.2);
+        poseEstimator.update(gyroscope.getYaw(), swerveModulePositions);
+        poseEstimator.getEstimatedPosition();
     }
 
     public enum Module {

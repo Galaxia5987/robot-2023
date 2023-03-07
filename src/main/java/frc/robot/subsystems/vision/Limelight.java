@@ -219,11 +219,6 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public Optional<Pose2d> getBotPose() {
         long id = getTagId();
         if (id > 0 && id < 9) {
-            var targetPose = aprilTagFieldLayout.getTagPose((int) id);
-//            return Optional.of(
-//                    VisionConstants.CENTER_POSE.plus(
-//                            new Transform2d(new Translation2d(botPose.get()[0], botPose.get()[1]), Rotation2d.fromDegrees(botPose.get()[5])))
-//            );
             return Optional.of(
                     new Pose2d(botPose.get()[2], -botPose.get()[0], Rotation2d.fromDegrees(botPose.get()[4]))
             );
@@ -232,9 +227,10 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     }
     public Optional<Pose2d> getBotPoseFieldOriented() {
         if (hasTargets()) {
-            return Optional.of(
-                    new Pose2d(botPoseFieldOriented.get()[0], -botPoseFieldOriented.get()[0], Rotation2d.fromDegrees(botPoseFieldOriented.get()[0])) //TODO: check index values :eggplant emoji.
-            );
+            var botPoseResult = DriverStation.getAlliance() == DriverStation.Alliance.Blue ?
+                    LimelightHelpers.getBotPose2d_wpiBlue("") :
+                    LimelightHelpers.getBotPose2d_wpiRed("");
+            return Optional.of(botPoseResult);
         }
         return Optional.empty();
     }

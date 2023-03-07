@@ -119,8 +119,9 @@ public class RobotContainer {
         ));
 
         rb.whileTrue(new ArmAxisControl(0.3, 0.02,0));
-        leftJoystickTopBottom.onTrue(new InstantCommand(()-> swerveSubsystem.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d()))));
-
+        leftJoystickTopBottom.onTrue(new InstantCommand(() -> limelight
+                .getBotPoseFieldOriented()
+                .ifPresent(swerveSubsystem::resetOdometry)));
     }
 
 

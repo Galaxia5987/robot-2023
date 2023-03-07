@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -8,9 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
-import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.*;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
@@ -118,6 +119,8 @@ public class RobotContainer {
         ));
 
         rb.whileTrue(new ArmAxisControl(0.3, 0.02,0));
+        leftJoystickTopBottom.onTrue(new InstantCommand(()-> swerveSubsystem.resetOdometry(new Pose2d(new Translation2d(), new Rotation2d()))));
+
     }
 
 

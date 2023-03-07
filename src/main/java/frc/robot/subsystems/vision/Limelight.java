@@ -23,6 +23,7 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     private final IntegerSubscriber tid = table.getIntegerTopic("tid").subscribe(0);
     private final IntegerSubscriber getpipe = table.getIntegerTopic("getpipe").subscribe(0); //TODO: check vision pipelines
     private final DoubleArraySubscriber botPose = table.getDoubleArrayTopic("botpose_targetspace").subscribe(new double[6]);
+    private final DoubleArraySubscriber botPoseFieldOriented = table.getDoubleArrayTopic("botpose").subscribe(new double[6]);
 
     private final AprilTagFieldLayout aprilTagFieldLayout;
 
@@ -225,6 +226,14 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
 //            );
             return Optional.of(
                     new Pose2d(botPose.get()[2], -botPose.get()[0], Rotation2d.fromDegrees(botPose.get()[4]))
+            );
+        }
+        return Optional.empty();
+    }
+    public Optional<Pose2d> getBotPoseOriented() {
+        if (hasTargets()) {
+            return Optional.of(
+                    new Pose2d(botPoseFieldOriented.get()[0], -botPoseFieldOriented.get()[0], Rotation2d.fromDegrees(botPoseFieldOriented.get()[0])) //TODO: check index values :eggplant emoji.
             );
         }
         return Optional.empty();

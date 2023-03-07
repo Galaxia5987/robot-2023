@@ -79,8 +79,8 @@ public class RobotContainer {
         swerveSubsystem.setDefaultCommand(
                 new JoystickDrive(leftJoystick, rightJoystick)
         );
-//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
-        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));
     }
 
     private void configureButtonBindings() {

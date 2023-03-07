@@ -34,8 +34,8 @@ public class ArmAxisXboxControlSmart extends CommandBase {
             elbowHoldAngle = arm.getElbowJointAngle().getDegrees();
         }
         if (joysticksZero) {
-            arm.setShoulderJointAngle(shoulderHoldAngle, true);
-            arm.setElbowJointAngle(elbowHoldAngle, true);
+            arm.setShoulderJointAngle(shoulderHoldAngle, 1);
+            arm.setElbowJointAngle(elbowHoldAngle, 1);
         } else {
             arm.setVelocity(new Translation2d(
                     powerX * 0.1, powerY * 0.1

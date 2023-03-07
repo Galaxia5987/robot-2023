@@ -1,13 +1,14 @@
 package frc.robot.subsystems.arm.commands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.gripper.Gripper;
 
 public class ArmAxisControl extends CommandBase {
     private final Arm arm = Arm.getInstance();
+    private final Gripper gripper = Gripper.getInstance();
     private final double Xvalue;
     private final double Yvalue;
     private final double multiplier;
@@ -32,8 +33,12 @@ public class ArmAxisControl extends CommandBase {
 
         if (!passedMaximum) {
             position = position.plus(new Translation2d(Xvalue * multiplier, Yvalue * multiplier));
-            arm.setEndPosition(position, true);
+            arm.setEndPosition(position, 1, 0.5);
         }
-        System.out.println(position.getX() + " " + position.getY());
+    }
+
+    @Override
+    public boolean isFinished() {
+        return gripper.getDistance() < ArmConstants.FEEDER_DISTANCE;
     }
 }

@@ -23,9 +23,7 @@ public class MidScoring extends SequentialCommandGroup {
                         () -> arm.getEndPosition().getX() < 0
                 ),
                 new ConditionalCommand(
-                        new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2, 0.1)
-                                .andThen(new WaitCommand(0.5))
-                                .andThen(new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING3)),
+                        new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CONE_SCORING2, 0.1),
                         new SetArmsPositionAngular(() -> ArmConstants.MIDDLE_CUBE_SCORING),
                         Leds.getInstance()::inConeMode
                 )

@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class GripperLoggedInputs implements LoggableInputs {
     public boolean isOpen;
+    public double distance;
 
     /**
      * Puts parameters into the table.
@@ -12,6 +13,7 @@ public class GripperLoggedInputs implements LoggableInputs {
     @Override
     public void toLog(LogTable table) {
         table.put("gripperSolenoid", isOpen);
+        table.put("distance", distance);
     }
 
     /**
@@ -20,5 +22,6 @@ public class GripperLoggedInputs implements LoggableInputs {
     @Override
     public void fromLog(LogTable table) {
         isOpen = table.getBoolean("gripperSolenoid", isOpen);
+        distance = table.getDouble("distance", distance);
     }
 }

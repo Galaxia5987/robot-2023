@@ -32,8 +32,8 @@ public class ArmXboxControl extends CommandBase {
             elbowHoldAngle = arm.getElbowJointAngle().getDegrees();
         }
         if (joysticksZero) {
-            arm.setShoulderJointAngle(shoulderHoldAngle, true);
-            arm.setElbowJointAngle(elbowHoldAngle, true);
+            arm.setShoulderJointAngle(shoulderHoldAngle, 1);
+            arm.setElbowJointAngle(elbowHoldAngle, 1);
         } else {
             arm.setShoulderJointPower(0.3 * powerSho);
             arm.setElbowJointPower(0.3 * powerEl);

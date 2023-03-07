@@ -55,12 +55,12 @@ public class ArmAxisXboxControlDumb extends CommandBase {
             elbowHoldAngle = arm.getElbowJointAngle().getDegrees();
         }
         if (joysticksZero || passedMaximum) {
-            arm.setShoulderJointAngle(shoulderHoldAngle, true);
-            arm.setElbowJointAngle(elbowHoldAngle, true);
+            arm.setShoulderJointAngle(shoulderHoldAngle, 0);
+            arm.setElbowJointAngle(elbowHoldAngle, 0);
         } else {
             position = position.plus(new Translation2d(powerX * multiplier, powerY * multiplier));
 
-            arm.setEndPosition(position, true);
+            arm.setEndPosition(position, 1, 0.5);
         }
 
         lastJoysticksZero = joysticksZero;

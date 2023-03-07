@@ -155,7 +155,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      * @param angle desired angle. [degrees]
      */
     public void setShoulderJointAngle(double angle) {
-        setShoulderJointAngle(angle, false);
+        setShoulderJointAngle(angle, 0);
     }
 
     /**
@@ -163,11 +163,11 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      *
      * @param angle desired angle. [degrees]
      */
-    public void setShoulderJointAngle(double angle, boolean useFF) {
+    public void setShoulderJointAngle(double angle, double ffMultiplier) {
         angle = AngleUtil.normalize(angle);
         double error = unitModelShoulder.toTicks(Math.toRadians(angle)) - unitModelShoulder.toTicks(getShoulderJointAngle().getRadians());
         shoulderMainMotor.set(TalonFXControlMode.Position, shoulderMainMotor.getSelectedSensorPosition() + error,
-                DemandType.ArbitraryFeedForward, useFF ? shoulderFeedforward : 0);
+                DemandType.ArbitraryFeedForward, ffMultiplier * shoulderFeedforward);
         loggerInputs.shoulderSetpoint = angle;
         loggerInputs.shoulderError = error;
     }
@@ -187,7 +187,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      * @param angle desired angle. [degrees]
      */
     public void setElbowJointAngle(double angle) {
-        setElbowJointAngle(angle, false);
+        setElbowJointAngle(angle, 0);
     }
 
     /**
@@ -195,11 +195,11 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      *
      * @param angle desired angle. [degrees]
      */
-    public void setElbowJointAngle(double angle, boolean useFF) {
+    public void setElbowJointAngle(double angle, double ffMultiplier) {
         angle = AngleUtil.normalize(angle);
         double error = unitModelElbow.toTicks(Math.toRadians(angle)) - unitModelElbow.toTicks(getElbowJointAngle().getRadians());
         elbowMainMotor.set(TalonFXControlMode.Position, elbowMainMotor.getSelectedSensorPosition() + error,
-                DemandType.ArbitraryFeedForward, useFF ? elbowFeedforward : 0);
+                DemandType.ArbitraryFeedForward, ffMultiplier * elbowFeedforward);
         loggerInputs.elbowSetpoint = angle;
         loggerInputs.elbowError = error;
     }
@@ -220,10 +220,10 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      *
      * @param armLocation Translation2d of the desired location.
      */
-    public void setEndPosition(Translation2d armLocation, boolean useFF) {
+    public void setEndPosition(Translation2d armLocation, double shoulderFFMultiplier, double elbowFFMultiplier) {
         var angles = kinematics.inverseKinematics(armLocation);
-        setShoulderJointAngle(Math.toDegrees(angles.shoulderAngle), useFF);
-        setElbowJointAngle(Math.toDegrees(angles.elbowAngle), useFF);
+        setShoulderJointAngle(Math.toDegrees(angles.shoulderAngle), shoulderFFMultiplier);
+        setElbowJointAngle(Math.toDegrees(angles.elbowAngle), elbowFFMultiplier);
         ySetpoint = armLocation.getY();
     }
 
@@ -233,7 +233,7 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      * @param armLocation Translation2d of the desired location.
      */
     public void setEndPosition(Translation2d armLocation) {
-        setEndPosition(armLocation, false);
+        setEndPosition(armLocation, 0, 0);
     }
 
     /**

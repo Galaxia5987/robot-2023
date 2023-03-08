@@ -12,7 +12,6 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.controllers.PIDFController;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Optional;
 
@@ -21,7 +20,8 @@ public class AdjustToTargetSmart extends CommandBase {
     private final Limelight limelight = Limelight.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
     private final int id;
-    private Optional<Pose2d> setPointPose = Optional.empty();
+    private boolean isApril;
+    private Pose2d setPointPose;
 
     private final PIDFController xController = new PIDFController(SwerveConstants.TARGET_X_Kp, SwerveConstants.TARGET_X_Ki, SwerveConstants.TARGET_X_Kd, SwerveConstants.TARGET_X_Kf);
     private final PIDFController yController = new PIDFController(SwerveConstants.TARGET_Y_Kp, SwerveConstants.TARGET_Y_Ki, SwerveConstants.TARGET_Y_Kd, SwerveConstants.TARGET_Y_Kf);
@@ -34,14 +34,14 @@ public class AdjustToTargetSmart extends CommandBase {
 
     @Override
     public void initialize() {
-        setPointPose = limelight.positionForId(id);
+        setPointPose = limelight.positionForId(id, isApril);
     }
 
     @Override
     public void execute() {
         var pose = swerveDrive.getPose();
-        if (setPointPose.isPresent()){
-            var setPointPose = this.setPointPose.get().plus(new Transform2d(new Translation2d(1.3, -0.15+0.56), new Rotation2d()));
+        if (id>=1 && id<=8 && this.isApril || id>=1 && id<=6 && !(this.isApril)){
+            var setPointPose = this.setPointPose.plus(new Transform2d(new Translation2d(1.3, -0.15+0.56), new Rotation2d()));
             var speeds = new ChassisSpeeds(
                     xController.calculate(pose.getX(), setPointPose.getX()),
                     yController.calculate(pose.getY(), setPointPose.getY()),
@@ -57,6 +57,6 @@ public class AdjustToTargetSmart extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return setPointPose.isEmpty();
+        return !(id>=1 && id<=8 && this.isApril || id>=1 && id<=6 && !(this.isApril));
     }
 }

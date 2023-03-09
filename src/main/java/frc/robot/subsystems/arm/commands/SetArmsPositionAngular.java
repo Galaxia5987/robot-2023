@@ -5,6 +5,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmKinematics;
 
 import java.util.function.DoubleSupplier;
@@ -71,6 +72,7 @@ public class SetArmsPositionAngular extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return arm.getEndPosition().minus(positionSupplier.get()).getNorm() < deadBand;
+        return arm.getEndPosition().minus(positionSupplier.get()).getNorm() < deadBand
+                || positionSupplier.get().getNorm() > (ArmConstants.SHOULDER_ARM_LENGTH+ArmConstants.SHOULDER_LENGTH);
     }
 }

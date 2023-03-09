@@ -10,10 +10,6 @@ import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 public class FeederPosition extends SequentialCommandGroup {
     private static Translation2d offset = new Translation2d(0, 0);
 
-    public static void setOffset(Translation2d offset) {
-        FeederPosition.offset = offset;
-    }
-
     public FeederPosition() {
         Arm arm = Arm.getInstance();
 
@@ -28,5 +24,9 @@ public class FeederPosition extends SequentialCommandGroup {
                 new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION
                         .plus(offset), 0)
         );
+    }
+
+    public static void setOffset(Translation2d offset) {
+        FeederPosition.offset = offset;
     }
 }

@@ -5,9 +5,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GridChooser {
     private final XboxController xboxController;
-
-    private int index = 0;
     private final boolean[] grid = new boolean[9];
+    private int index = 0;
 
     public GridChooser(XboxController xboxController) {
         this.xboxController = xboxController;

@@ -23,13 +23,11 @@ public class AdjustToTape extends CommandBase {
     private final Limelight limelight = Limelight.getInstance();
     private final PIDFController yController;
     private final ProfiledPIDController rotationController;
-    private ChassisSpeeds lastSpeeds = new ChassisSpeeds();
-
     private final TargetAdjustInputsAutoLogged inputs = new TargetAdjustInputsAutoLogged();
     private final double desiredYaw;
     private final double desiredAbsoluteYaw;
-
     private final DoubleSupplier xSupplier;
+    private final ChassisSpeeds lastSpeeds = new ChassisSpeeds();
 
     public AdjustToTape(DoubleSupplier xSupplier, double desiredYaw, double desiredAbsoluteYaw) {
         this.xSupplier = xSupplier;

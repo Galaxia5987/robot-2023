@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commandgroups.PickUpCube;
 import frc.robot.commandgroups.ReturnIntake;
 import frc.robot.subsystems.gripper.Gripper;
-import frc.robot.commandgroups.Feed;
 import frc.robot.subsystems.intake.Intake;
 
 public class CheckIntakeFlow extends SequentialCommandGroup {

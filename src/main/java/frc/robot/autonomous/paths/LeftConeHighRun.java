@@ -8,14 +8,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.commandgroups.UpperScoring;
-import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.commands.SetArmsPositionAngular;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.leds.YellowLed;
-import frc.robot.subsystems.vision.Limelight;
 
 /**
  * This class contains all the parts of the path LeftConeHighRun.
@@ -32,8 +29,8 @@ public class LeftConeHighRun extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftRun", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
-                new InstantCommand(()->gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
-                new InstantCommand(()-> swerveDrive.resetOdometry(trajectory.getInitialPose())),
+                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
+                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
 
                 new InstantCommand(gripper::close, gripper).withTimeout(1),
                 new YellowLed(),

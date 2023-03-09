@@ -1,7 +1,6 @@
 package frc.robot.commandgroups;
 
-import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.subsystems.intake.BeamBreaker;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.commands.Retract;

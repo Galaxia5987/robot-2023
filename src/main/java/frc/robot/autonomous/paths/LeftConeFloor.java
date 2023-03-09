@@ -7,7 +7,6 @@ import frc.robot.subsystems.vision.Limelight;
 
 /**
  * This
- *
  */
 public class LeftConeFloor extends SequentialCommandGroup {
 

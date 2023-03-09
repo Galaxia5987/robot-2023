@@ -8,13 +8,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
-
-import java.util.Arrays;
 
 import static frc.robot.Ports.SwerveDrive.*;
 import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
@@ -51,8 +48,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
-    private Pose2d lastLimelightPose = new Pose2d();
-
     private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
             mKinematics,
             new Rotation2d(),
@@ -61,6 +56,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
             VecBuilder.fill(0.1, 0.1, 0.1),
             VecBuilder.fill(10.0, 10.0, 10.0)
     );
+    private Pose2d lastLimelightPose = new Pose2d();
 
     private SwerveDrive() {
         super(new SwerveDriveLogInputs());

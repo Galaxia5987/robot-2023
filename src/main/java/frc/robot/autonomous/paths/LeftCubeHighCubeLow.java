@@ -3,9 +3,7 @@ package frc.robot.autonomous.paths;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.commandgroups.MidScoring;
 import frc.robot.commandgroups.PickUpCube;
-import frc.robot.commandgroups.UpperScoring;
 import frc.robot.subsystems.vision.Limelight;
 
 /**

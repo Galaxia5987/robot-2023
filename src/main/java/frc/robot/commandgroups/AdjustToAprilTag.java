@@ -25,7 +25,7 @@ public class AdjustToAprilTag extends CommandBase {
 
     private double lastVy = 0;
 
-    public AdjustToAprilTag(DoubleSupplier xSupplier){
+    public AdjustToAprilTag(DoubleSupplier xSupplier) {
         this.xSupplier = xSupplier;
         addRequirements(swerveDrive);
 
@@ -46,7 +46,7 @@ public class AdjustToAprilTag extends CommandBase {
         swerveDrive.drive(
                 new DriveSignal(
                         MathUtil.applyDeadband(xSupplier.getAsDouble(), 0.1)
-                        * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                                * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
                         yVelocity,
                         omegaVelocity,
                         new Translation2d(),

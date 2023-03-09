@@ -1,6 +1,8 @@
 package frc.robot.commandgroups;
 
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.intake.Intake;
@@ -15,7 +17,7 @@ public class PickUpCube extends ParallelCommandGroup {
         addCommands(
                 new GetArmIntoRobot(),
                 new WaitUntilCommand(() -> !arm.armIsOutOfFrame()).andThen(new InstantCommand(gripper::open, gripper))
-                .andThen(new Feed(false))
+                        .andThen(new Feed(false))
         );
     }
 }

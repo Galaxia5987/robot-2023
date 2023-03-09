@@ -5,21 +5,17 @@
 package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.commandgroups.ReturnIntake;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
-import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.utils.valuetuner.NetworkTableConstant;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -35,13 +31,15 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
     public static boolean debug = true;
+    private static boolean lastEnabled = false;
+    private static boolean justEnabled = false;
     private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-
     private RobotContainer robotContainer;
     private Command autonomousCommand;
 
-    private static boolean lastEnabled = false;
-    private static boolean justEnabled = false;
+    public static boolean justEnabled() {
+        return justEnabled;
+    }
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -173,9 +171,5 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void testPeriodic() {
-    }
-
-    public static boolean justEnabled() {
-        return justEnabled;
     }
 }

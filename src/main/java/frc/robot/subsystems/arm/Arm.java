@@ -1,6 +1,9 @@
 package frc.robot.subsystems.arm;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,9 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.arm.commands.ArmAxisXboxControlDumb;
-import frc.robot.subsystems.arm.commands.ArmAxisXboxControlSmart;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
-import frc.robot.utils.Utils;
 import frc.robot.utils.math.AngleUtil;
 import frc.robot.utils.units.UnitModel;
 import org.littletonrobotics.junction.Logger;
@@ -226,11 +227,8 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      *
      * @param armLocation Translation2d of the desired location.
      */
-    public void setEndPosition(Translation2d armLocation, double shoulderFFMultiplier, double elbowFFMultiplier) {
-        var angles = kinematics.inverseKinematics(armLocation);
-        setShoulderJointAngle(Math.toDegrees(angles.shoulderAngle), shoulderFFMultiplier);
-        setElbowJointAngle(Math.toDegrees(angles.elbowAngle), elbowFFMultiplier);
-        ySetpoint = armLocation.getY();
+    public void setEndPosition(Translation2d armLocation) {
+        setEndPosition(armLocation, 0, 0);
     }
 
     /**
@@ -238,8 +236,11 @@ public class Arm extends LoggedSubsystem<ArmInputsAutoLogged> {
      *
      * @param armLocation Translation2d of the desired location.
      */
-    public void setEndPosition(Translation2d armLocation) {
-        setEndPosition(armLocation, 0, 0);
+    public void setEndPosition(Translation2d armLocation, double shoulderFFMultiplier, double elbowFFMultiplier) {
+        var angles = kinematics.inverseKinematics(armLocation);
+        setShoulderJointAngle(Math.toDegrees(angles.shoulderAngle), shoulderFFMultiplier);
+        setElbowJointAngle(Math.toDegrees(angles.elbowAngle), elbowFFMultiplier);
+        ySetpoint = armLocation.getY();
     }
 
     /**

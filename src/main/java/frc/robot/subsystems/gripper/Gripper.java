@@ -1,6 +1,8 @@
 package frc.robot.subsystems.gripper;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 

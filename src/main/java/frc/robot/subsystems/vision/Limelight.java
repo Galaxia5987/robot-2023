@@ -2,7 +2,10 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -254,13 +257,13 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
     public Pose2d positionForReflectorId(int id) {
         switch (id) {
             case 1:
-                return new Pose2d(new Translation2d( 1.43, 5.176), new Rotation2d(0));
+                return new Pose2d(new Translation2d(1.43, 5.176), new Rotation2d(0));
             case 2:
-                return new Pose2d(new Translation2d( 1.43,3.968 ), new Rotation2d(0));
+                return new Pose2d(new Translation2d(1.43, 3.968), new Rotation2d(0));
             case 3:
-                return new Pose2d(new Translation2d( 1.43, 3.316), new Rotation2d(0));
+                return new Pose2d(new Translation2d(1.43, 3.316), new Rotation2d(0));
             case 4:
-                return new Pose2d(new Translation2d( 1.43, 2.198), new Rotation2d(0));
+                return new Pose2d(new Translation2d(1.43, 2.198), new Rotation2d(0));
             case 5:
                 return new Pose2d(new Translation2d(1.43, 1.639), new Rotation2d(0));
             case 6:

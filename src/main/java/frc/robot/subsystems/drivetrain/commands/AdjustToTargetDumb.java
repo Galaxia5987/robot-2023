@@ -20,13 +20,11 @@ public class AdjustToTargetDumb extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
-
-    private Optional<Pose2d> setpointPose;
-    private Position position;
-
     private final PIDFController xController = new PIDFController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
     private final PIDFController yController = new PIDFController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
     private final PIDFController rotationController = new PIDFController(SwerveConstants.TARGET_ROTATION_Kp, SwerveConstants.TARGET_ROTATION_Ki, SwerveConstants.TARGET_ROTATION_Kd, SwerveConstants.TARGET_ROTATION_Kf);
+    private Optional<Pose2d> setpointPose;
+    private Position position;
 
     public AdjustToTargetDumb(Position position) {
         this.position = position;
@@ -58,7 +56,7 @@ public class AdjustToTargetDumb extends CommandBase {
 
     @Override
     public void execute() {
-         if (setpointPose.isPresent()) {
+        if (setpointPose.isPresent()) {
             var pose = swerveDrive.getPose();
             var speeds = new ChassisSpeeds(
                     xController.calculate(pose.getX(), setpointPose.get().getX()),

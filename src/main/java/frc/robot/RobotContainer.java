@@ -1,22 +1,20 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autonomous.paths.*;
+import frc.robot.autonomous.paths.Test;
 import frc.robot.commandgroups.*;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.commands.*;
+import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
 import frc.robot.subsystems.drivetrain.commands.AdjustToTargetSmart;
-import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
@@ -36,7 +34,7 @@ public class RobotContainer {
     private final SwerveDrive swerveSubsystem = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
     private final Intake intake = Intake.getInstance();
-   private final Gripper gripper = Gripper.getInstance();
+    private final Gripper gripper = Gripper.getInstance();
     private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
     private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
@@ -101,15 +99,15 @@ public class RobotContainer {
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
-        leftPOV.whileTrue(new ArmAxisControl(0.3, 0.02,0));
-        rightPOV.whileTrue(new ArmAxisControl(0.3, -0.02,0));
-        downPOV.whileTrue(new ArmAxisControl(0.3, 0,-0.01));
-        upPOV.whileTrue(new ArmAxisControl(0.3, 0,0.01));
+        leftPOV.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
+        rightPOV.whileTrue(new ArmAxisControl(0.3, -0.02, 0));
+        downPOV.whileTrue(new ArmAxisControl(0.3, 0, -0.01));
+        upPOV.whileTrue(new ArmAxisControl(0.3, 0, 0.01));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
         xboxRightTrigger.whileTrue(new ReturnIntake()
-                .andThen(new RunCommand(() -> intake.setAnglePower(0.05))))
+                        .andThen(new RunCommand(() -> intake.setAnglePower(0.05))))
                 .onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
 
         start.onTrue(new InstantCommand(leds::toggle));
@@ -125,7 +123,7 @@ public class RobotContainer {
                 AdjustToTargetDumb.Position.RIGHT
         ));
 
-        rb.whileTrue(new ArmAxisControl(0.3, 0.02,0));
+        rb.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
@@ -135,7 +133,6 @@ public class RobotContainer {
 
 
     /**
-     *
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous

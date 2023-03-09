@@ -10,9 +10,9 @@ import frc.robot.utils.math.AngleUtil;
 public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
     private static Gyroscope INSTANCE;
     private final AHRS navx;
+    private final boolean zeroInitialized = false;
     private Rotation2d zeroPitch = new Rotation2d();
     private double zeroRoll;
-    private final boolean zeroInitialized = false;
 
     private Gyroscope() {
         super(new GyroscopeLogInputs());

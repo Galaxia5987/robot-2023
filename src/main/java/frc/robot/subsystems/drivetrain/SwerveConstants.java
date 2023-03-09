@@ -34,8 +34,8 @@ public class SwerveConstants {
             WHEEL_DIAMETER * Math.PI;
     public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 13.0;
 
-   public static final double MAX_VELOCITY_AUTO = 4.0;
-   public static final double MAX_ACCELERATION_AUTO = 2.5;
+    public static final double MAX_VELOCITY_AUTO = 4.0;
+    public static final double MAX_ACCELERATION_AUTO = 2.5;
 
     public static final double XY_SLEW_RATE_LIMIT = 3.0;
     public static final double ROTATION_SLEW_RATE_LIMIT = 4.5;

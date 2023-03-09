@@ -21,7 +21,7 @@ public class ArmAxisXboxControlDumb extends CommandBase {
 
     private Translation2d position = new Translation2d(0, 0);
     private Translation2d initialPosition = new Translation2d(0, 0);
-    private double lastPositionSign = 0;
+    private final double lastPositionSign = 0;
 
     private boolean lastPassedMaximum = false;
 

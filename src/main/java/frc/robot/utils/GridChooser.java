@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,6 +35,44 @@ public class GridChooser {
 
         for (int i = 0; i < 9; i++) {
             SmartDashboard.putBoolean("Grid #" + (i + 1), grid[i]);
+        }
+    }
+
+    public int getAprilTagIndex() {
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+            if (index / 3 == 0) {
+                return 6;
+            } else if (index / 3 == 1) {
+                return 7;
+            } else {
+                return 8;
+            }
+        } else {
+            if (index / 3 == 0) {
+                return 1;
+            } else if (index / 3 == 1) {
+                return 2;
+            } else {
+                return 3;
+            }
+        }
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public Position getPosition() {
+        return new Position(index, getAprilTagIndex());
+    }
+
+    public static class Position {
+        public int index;
+        public int aprilTagID;
+
+        public Position(int index, int aprilTagID) {
+            this.index = index;
+            this.aprilTagID = aprilTagID;
         }
     }
 }

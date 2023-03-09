@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -99,10 +100,6 @@ public class RobotContainer {
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
-        leftPOV.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
-        rightPOV.whileTrue(new ArmAxisControl(0.3, -0.02, 0));
-        downPOV.whileTrue(new ArmAxisControl(0.3, 0, -0.01));
-        upPOV.whileTrue(new ArmAxisControl(0.3, 0, 0.01));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
@@ -127,7 +124,8 @@ public class RobotContainer {
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
-        leftJoystickTopLeft.whileTrue(new AdjustToTargetSmart(6));
+        leftJoystickTopLeft.whileTrue(new ProxyCommand(() -> new AdjustToTargetSmart(gridChooser.getPosition())));
+
         povUpdated.onTrue(new InstantCommand(gridChooser::update));
     }
 

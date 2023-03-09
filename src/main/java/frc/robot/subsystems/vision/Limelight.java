@@ -249,34 +249,12 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
         return Optional.empty();
     }
 
-    public Optional<Pose2d> positionForAprilId(int id) {
+    public Optional<Pose2d> positionForId(int id) {
         var pose = aprilTagFieldLayout.getTagPose(id);
+        aprilTagFieldLayout.setOrigin(DriverStation.getAlliance() == DriverStation.Alliance.Blue ?
+                AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide :
+                AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide);
         return pose.map(Pose3d::toPose2d);
-    }
-
-    public Pose2d positionForReflectorId(int id) {
-        switch (id) {
-            case 1:
-                return new Pose2d(new Translation2d(1.43, 5.176), new Rotation2d(0));
-            case 2:
-                return new Pose2d(new Translation2d(1.43, 3.968), new Rotation2d(0));
-            case 3:
-                return new Pose2d(new Translation2d(1.43, 3.316), new Rotation2d(0));
-            case 4:
-                return new Pose2d(new Translation2d(1.43, 2.198), new Rotation2d(0));
-            case 5:
-                return new Pose2d(new Translation2d(1.43, 1.639), new Rotation2d(0));
-            case 6:
-                return new Pose2d(new Translation2d(1.43, 0.522), new Rotation2d(0));
-        }
-        return new Pose2d();
-    }
-
-    public Pose2d positionForId(int id, boolean isApril) {
-        if (isApril && positionForAprilId(id).isPresent()) {
-            return positionForAprilId(id).get();
-        }
-        return positionForReflectorId(id);
     }
 
     @Override

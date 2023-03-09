@@ -80,11 +80,11 @@ public class AdjustToTargetDumb extends CommandBase {
     }
 
     public enum Position {
-        RIGHT(new Translation2d(-0.75, 0.69)),
-        LEFT(new Translation2d(-0.75, -0.48)),
-        MIDDLE(new Translation2d(-0.75, 0.13)),
-        FEEDER_RIGHT(new Translation2d(-0.55, -0.48)),
-        FEEDER_LEFT(new Translation2d(-0.55, 0.69));
+        RIGHT(new Translation2d(0.75, -0.69)),
+        LEFT(new Translation2d(0.75, 0.48)),
+        MIDDLE(new Translation2d(0.75, -0.13)),
+        FEEDER_RIGHT(new Translation2d(0.55, 0.48)),
+        FEEDER_LEFT(new Translation2d(0.55, -0.69));
 
         public final Translation2d offset;
 

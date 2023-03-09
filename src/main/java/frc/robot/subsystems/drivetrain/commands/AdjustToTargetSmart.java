@@ -11,34 +11,55 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
+import frc.robot.utils.GridChooser;
 import frc.robot.utils.controllers.DieterController;
+
+import java.util.Optional;
 
 public class AdjustToTargetSmart extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
-    private final int id;
+    private final GridChooser.Position position;
     private final DieterController xController = new DieterController(SwerveConstants.TARGET_X_Kp, SwerveConstants.TARGET_X_Ki, SwerveConstants.TARGET_X_Kd, SwerveConstants.TARGET_X_Kf);
     private final DieterController yController = new DieterController(SwerveConstants.TARGET_Y_Kp, SwerveConstants.TARGET_Y_Ki, SwerveConstants.TARGET_Y_Kd, SwerveConstants.TARGET_Y_Kf);
     private final DieterController rotationController = new DieterController(SwerveConstants.TARGET_ROTATION_Kp, SwerveConstants.TARGET_ROTATION_Ki, SwerveConstants.TARGET_ROTATION_Kd, SwerveConstants.TARGET_ROTATION_Kf);
-    private boolean isApril;
     private Pose2d setPointPose;
 
-    public AdjustToTargetSmart(int id) {
-        this.id = id;
+    public AdjustToTargetSmart(GridChooser.Position position) {
+        this.position = position;
         addRequirements(swerveDrive);
+
+        xController.setDieterBand(0.05);
+        yController.setDieterBand(0.05);
+        rotationController.setDieterBand(Math.toRadians(5));
+
+        xController.setTolerance(0.01);
+        yController.setTolerance(0.01);
+        rotationController.setTolerance(Math.toRadians(1));
     }
 
     @Override
     public void initialize() {
-        setPointPose = limelight.positionForId(id, isApril);
+        limelight.positionForId(position.aprilTagID).ifPresentOrElse(
+                pose -> setPointPose = pose,
+                () -> setPointPose = null
+        );
     }
 
     @Override
     public void execute() {
-        var pose = swerveDrive.getPose();
-        if (id >= 1 && id <= 8 && this.isApril || id >= 1 && id <= 6 && !(this.isApril)) {
-            var setPointPose = this.setPointPose.plus(new Transform2d(new Translation2d(1.3, -0.15 + 0.56), new Rotation2d()));
+        var pose = swerveDrive.getEstimatedPose();
+        if (setPointPose != null) {
+            Translation2d offset;
+            if (position.index % 3 == 1) {
+                offset = AdjustToTargetDumb.Position.LEFT.offset;
+            } else if (position.index % 3 == 2) {
+                offset = AdjustToTargetDumb.Position.MIDDLE.offset;
+            } else {
+                offset = AdjustToTargetDumb.Position.RIGHT.offset;
+            }
+            var setPointPose = this.setPointPose.plus(new Transform2d(offset, new Rotation2d()));
             var speeds = new ChassisSpeeds(
                     xController.calculate(pose.getX(), setPointPose.getX()),
                     yController.calculate(pose.getY(), setPointPose.getY()),
@@ -54,6 +75,9 @@ public class AdjustToTargetSmart extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return !(id >= 1 && id <= 8 && this.isApril || id >= 1 && id <= 6 && !(this.isApril));
+        return (xController.atSetpoint() &&
+                yController.atSetpoint() &&
+                rotationController.atSetpoint()) ||
+                setPointPose == null;
     }
 }

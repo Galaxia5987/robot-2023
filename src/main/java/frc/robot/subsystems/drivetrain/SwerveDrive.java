@@ -50,14 +50,14 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
-    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-            mKinematics,
-            new Rotation2d(),
-            swerveModulePositions,
-            new Pose2d(),
-            VecBuilder.fill(0.1, 0.1, 0.1),
-            VecBuilder.fill(10.0, 10.0, 10.0)
-    );
+//    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+//            mKinematics,
+//            new Rotation2d(),
+//            swerveModulePositions,
+//            new Pose2d(),
+//            VecBuilder.fill(0.1, 0.1, 0.1),
+//            VecBuilder.fill(10.0, 10.0, 10.0)
+//    );
     private Pose2d lastLimelightPose = new Pose2d();
 
     private SwerveDrive() {
@@ -125,7 +125,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      */
     public void resetOdometry(Pose2d pose) {
         mOdometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
-        poseEstimator.resetPosition(pose.getRotation(), swerveModulePositions, pose);
+//        poseEstimator.resetPosition(pose.getRotation(), swerveModulePositions, pose);
     }
 
     /**
@@ -138,7 +138,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     public Pose2d getEstimatedPose() {
-        return poseEstimator.getEstimatedPosition();
+//        return poseEstimator.getEstimatedPosition();
+        return new Pose2d();
     }
 
     /**
@@ -211,7 +212,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearLeft.getState(),
                 mRearRight.getState()
         ));
-        loggerInputs.estimatedPose = Utils.pose2dToArray(poseEstimator.getEstimatedPosition());
+//        loggerInputs.estimatedPose = Utils.pose2dToArray(poseEstimator.getEstimatedPosition());
     }
 
     @Override
@@ -257,16 +258,12 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
         limelight.getBotPoseFieldOriented().ifPresentOrElse(pose2d -> {
             if (pose2d.minus(lastLimelightPose).getTranslation().getNorm() < 0.3) {
-                if (pose2d.minus(poseEstimator.getEstimatedPosition()).getTranslation().getNorm() < 0.1) {
-                    Leds.getInstance().setBlink(true);
-                    Leds.getInstance().setBlinkTime(0.25);
-                }
-                poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp());
+//                poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp());
             }
 
             lastLimelightPose = pose2d;
         }, () -> Leds.getInstance().setBlink(false));
-        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(), swerveModulePositions);
+//        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(), swerveModulePositions);
     }
 
     public enum Module {

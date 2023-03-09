@@ -63,7 +63,7 @@ public class ArmConstants {
     public static final Translation2d FEEDER_POSITION = new Translation2d(0.437, 0.807);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
     //    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
-    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.2, 0.9);
+    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.1, 0.95);
     //    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.6945, 0.475);
     public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.909, 0.64);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);

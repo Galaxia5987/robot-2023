@@ -8,11 +8,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
+import frc.robot.subsystems.vision.LimelightHelpers;
 import frc.robot.utils.Utils;
 
 import static frc.robot.Ports.SwerveDrive.*;
@@ -50,15 +50,13 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
-//    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-//            mKinematics,
-//            new Rotation2d(),
-//            swerveModulePositions,
-//            new Pose2d(),
-//            VecBuilder.fill(0.1, 0.1, 0.1),
-//            VecBuilder.fill(10.0, 10.0, 10.0)
-//    );
-    private Pose2d lastLimelightPose = new Pose2d();
+
+    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+            mKinematics,
+            new Rotation2d(),
+            swerveModulePositions,
+            new Pose2d()
+    );
 
     private SwerveDrive() {
         super(new SwerveDriveLogInputs());
@@ -125,7 +123,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      */
     public void resetOdometry(Pose2d pose) {
         mOdometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
-//        poseEstimator.resetPosition(pose.getRotation(), swerveModulePositions, pose);
+        poseEstimator.resetPosition(pose.getRotation(), swerveModulePositions, pose);
     }
 
     /**
@@ -138,8 +136,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     public Pose2d getEstimatedPose() {
-//        return poseEstimator.getEstimatedPosition();
-        return new Pose2d();
+        return poseEstimator.getEstimatedPosition();
     }
 
     /**
@@ -212,7 +209,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearLeft.getState(),
                 mRearRight.getState()
         ));
-//        loggerInputs.estimatedPose = Utils.pose2dToArray(poseEstimator.getEstimatedPosition());
+        loggerInputs.estimatedPose = Utils.pose2dToArray(poseEstimator.getEstimatedPosition());
     }
 
     @Override
@@ -257,13 +254,11 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearRight.getEncoderTicks() + "}");
 
         limelight.getBotPoseFieldOriented().ifPresentOrElse(pose2d -> {
-            if (pose2d.minus(lastLimelightPose).getTranslation().getNorm() < 0.3) {
-//                poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp());
-            }
-
-            lastLimelightPose = pose2d;
+            poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp() -
+                    LimelightHelpers.getLatency_Pipeline("") / 1000.0 -
+                    LimelightHelpers.getLatency_Capture("") / 1000.0);
         }, () -> Leds.getInstance().setBlink(false));
-//        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(), swerveModulePositions);
+        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(), swerveModulePositions);
     }
 
     public enum Module {

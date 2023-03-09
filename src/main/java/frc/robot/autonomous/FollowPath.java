@@ -1,13 +1,16 @@
 package frc.robot.autonomous;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -15,10 +18,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
+import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.vision.Limelight;
+import frc.robot.utils.AllianceFlipUtil;
+import frc.robot.utils.GridChooser;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -253,19 +260,17 @@ public class FollowPath extends CommandBase {
         FollowPath.logError = logError;
     }
 
-//    public static Command generatePathToAprilTag(SwerveDrive swerveDrive, Limelight limelight, Gyroscope gyroscope, boolean rightSide, boolean useHorizontalOffset) {
+//    public static Command generatePathToAprilTag(SwerveDrive swerveDrive, Limelight limelight, Gyroscope gyroscope, GridChooser.Position position) {
 //        PathPlannerTrajectory trajectory;
-//        var aprilTag = limelight.getAprilTagTarget(rightSide, useHorizontalOffset);
-//        var botPose = limelight.getBotPose();
+//        var aprilTag = limelight.getAprilTagTarget();
+//        var botPose = limelight.getBotPoseFieldOriented();
 //        var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
 //
 //        if (aprilTag.isPresent() && botPose.isPresent()) {
-////            var relativePose = AllianceFlipUtil.apply(DriverStation.getAlliance(), botPose.get());
-////            log.relativePose = Utils.pose2dToArray(relativePose);
-////            log.aprilTag = Utils.pose2dToArray(aprilTag.get());
-////            log.botPose = Utils.pose2dToArray(botPose.get());
-//            swerveDrive.resetOdometry(relativePose);
-//            gyroscope.resetYaw(relativePose.getRotation());
+//            log.relativePose = Utils.pose2dToArray(relativePose);
+//            log.aprilTag = Utils.pose2dToArray(aprilTag.get());
+//            log.botPose = Utils.pose2dToArray(botPose.get());
+
 //            var pStart = new PathPoint(
 //                    botPose.get().getTranslation(),
 //                    new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond),
@@ -281,19 +286,21 @@ public class FollowPath extends CommandBase {
 //                    pStart, pEnd);
 //            trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
 //
-//            return new FollowPath(
+//            return new InstantCommand(() -> {
+//                swerveDrive.resetOdometry(botPose.get());
+//                gyroscope.resetYaw(botPose.get().getRotation());
+//            }).andThen(new FollowPath(
 //                    trajectory,
 //                    swerveDrive::getPose,
 //                    swerveDrive.getKinematics(),
-//                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
-//                    new PIDController(SwerveConstants.AUTO_XY_Kp, SwerveConstants.AUTO_XY_Ki, SwerveConstants.AUTO_XY_Kd),
+//                    new PIDController(SwerveConstants.AUTO_X_Kp, SwerveConstants.AUTO_X_Ki, SwerveConstants.AUTO_X_Kd),
+//                    new PIDController(SwerveConstants.AUTO_Y_Kp, SwerveConstants.AUTO_Y_Ki, SwerveConstants.AUTO_Y_Kd),
 //                    new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
 //                    swerveDrive::setStates,
 //                    swerveDrive
-//            );
+//            ));
 //        }
-//        return new RunCommand(() -> {
-//        });
+//        return new RunCommand(() -> {});
 //    }
 
     public static FollowPath loadTrajectory(String path) {

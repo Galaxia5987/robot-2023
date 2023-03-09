@@ -3,10 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.paths.LeftConeCubeHigh;
@@ -66,7 +63,7 @@ public class RobotContainer {
     private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0));
     private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180));
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
-    private final GridChooser gridChooser = new GridChooser(xboxController);
+    public final GridChooser gridChooser = new GridChooser();
     private final Trigger povUpdated = new Trigger(() -> xboxController.getPOV() >= 0);
 
     /**
@@ -89,9 +86,9 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerveSubsystem.setDefaultCommand(
-                new JoystickDrive(leftJoystick, rightJoystick)
+                new XboxDrive(swerveSubsystem, xboxController)
         );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+       // arm.setDefaultCommand(new ArmXboxControl(xboxController));
 //        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));
     }
 
@@ -104,7 +101,7 @@ public class RobotContainer {
         x.whileTrue(new MidScoring()
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
-        lb.onTrue(new InstantCommand(gripper::toggle));
+//        lb.onTrue(new InstantCommand(gripper::toggle));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
@@ -125,13 +122,14 @@ public class RobotContainer {
                 AdjustToTargetDumb.Position.RIGHT
         ));
 
-        rb.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
+//        rb.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
+        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
-        leftJoystickTopLeft.whileTrue(new ProxyCommand(() -> new AdjustToTargetSmart(gridChooser.getPosition())));
+        lb.whileTrue(new ProxyCommand(() -> new AdjustToTargetSmart(gridChooser.getPosition())));
 
-        povUpdated.onTrue(new InstantCommand(gridChooser::update));
+        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
     }
 
 

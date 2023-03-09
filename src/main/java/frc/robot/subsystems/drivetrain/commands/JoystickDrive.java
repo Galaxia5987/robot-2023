@@ -36,10 +36,10 @@ public class JoystickDrive extends CommandBase {
 
             double magnitude = Math.hypot(vx, vy);
             double angle = Math.atan2(vy, vx);
-            magnitude = MathUtil.applyDeadband(magnitude, 0.1);
+            magnitude = MathUtil.applyDeadband(magnitude, 0.05);
             vx = Math.cos(angle) * magnitude;
             vy = Math.sin(angle) * magnitude;
-            omega = MathUtil.applyDeadband(omega, 0.1);
+            omega = MathUtil.applyDeadband(omega, 0.05);
 
             vx = Math.copySign(vx * vx, vx);
             vy = Math.copySign(vy * vy, vy);
@@ -49,7 +49,7 @@ public class JoystickDrive extends CommandBase {
                     vy * SwerveConstants.MAX_VELOCITY_AUTO,
                     omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                     new Translation2d(),
-                    !leftJoystick.getTop());
+                    true);
             swerveDrive.drive(signal);
         }
     }

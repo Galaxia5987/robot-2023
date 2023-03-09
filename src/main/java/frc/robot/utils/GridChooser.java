@@ -1,24 +1,21 @@
 package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.Arrays;
+
 public class GridChooser {
-    private final XboxController xboxController;
     private final boolean[] grid = new boolean[9];
     private int index = 0;
 
-    public GridChooser(XboxController xboxController) {
-        this.xboxController = xboxController;
+    public GridChooser() {
         for (int i = 0; i < 9; i++) {
             grid[i] = i == index;
         }
     }
 
-    public void update() {
-        int pov = xboxController.getPOV();
-
+    public void update(int pov) {
         if (Utils.epsilonEquals(pov, 90, 50)) {
             if (index == 8) {
                 index = 0;
@@ -31,6 +28,10 @@ public class GridChooser {
             } else {
                 index--;
             }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            grid[i] = i == index;
         }
 
         for (int i = 0; i < 9; i++) {
@@ -63,7 +64,7 @@ public class GridChooser {
     }
 
     public Position getPosition() {
-        return new Position(index, getAprilTagIndex());
+        return new Position(index + 1, getAprilTagIndex());
     }
 
     public static class Position {

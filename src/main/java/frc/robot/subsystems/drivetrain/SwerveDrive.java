@@ -8,8 +8,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.Utils;
 
@@ -250,12 +252,17 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearLeft.getEncoderTicks() + ", " +
                 mRearRight.getEncoderTicks() + "}");
 
-        limelight.getBotPoseFieldOriented().ifPresent(pose2d -> {
+        limelight.getBotPoseFieldOriented().ifPresentOrElse(pose2d -> {
             if (pose2d.minus(lastLimelightPose).getTranslation().getNorm() < 0.3) {
+                if (pose2d.minus(poseEstimator.getEstimatedPosition()).getTranslation().getNorm() < 0.1) {
+                    Leds.getInstance().setBlink(true);
+                    Leds.getInstance().setBlinkTime(0.25);
+                }
                 poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp());
             }
+
             lastLimelightPose = pose2d;
-        });
+        }, () -> Leds.getInstance().setBlink(false));
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(), swerveModulePositions);
     }
 

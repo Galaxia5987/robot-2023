@@ -2,6 +2,7 @@ package frc.robot.subsystems.leds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports;
@@ -14,10 +15,19 @@ public class Leds extends SubsystemBase {
 
     private Color color = Color.kPurple;
 
+    private double blinkTime = 0;
+    private final Timer timer = new Timer();
+    private boolean blink = false;
+
+    private Mode mode = Mode.ON;
+
     private Leds() {
         leds.setLength(ledBuffer.getLength());
         leds.setData(ledBuffer);
         leds.start();
+
+        timer.start();
+        timer.reset();
     }
 
     public static Leds getInstance() {
@@ -35,6 +45,14 @@ public class Leds extends SubsystemBase {
         color = Color.kPurple;
     }
 
+    public void setBlinkTime(double blinkTime) {
+        this.blinkTime = blinkTime;
+    }
+
+    public void setBlink(boolean blink) {
+        this.blink = blink;
+    }
+
     public void toggle() {
         if (color == Color.kYellow) {
             color = Color.kPurple;
@@ -49,9 +67,33 @@ public class Leds extends SubsystemBase {
 
     @Override
     public void periodic() {
-        for (int i = 0; i < ledBuffer.getLength(); i++) {
-            ledBuffer.setLED(i, color);
+        if (blink) {
+            if (timer.hasElapsed(blinkTime)) {
+                if (mode == Mode.ON) {
+                    mode = Mode.OFF;
+                } else {
+                    mode = Mode.ON;
+                }
+                timer.reset();
+            }
+        } else {
+            mode = Mode.ON;
         }
-        leds.setData(ledBuffer);
+
+        if (mode == Mode.ON) {
+            for (int i = 0; i < ledBuffer.getLength(); i++) {
+                ledBuffer.setLED(i, color);
+            }
+            leds.setData(ledBuffer);
+        } else {
+            for (int i = 0; i < ledBuffer.getLength(); i++) {
+                ledBuffer.setLED(i, Color.kBlack);
+            }
+            leds.setData(ledBuffer);
+        }
+    }
+
+    private enum Mode {
+        OFF, ON
     }
 }

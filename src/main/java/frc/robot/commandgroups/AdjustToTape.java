@@ -12,7 +12,7 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.utils.controllers.PIDFController;
+import frc.robot.utils.controllers.DieterController;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
@@ -21,7 +21,7 @@ public class AdjustToTape extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
     private final Limelight limelight = Limelight.getInstance();
-    private final PIDFController yController;
+    private final DieterController yController;
     private final ProfiledPIDController rotationController;
     private final TargetAdjustInputsAutoLogged inputs = new TargetAdjustInputsAutoLogged();
     private final double desiredYaw;
@@ -33,7 +33,7 @@ public class AdjustToTape extends CommandBase {
         this.xSupplier = xSupplier;
         this.desiredYaw = desiredYaw;
         this.desiredAbsoluteYaw = desiredAbsoluteYaw;
-        yController = new PIDFController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
+        yController = new DieterController(SwerveConstants.TARGET_XY_Kp, SwerveConstants.TARGET_XY_Ki, SwerveConstants.TARGET_XY_Kd, SwerveConstants.TARGET_XY_Kf);
         rotationController = new ProfiledPIDController(
                 SwerveConstants.TARGET_ROTATION_Kp,
                 SwerveConstants.TARGET_ROTATION_Ki,

@@ -9,13 +9,13 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
-import frc.robot.utils.controllers.PIDFController;
+import frc.robot.utils.controllers.DieterController;
 
 public class BalanceOnStation extends CommandBase {
     private final SwerveDrive swerveDrive;
     private final Gyroscope gyroscope;
     private final Timer timer = new Timer();
-    private final PIDFController controller = new PIDFController(
+    private final DieterController controller = new DieterController(
             SwerveConstants.CHARGING_STATION_BALANCE_Kp,
             SwerveConstants.CHARGING_STATION_BALANCE_Ki,
             SwerveConstants.CHARGING_STATION_BALANCE_Kd,

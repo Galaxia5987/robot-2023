@@ -2,9 +2,7 @@ package frc.robot.subsystems.drivetrain;
 
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.pathplanner.lib.auto.PIDConstants;
 import frc.robot.autonomous.DrivetrainFeedforwardConstants;
-import frc.robot.utils.controllers.PIDFConstants;
 
 public class SwerveConstants {
     public static final double TICKS_PER_ROTATION = 2048;
@@ -81,26 +79,9 @@ public class SwerveConstants {
     public static DrivetrainFeedforwardConstants ROTATION_FF_CONSTANTS = new DrivetrainFeedforwardConstants(
             AUTO_ROTATION_VELOCITY_FEEDFORWARD, AUTO_ROTATION_ACCELERATION_FEEDFORWARD, AUTO_ROTATION_STATIC_FEEDFORWARD
     );
-    public static PIDConstants AUTO_TRANSLATION_PID_CONSTANTS_X = new PIDConstants(
-            AUTO_X_Kp, AUTO_X_Ki, AUTO_X_Kd, AUTO_X_Kf
-    );
-    public static PIDConstants AUTO_TRANSLATION_PID_CONSTANTS_Y = new PIDConstants(
-            AUTO_Y_Kp, AUTO_Y_Ki, AUTO_Y_Kd, AUTO_Y_Kf
-    );
-    public static PIDFConstants AUTO_ROTATION_PID_CONSTANTS = new PIDFConstants(
-            AUTO_ROTATION_Kp, AUTO_ROTATION_Ki, AUTO_ROTATION_Kd, AUTO_ROTATION_Kf
-    );
-    public static PIDConstants TARGET_TRANSLATION_PID_CONSTANTS = new PIDConstants(
-            TARGET_XY_Kp, TARGET_XY_Ki, TARGET_XY_Kd
-    );
-    public static PIDFConstants TARGET_ROTATION_PID_CONSTANTS = new PIDFConstants(
-            TARGET_ROTATION_Kp, TARGET_ROTATION_Ki, TARGET_ROTATION_Kd, TARGET_ROTATION_Kf
-    );
 
     public static double CHARGING_STATION_BALANCE_Kp = 50;
     public static double CHARGING_STATION_BALANCE_Ki = 0;
     public static double CHARGING_STATION_BALANCE_Kd = 1;
     public static double CHARGING_STATION_BALANCE_Kf = 0;
-
-    public static double FEEDFORWARD_MULTIPLIER = 0;
 }

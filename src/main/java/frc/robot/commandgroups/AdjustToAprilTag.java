@@ -8,7 +8,7 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.utils.controllers.PIDFController;
+import frc.robot.utils.controllers.DieterController;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.function.DoubleSupplier;
@@ -18,8 +18,8 @@ public class AdjustToAprilTag extends CommandBase {
     private final Limelight limelight = Limelight.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
 
-    private final PIDFController yController = new PIDFController(3, 0, 0.4, 0.7);
-    private final PIDFController thetaController = new PIDFController(4.0, 0, 0, 1);
+    private final DieterController yController = new DieterController(3, 0, 0.4, 0.7);
+    private final DieterController thetaController = new DieterController(4.0, 0, 0, 1);
 
     private final DoubleSupplier xSupplier;
 

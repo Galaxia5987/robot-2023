@@ -78,6 +78,10 @@ public class Robot extends LoggedRobot {
 
         Leds.getInstance().setPurple();
         Limelight.getInstance().setAprilTagsPipeline();
+
+        for (int i = 1; i <= 9; i++) {
+            SmartDashboard.putBoolean("Grid Color #" + i, i % 3 == 2);
+        }
     }
 
     /**

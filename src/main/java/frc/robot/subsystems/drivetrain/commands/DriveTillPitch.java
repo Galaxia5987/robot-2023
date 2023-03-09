@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.utils.Utils;
 
 public class DriveTillPitch extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
@@ -34,6 +35,12 @@ public class DriveTillPitch extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return gyroscope.getPitch().getDegrees() >= desiredPitch;
+        if (desiredPitch > 0) {
+            return gyroscope.getPitch().getDegrees() >= desiredPitch;
+        } else if (desiredPitch < 0) {
+            return gyroscope.getPitch().getDegrees() <= desiredPitch;
+        } else {
+            return Utils.epsilonEquals(gyroscope.getPitch().getDegrees(), 0, 1);
+        }
     }
 }

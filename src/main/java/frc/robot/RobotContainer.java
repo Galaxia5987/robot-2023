@@ -24,6 +24,7 @@ import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
+import frc.robot.utils.GridChooser;
 import frc.robot.utils.Utils;
 
 public class RobotContainer {
@@ -61,6 +62,8 @@ public class RobotContainer {
     private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0));
     private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180));
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
+    private final GridChooser gridChooser = new GridChooser(xboxController);
+    private final Trigger povUpdated = new Trigger(() -> xboxController.getPOV() >= 0);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -127,6 +130,7 @@ public class RobotContainer {
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
         leftJoystickTopLeft.whileTrue(new AdjustToTargetSmart(6));
+        povUpdated.onTrue(new InstantCommand(gridChooser::update));
     }
 
 

@@ -16,6 +16,7 @@ import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
 import frc.robot.subsystems.drivetrain.commands.AdjustToTargetSmart;
+import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
@@ -84,7 +85,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerveSubsystem.setDefaultCommand(
-                new XboxDrive(swerveSubsystem, xboxController)
+                new JoystickDrive(leftJoystick, rightJoystick)
         );
 //        arm.setDefaultCommand(new ArmXboxControl(xboxController));
 //        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));

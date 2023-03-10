@@ -86,14 +86,12 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerveSubsystem.setDefaultCommand(
-                new XboxDrive(swerveSubsystem, xboxController)
+                new JoystickDrive(leftJoystick, rightJoystick)
         );
-       // arm.setDefaultCommand(new ArmXboxControl(xboxController));
-//        arm.setDefaultCommand(new ArmAxisXboxControlDumb(xboxController, 0.1, 0.2));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
     }
 
     private void configureButtonBindings() {
-
         b.whileTrue(new FeederPosition()
                 .alongWith(new ReturnIntake()));
         y.whileTrue(new UpperScoring()
@@ -101,7 +99,7 @@ public class RobotContainer {
         x.whileTrue(new MidScoring()
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
-//        lb.onTrue(new InstantCommand(gripper::toggle));
+        lb.onTrue(new InstantCommand(gripper::toggle));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
@@ -112,22 +110,14 @@ public class RobotContainer {
         start.onTrue(new InstantCommand(leds::toggle));
 
         rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
-        rightJoystickTopBottom.whileTrue(new AdjustToTargetDumb(
-                AdjustToTargetDumb.Position.MIDDLE
-        ));
-        rightJoystickTopLeft.whileTrue(new AdjustToTargetDumb(
-                AdjustToTargetDumb.Position.LEFT
-        ));
-        rightJoystickTopRight.whileTrue(new AdjustToTargetDumb(
-                AdjustToTargetDumb.Position.RIGHT
-        ));
 
-//        rb.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
-        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
+        rb.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
-        lb.whileTrue(new ProxyCommand(() -> new AdjustToTargetSmart(gridChooser.getPosition())));
+        rightJoystickTopBottom.whileTrue(new ProxyCommand(() ->
+                new AdjustToTargetSmart(gridChooser.getPosition())
+                        .withFinishingCommand()));
 
         povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
     }

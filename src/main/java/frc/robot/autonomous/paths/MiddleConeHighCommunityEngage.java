@@ -38,9 +38,9 @@ public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
                 new InstantCommand(() -> swerveDrive.resetOdometry(
                         AllianceFlipUtil.apply(DriverStation.getAlliance(), trajectory.getInitialPose()))),
                 new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
-                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
 
-                new AutonUpperScoring(true),
+                new Retract(false).withTimeout(0.35)
+                        .andThen(new AutonUpperScoring(true)),
 
                 new InstantCommand(gripper::open),
 

@@ -75,8 +75,7 @@ public class AdjustToTargetSmart extends CommandBase {
     @Override
     public boolean isFinished() {
         return (xController.atSetpoint() &&
-                yController.atSetpoint() &&
-                rotationController.atSetpoint()) ||
+                yController.atSetpoint()) ||
                 setPointPose == null;
     }
 

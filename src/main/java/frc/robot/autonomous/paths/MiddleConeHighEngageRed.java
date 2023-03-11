@@ -19,19 +19,12 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.AllianceFlipUtil;
 
-/**
- * This class contains all the parts for the path MiddleConeHighEngage.
- * <p>
- * In this path the robot places a cone in the middle grid
- * in the part that is closer to the feeder and goes to the charge station.
- */
-public class MiddleConeHighEngage extends SequentialCommandGroup {
-
-    public MiddleConeHighEngage() {
+public class MiddleConeHighEngageRed extends SequentialCommandGroup {
+    public MiddleConeHighEngageRed() {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gyroscope gyroscope = Gyroscope.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage blue", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage red", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
                 new InstantCommand(() -> swerveDrive.resetOdometry(

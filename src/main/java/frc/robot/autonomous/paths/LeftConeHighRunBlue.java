@@ -20,13 +20,13 @@ import frc.robot.subsystems.leds.YellowLed;
  * In this path the robot places a cone in the grid that is closest to the feeder
  * and goes to park in the opposite alliance's loading zone.
  */
-public class LeftConeHighRun extends SequentialCommandGroup {
+public class LeftConeHighRunBlue extends SequentialCommandGroup {
 
-    public LeftConeHighRun() {
+    public LeftConeHighRunBlue() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftRun", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftRun blue1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
                 new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
@@ -37,7 +37,7 @@ public class LeftConeHighRun extends SequentialCommandGroup {
                 new UpperScoring().withTimeout(4),
                 new InstantCommand(gripper::open, gripper).withTimeout(1),
                 new ReturnArm().withTimeout(3),
-                FollowPath.loadTrajectory("LeftRun")
+                FollowPath.loadTrajectory("LeftRun blue1")
         );
     }
 }

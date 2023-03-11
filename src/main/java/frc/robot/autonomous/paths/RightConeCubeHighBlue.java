@@ -25,9 +25,9 @@ import frc.robot.utils.AllianceFlipUtil;
  * goes to pick up a cube (the one furthest from the feeder)
  * and returns to place it in the same grid.
  */
-public class RightConeCubeHigh extends SequentialCommandGroup {
+public class RightConeCubeHighBlue extends SequentialCommandGroup {
 
-    public RightConeCubeHigh() {
+    public RightConeCubeHighBlue() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();

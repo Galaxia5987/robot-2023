@@ -42,5 +42,6 @@ public class DriveTillPitch extends CommandBase {
         } else {
             return Utils.epsilonEquals(gyroscope.getPitch().getDegrees(), 0, 1);
         }
+        // Math.abs(gyroscope.getPitch().getDegrees()) >= Math.abs(desiredPitch); TODO: alternative for the first two if's above.
     }
 }

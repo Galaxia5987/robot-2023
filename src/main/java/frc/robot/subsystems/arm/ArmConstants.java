@@ -60,10 +60,10 @@ public class ArmConstants {
 
     //arm positions
     public static final Translation2d STARTING_POSITION = new Translation2d(-0.4, 0.06);
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.437, 0.807);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.2, 0.75);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
     //    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
-    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.1, 0.95);
+    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.18, 0.92);
     //    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.6945, 0.475);
     public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.909, 0.64);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);
@@ -85,5 +85,5 @@ public class ArmConstants {
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT1 = new ArmLinearProfile.Waypoint(0, 0, 0, 0.5);
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT2 = new ArmLinearProfile.Waypoint(0, 0, 0, 0);
 
-    public static final double FEEDER_DISTANCE = 25;
+    public static final double FEEDER_DISTANCE = 23;
 }

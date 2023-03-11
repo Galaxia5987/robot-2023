@@ -251,10 +251,9 @@ public class Limelight extends LoggedSubsystem<LimelightLogInputs> {
 
     public Optional<Pose2d> positionForId(int id) {
         var pose = aprilTagFieldLayout.getTagPose(id);
-        aprilTagFieldLayout.setOrigin(DriverStation.getAlliance() == DriverStation.Alliance.Blue ?
-                AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide :
-                AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide);
-        return pose.map(Pose3d::toPose2d);
+        aprilTagFieldLayout.setOrigin(
+                AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
+        return pose.map(pose3d -> AllianceFlipUtil.apply(DriverStation.getAlliance(), pose3d.toPose2d()));
     }
 
     @Override

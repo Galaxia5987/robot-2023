@@ -15,6 +15,8 @@ import frc.robot.subsystems.vision.Limelight;
 import frc.robot.subsystems.vision.LimelightHelpers;
 import frc.robot.utils.Utils;
 
+import java.util.Arrays;
+
 import static frc.robot.Ports.SwerveDrive.*;
 import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
 
@@ -54,7 +56,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
             mKinematics,
             new Rotation2d(),
-            swerveModulePositions,
+            Arrays.copyOf(swerveModulePositions, swerveModulePositions.length),
             new Pose2d()
     );
 
@@ -137,6 +139,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
     public Pose2d getEstimatedPose() {
         return poseEstimator.getEstimatedPosition();
+//        return new Pose2d();
     }
 
     /**
@@ -236,6 +239,15 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         mRearRight.vroom();
     }
 
+    public SwerveModule[] getModules() {
+        return new SwerveModule[] {
+                mFrontLeft,
+                mFrontRight,
+                mRearLeft,
+                mRearRight
+        };
+    }
+
     @Override
     public void periodic() {
         swerveModulePositions = new SwerveModulePosition[]{
@@ -258,7 +270,8 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                     LimelightHelpers.getLatency_Pipeline("") / 1000.0 -
                     LimelightHelpers.getLatency_Capture("") / 1000.0);
         }, () -> Leds.getInstance().setBlink(false));
-        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(), swerveModulePositions);
+        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(),
+                Arrays.copyOf(swerveModulePositions, swerveModulePositions.length));
     }
 
     public enum Module {

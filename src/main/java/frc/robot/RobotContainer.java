@@ -6,25 +6,20 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autonomous.paths.LeftConeCubeHigh;
-import frc.robot.autonomous.paths.LeftConeCubeHighEngage;
-import frc.robot.autonomous.paths.LeftConeCubeHighNew;
-import frc.robot.autonomous.paths.Test;
+import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
-import frc.robot.subsystems.drivetrain.commands.AdjustToTargetSmart;
-import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
-import frc.robot.subsystems.drivetrain.commands.XboxDrive;
+import frc.robot.subsystems.drivetrain.commands.*;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
+import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.utils.GridChooser;
 import frc.robot.utils.Utils;
 
@@ -46,6 +41,7 @@ public class RobotContainer {
     private final JoystickButton b = new JoystickButton(xboxController, XboxController.Button.kB.value);
     private final JoystickButton y = new JoystickButton(xboxController, XboxController.Button.kY.value);
     private final JoystickButton x = new JoystickButton(xboxController, XboxController.Button.kX.value);
+    private final JoystickButton kBack = new JoystickButton(xboxController, XboxController.Button.kBack.value);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton lb = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
     private final Trigger xboxRightTrigger = new Trigger(() -> xboxController.getRightTriggerAxis() > 0.2);
@@ -86,9 +82,9 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerveSubsystem.setDefaultCommand(
-                new JoystickDrive(leftJoystick, rightJoystick)
+                new XboxDrive(swerveSubsystem, xboxController)
         );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
     }
 
     private void configureButtonBindings() {
@@ -99,7 +95,7 @@ public class RobotContainer {
         x.whileTrue(new MidScoring()
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
-        lb.onTrue(new InstantCommand(gripper::toggle));
+//        lb.onTrue(new InstantCommand(gripper::toggle));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
@@ -109,17 +105,20 @@ public class RobotContainer {
 
         start.onTrue(new InstantCommand(leds::toggle));
 
-        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
 
-        rb.whileTrue(new ArmAxisControl(0.3, 0.02, 0));
+//        kBack.whileTrue(new AdjustToTargetSmart());
+//        rb.whileTrue(new ArmAxisControl(1, 0.02, 0));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
-        rightJoystickTopBottom.whileTrue(new ProxyCommand(() ->
-                new AdjustToTargetSmart(gridChooser.getPosition())
-                        .withFinishingCommand()));
+        lb.whileTrue(new ProxyCommand(() ->
+                new AdjustToTargetSmart(gridChooser.getPosition())));
 
-        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
+
+        leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
+        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())).ignoringDisable(true));
+
     }
 
 
@@ -129,6 +128,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new LeftConeCubeHighNew();
+        return new MiddleConeHighCommunityEngage();
     }
 }

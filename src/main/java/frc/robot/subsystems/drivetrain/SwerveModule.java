@@ -216,12 +216,16 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         loggerInputs.moduleDistance = (driveMotor.getSelectedSensorPosition() / TICKS_PER_ROTATION) * WHEEL_DIAMETER * Math.PI * DRIVE_REDUCTION;
     }
 
+    public void initializeOffset() {
+        double newPosition = absoluteEncoderToAbsoluteFalcon(encoder.getAbsolutePosition()) - offset;
+        angleMotor.setSelectedSensorPosition(newPosition);
+        initializedOffset = true;
+    }
+
     @Override
     public void periodic() {
         if (!initializedOffset && encoder.isConnected()) {
-            double newPosition = absoluteEncoderToAbsoluteFalcon(encoder.getAbsolutePosition()) - offset;
-            angleMotor.setSelectedSensorPosition(newPosition);
-            initializedOffset = true;
+            initializeOffset();
         }
         if (SmartDashboard.getBoolean("Swerve Tune Motion Magic", false)) {
             angleMotor.updatePIDF(0,

@@ -51,7 +51,7 @@ public class SetArmsPositionAngular extends CommandBase {
         shoulderProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(180, 540),
                 new TrapezoidProfile.State(shoulderAngle.getAsDouble(), finalShoulderVelocity),
                 new TrapezoidProfile.State(currentShoulderAngle, 0));
-        elbowProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(360, 1080),
+        elbowProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(360, 2080),
                 new TrapezoidProfile.State(elbowAngle.getAsDouble(), finalElbowVelocity),
                 new TrapezoidProfile.State(currentElbowAngle, 0));
 

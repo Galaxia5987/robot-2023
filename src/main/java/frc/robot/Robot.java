@@ -5,15 +5,14 @@
 package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
+import frc.robot.subsystems.drivetrain.SwerveDrive;
+import frc.robot.subsystems.drivetrain.SwerveModule;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -36,6 +35,7 @@ public class Robot extends LoggedRobot {
     private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     private RobotContainer robotContainer;
     private Command autonomousCommand;
+    private final Timer timer = new Timer();
 
     public static boolean justEnabled() {
         return justEnabled;
@@ -80,6 +80,12 @@ public class Robot extends LoggedRobot {
         for (int i = 1; i <= 9; i++) {
             SmartDashboard.putBoolean("Grid Color #" + i, i % 3 == 2);
         }
+
+        for (SwerveModule module : SwerveDrive.getInstance().getModules()) {
+            module.initializeOffset();
+        }
+        timer.start();
+        timer.reset();
     }
 
     /**
@@ -97,6 +103,13 @@ public class Robot extends LoggedRobot {
         boolean enabled = DriverStation.isEnabled();
         justEnabled = !lastEnabled && enabled;
         lastEnabled = enabled;
+
+        if (timer.hasElapsed(1)) {
+            timer.reset();
+            for (SwerveModule module : SwerveDrive.getInstance().getModules()) {
+                module.initializeOffset();
+            }
+        }
     }
 
     /**

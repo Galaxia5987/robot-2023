@@ -47,7 +47,7 @@ public class JoystickDrive extends CommandBase {
             DriveSignal signal = new DriveSignal(
                     vx * SwerveConstants.MAX_VELOCITY_AUTO,
                     vy * SwerveConstants.MAX_VELOCITY_AUTO,
-                    omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+                    0.7 * omega * SwerveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                     new Translation2d(),
                     true);
             swerveDrive.drive(signal);

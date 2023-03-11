@@ -16,9 +16,9 @@ public class FeederPosition extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(() -> {
                     if (arm.getEndPosition().getX() < 0) {
-                        setOffset(new Translation2d(0, -0.02));
+                        setOffset(new Translation2d(0, -0.04));
                     } else {
-                        setOffset(new Translation2d(0, 0.02));
+                        setOffset(new Translation2d(0, 0.0));
                     }
                 }),
                 new SetArmsPositionAngular(() -> ArmConstants.FEEDER_POSITION

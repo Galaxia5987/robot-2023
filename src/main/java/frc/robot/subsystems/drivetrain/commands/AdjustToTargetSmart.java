@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.subsystems.drivetrain.DriveSignal;
@@ -49,6 +50,7 @@ public class AdjustToTargetSmart extends CommandBase {
     @Override
     public void execute() {
         var pose = swerveDrive.getEstimatedPose();
+        System.out.println("Pose: " + pose.getTranslation().toString());
         if (setPointPose != null) {
             Translation2d offset;
             if (position.index % 3 == 1) {
@@ -58,25 +60,23 @@ public class AdjustToTargetSmart extends CommandBase {
             } else {
                 offset = AdjustToTargetDumb.Position.RIGHT.offset;
             }
-            var setPointPose = this.setPointPose.plus(new Transform2d(offset, new Rotation2d()));
+            if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+                offset = offset.unaryMinus();
+            }
+
+            var setPointPose = this.setPointPose.plus(new Transform2d(offset, new Rotation2d(150)));
+            System.out.println("Setpoint: " + setPointPose.getTranslation().toString());
             var speeds = new ChassisSpeeds(
                     xController.calculate(pose.getX(), setPointPose.getX()),
                     yController.calculate(pose.getY(), setPointPose.getY()),
-                    rotationController.calculate(gyroscope.getYaw().getRadians(), setPointPose.getRotation().getRadians())
+                    rotationController.calculate(gyroscope.getYaw().getRadians(), 0)
             );
             swerveDrive.drive(new DriveSignal(
                     speeds,
                     new Translation2d(),
-                    true
+                    false
             ));
         }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return (xController.atSetpoint() &&
-                yController.atSetpoint()) ||
-                setPointPose == null;
     }
 
     public CommandBase withFinishingCommand() {

@@ -19,7 +19,6 @@ import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.utils.GridChooser;
 import frc.robot.utils.Utils;
 
@@ -82,9 +81,9 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerveSubsystem.setDefaultCommand(
-                new XboxDrive(swerveSubsystem, xboxController)
+                new JoystickDrive(leftJoystick, rightJoystick)
         );
-//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
     }
 
     private void configureButtonBindings() {
@@ -95,20 +94,18 @@ public class RobotContainer {
         x.whileTrue(new MidScoring()
                 .alongWith(new ReturnIntake()));
         a.whileTrue(new ReturnArm());
-//        lb.onTrue(new InstantCommand(gripper::toggle));
+        rb.onTrue(new InstantCommand(gripper::toggle));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
         xboxRightTrigger.whileTrue(new ReturnIntake()
-                        .andThen(new RunCommand(() -> intake.setAnglePower(0.05))))
+                        .andThen(new RunCommand(() -> intake.setAnglePower(0.08))))
                 .onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
 
         start.onTrue(new InstantCommand(leds::toggle));
 
-        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
 
-//        kBack.whileTrue(new AdjustToTargetSmart());
-//        rb.whileTrue(new ArmAxisControl(1, 0.02, 0));
+        kBack.whileTrue(new ArmAxisControl(1, 0.02, 0));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerveSubsystem::resetOdometry)));
@@ -117,7 +114,7 @@ public class RobotContainer {
 
 
         leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
-        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())).ignoringDisable(true));
+        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
 
     }
 
@@ -128,6 +125,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new MiddleConeHighCommunityEngage();
+        return new MiddleConeHighCommunityEngageBlue();
     }
 }

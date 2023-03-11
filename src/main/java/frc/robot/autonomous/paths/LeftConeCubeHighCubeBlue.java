@@ -45,7 +45,7 @@ public class LeftConeCubeHighCubeBlue extends SequentialCommandGroup {
                 new PurpleLed(),
 
                 FollowPath.loadTrajectory("LeftConeCubeHigh blue 1").alongWith(
-                        new PickUpCube().withTimeout(3.7)),
+                        new PickUpCube().withTimeout(3.8)),
 
                 FollowPath.loadTrajectory("LeftConeCubeHigh blue 2")
                         .alongWith(new ReturnIntake()
@@ -55,6 +55,8 @@ public class LeftConeCubeHighCubeBlue extends SequentialCommandGroup {
 
                 new AutonUpperScoring(false),
                 new InstantCommand(gripper::open, gripper),
+
+                new ReturnArm().withTimeout(1.5),
 
                 FollowPath.loadTrajectory("LeftConeCubeHigh blue 3").alongWith(new PickUpCube().withTimeout(5)));
     }

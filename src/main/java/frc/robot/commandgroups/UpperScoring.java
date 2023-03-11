@@ -10,7 +10,6 @@ import frc.robot.subsystems.leds.Leds;
 public class UpperScoring extends SequentialCommandGroup {
 
     public UpperScoring() {
-        Arm arm = Arm.getInstance();
         addCommands(
                 new ConditionalCommand(
                         new SetArmsPositionAngular(() -> ArmConstants.UPPER_CONE_SCORING, 0.1),

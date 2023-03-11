@@ -28,7 +28,7 @@ public class RobotContainer {
     private final Arm arm = Arm.getInstance();
     private final Leds leds = Leds.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
-    private final SwerveDrive swerveSubsystem = SwerveDrive.getInstance();
+    private final SwerveDrive swerve = SwerveDrive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
     private final Intake intake = Intake.getInstance();
     private final Gripper gripper = Gripper.getInstance();
@@ -80,19 +80,21 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        swerveSubsystem.setDefaultCommand(
+        swerve.setDefaultCommand(
                 new JoystickDrive(leftJoystick, rightJoystick)
         );
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
     }
 
     private void configureButtonBindings() {
+        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
         b.whileTrue(new FeederPosition()
                 .alongWith(new ReturnIntake()));
         y.whileTrue(new UpperScoring()
                 .alongWith(new ReturnIntake()));
         x.whileTrue(new MidScoring()
                 .alongWith(new ReturnIntake()));
+
         a.whileTrue(new ReturnArm());
         rb.onTrue(new InstantCommand(gripper::toggle));
 
@@ -108,7 +110,7 @@ public class RobotContainer {
         kBack.whileTrue(new ArmAxisControl(1, 0.02, 0));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
-                .ifPresent(swerveSubsystem::resetOdometry)));
+                .ifPresent(swerve::resetOdometry)));
         lb.whileTrue(new ProxyCommand(() ->
                 new AdjustToTargetSmart(gridChooser.getPosition())));
 
@@ -125,6 +127,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new MiddleConeHighCommunityEngageBlue();
+        return new MiddleConeHighCubeEngage();
     }
 }

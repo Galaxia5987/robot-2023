@@ -43,8 +43,8 @@ public class ArmConstants {
     public static final double END_POSITION_LOWER_Y_LIMIT = 0; //[cm]
     public static final double END_POSITION_UPPER_X_LIMIT = 0; //[cm]
     public static final double END_POSITION_LOWER_X_LIMIT = 0; //[cm]
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.41758438543961 - SHOULDER_ZERO_POSITION / 360.0;
-    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.569573389239335 - ELBOW_ZERO_POSITION / 360.0;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.418350085458752 - SHOULDER_ZERO_POSITION / 360.0;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.5701 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
     public static final double shoulderP = 0.02;
@@ -66,9 +66,9 @@ public class ArmConstants {
     public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.18, 0.92);
     //    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.6945, 0.475);
     public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.909, 0.64);
-    public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.25, 0.90);
-    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.155, 0.741);
-    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.777, 0.481);
+    public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.28, 0.90);
+    public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.195, 0.741);
+    public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.8, 0.481);
     public static final Translation2d OUT_ROBOT1 = new Translation2d(-0.392, 0.0);
     public static final Translation2d IN_ROBOT1 = new Translation2d(-0.32, 0.0101);
     public static final Translation2d IN_ROBOT2 = new Translation2d(-0.34, -0.13);

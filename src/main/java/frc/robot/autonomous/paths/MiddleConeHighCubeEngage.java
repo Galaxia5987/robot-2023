@@ -36,34 +36,11 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
                 new AutonUpperScoring(true).andThen(new InstantCommand(gripper::close)),
                 new DriveTillPitch(-10.5, 1)
                         .alongWith(new ReturnArm()),
+                new DriveTillPitch(10.5, 1),
+                new RunCommand(()-> swerveDrive.drive(new DriveSignal(
+                        1,0,0, new Translation2d(), true
+                )), swerveDrive).alongWith(new PickUpCube()).withTimeout(5)
 
-                new RunCommand(() -> swerveDrive.drive(
-                        new DriveSignal(
-                                1,
-                                0,
-                                0,
-                                new Translation2d(),
-                                true
-                        )
-                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(1),
-
-
-                new RunCommand(() -> swerveDrive.drive(new DriveSignal(
-                        1,
-                        0,
-                        0,
-                        new Translation2d(),
-                        true
-                )), swerveDrive).alongWith(new PickUpCube()).withTimeout(3),
-                new RunCommand(() -> swerveDrive.drive(
-                        new DriveSignal(
-                                -1,
-                                0,
-                                0,
-                                new Translation2d(),
-                                true
-                        )
-                ), swerveDrive).withTimeout(1.35)
 
 
         );

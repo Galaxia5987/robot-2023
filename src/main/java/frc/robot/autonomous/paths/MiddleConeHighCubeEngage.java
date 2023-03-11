@@ -39,10 +39,9 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
                 new DriveTillPitch(10.5, 1),
                 new RunCommand(()-> swerveDrive.drive(new DriveSignal(
                         1,0,0, new Translation2d(), true
-                )), swerveDrive).alongWith(new PickUpCube()).withTimeout(5)
-
-
-
+                )), swerveDrive).alongWith(new PickUpCube()).withTimeout(5).andThen(new RunCommand(()-> swerveDrive.drive(new DriveSignal(
+                        -1,0,0, new Translation2d(), true
+                )), swerveDrive).withTimeout(1.35))
         );
     }
 }

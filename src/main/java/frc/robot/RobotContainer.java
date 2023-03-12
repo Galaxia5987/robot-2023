@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
+import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
@@ -126,6 +127,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new MiddleConeHighCubeEngage();
+        return new RunAllBits();
     }
 }

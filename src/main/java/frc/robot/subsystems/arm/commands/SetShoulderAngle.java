@@ -22,7 +22,7 @@ public class SetShoulderAngle extends CommandBase {
     @Override
     public void initialize() {
         double startAngle = AngleUtil.normalize(arm.getShoulderJointAngle().getDegrees());
-        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(45, 90),
+        profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(180, 1080),
                 new TrapezoidProfile.State(angle, 0),
                 new TrapezoidProfile.State(startAngle, 0));
         timer.start();

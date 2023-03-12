@@ -36,21 +36,32 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
                 new InstantCommand(() -> swerveDrive.resetOdometry(
                         AllianceFlipUtil.apply(DriverStation.getAlliance(), trajectory.getInitialPose()))),
                 new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
+                new AutonUpperScoring(true).andThen(new InstantCommand(gripper::close)),
+                new DriveTillPitch(-10.5, 1)
+                        .alongWith(new ReturnArm()),
 
                 new Retract(false).withTimeout(0.35)
                         .andThen(new AutonUpperScoring(true)),
 
-                new InstantCommand(gripper::open),
 
-                new DriveTillPitch(10.5, 1)
-                        .alongWith(new ReturnArm()),
+                new RunCommand(() -> swerveDrive.drive(new DriveSignal(
+                        1,
+                        0,
+                        0,
+                        new Translation2d(),
+                        true
+                )), swerveDrive).alongWith(new PickUpCube()).withTimeout(3),
+                new RunCommand(() -> swerveDrive.drive(
+                        new DriveSignal(
+                                -1,
+                                0,
+                                0,
+                                new Translation2d(),
+                                true
+                        )
+                ), swerveDrive).withTimeout(1.35)
 
-                new RunCommand(()-> swerveDrive.drive(new DriveSignal(
-                        1.2,0,0, new Translation2d(), true)), swerveDrive)
-                        .alongWith(new PickUpCube())
-                        .withTimeout(2.2),
 
-                        new RunCommand(()-> swerveDrive.drive(new DriveSignal(
-                        -1.3,0,0, new Translation2d(), true)), swerveDrive).withTimeout(3));
+        );
     }
 }

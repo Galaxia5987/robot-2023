@@ -96,22 +96,21 @@ public class RobotContainer {
                 .alongWith(new ReturnIntake()));
 
         a.whileTrue(new ReturnArm());
-        rb.onTrue(new InstantCommand(gripper::toggle));
+        lb.onTrue(new InstantCommand(gripper::toggle));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
         xboxRightTrigger.whileTrue(new ReturnIntake()
-                        .andThen(new RunCommand(() -> intake.setAnglePower(0.08))))
-                .onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
+                        .andThen(new RunCommand(() -> intake.setAnglePower(0.08)))).onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
 
         start.onTrue(new InstantCommand(leds::toggle));
 
 
-        kBack.whileTrue(new ArmAxisControl(1, 0.02, 0));
+        rb.whileTrue(new ArmAxisControl(1, 0.02, 0));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerve::resetOdometry)));
-        lb.whileTrue(new ProxyCommand(() ->
+        rightJoystickTopBottom.whileTrue(new ProxyCommand(() ->
                 new AdjustToTargetSmart(gridChooser.getPosition())));
 
 

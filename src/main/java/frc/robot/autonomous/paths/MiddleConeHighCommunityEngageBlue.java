@@ -42,6 +42,7 @@ public class MiddleConeHighCommunityEngageBlue extends SequentialCommandGroup {
                 new Retract(false).withTimeout(0.35)
                         .andThen(new AutonUpperScoring(true)),
 
+
                 new InstantCommand(gripper::open),
 
                 new DriveTillPitch(10.5, 1)

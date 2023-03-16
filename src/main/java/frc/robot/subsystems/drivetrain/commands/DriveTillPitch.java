@@ -12,9 +12,9 @@ public class DriveTillPitch extends CommandBase {
     private final Gyroscope gyroscope = Gyroscope.getInstance();
 
     private final double desiredPitch;
-    private final int xVelocity;
+    private final double xVelocity;
 
-    public DriveTillPitch(double desiredPitch, int xVelocity) {
+    public DriveTillPitch(double desiredPitch, double xVelocity) {
         this.desiredPitch = desiredPitch;
         this.xVelocity = xVelocity;
         addRequirements(swerveDrive);
@@ -42,6 +42,6 @@ public class DriveTillPitch extends CommandBase {
         } else {
             return Utils.epsilonEquals(gyroscope.getPitch().getDegrees(), 0, 1);
         }
-        // Math.abs(gyroscope.getPitch().getDegrees()) >= Math.abs(desiredPitch); TODO: alternative for the first two if's above.
+//         return Math.abs(gyroscope.getPitch().getDegrees()) >= Math.abs(desiredPitch);
     }
 }

@@ -37,8 +37,5 @@ public class ArmAxisControl extends CommandBase {
         }
     }
 
-    @Override
-    public boolean isFinished() {
-        return gripper.getDistance() < ArmConstants.FEEDER_DISTANCE;
-    }
+
 }

@@ -27,7 +27,8 @@ public class ReturnArm extends SequentialCommandGroup {
                                         .raceWith(new RunCommand(() -> Intake.getInstance().setAnglePower(0.05))
                                                 .finallyDo((b) -> Intake.getInstance().setAnglePower(0)))
                         ),
-                        () -> (arm.getEndPosition().getY() < 0) && (arm.getShoulderJointAngle().getDegrees() > 90)
+                        () -> ((arm.getEndPosition().getY() < 0) && (arm.getShoulderJointAngle().getDegrees() > 90))
+                                || (arm.getShoulderJointAngle().getDegrees() < 90)
                 )
         );
     }

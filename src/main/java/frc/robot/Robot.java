@@ -80,6 +80,9 @@ public class Robot extends LoggedRobot {
         for (int i = 1; i <= 9; i++) {
             SmartDashboard.putBoolean("Grid Color #" + i, i % 3 == 2);
         }
+        for (int i = 0; i < 9; i++) {
+            SmartDashboard.putBoolean("Grid #" + (i + 1), false);
+        }
 
         for (SwerveModule module : SwerveDrive.getInstance().getModules()) {
             module.initializeOffset();

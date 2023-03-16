@@ -6,16 +6,16 @@ import frc.robot.subsystems.intake.IntakeConstants;
 
 public class Retract extends CommandBase {
     private final Intake intake = Intake.getInstance();
-    private final boolean state;
+    private final Mode mode;
 
-    public Retract(boolean state) {
-        this.state = state;
+    public Retract(Mode mode) {
+        this.mode = mode;
         addRequirements(intake);
     }
 
     @Override
     public void end(boolean interrupted) {
-        if (state) {
+        if (mode == Mode.UP) {
             intake.setAnglePower(0.08);
         } else {
             intake.setAnglePower(0);
@@ -24,7 +24,7 @@ public class Retract extends CommandBase {
 
     @Override
     public void execute() {
-        if (state) {
+        if (mode == Mode.UP) {
             intake.setAnglePower(IntakeConstants.ANGLE_MOTOR_POWER);
         } else {
             intake.setAnglePower(-IntakeConstants.ANGLE_MOTOR_POWER);
@@ -34,5 +34,10 @@ public class Retract extends CommandBase {
     @Override
     public boolean isFinished() {
         return intake.getCurrent() >= IntakeConstants.MAX_CURRENT;
+    }
+
+    public enum Mode {
+        UP,
+        DOWN
     }
 }

@@ -11,7 +11,7 @@ public class Feed extends ParallelCommandGroup {
         Intake intake = Intake.getInstance();
 
         addCommands(
-                new Retract(false),
+                new Retract(Retract.Mode.DOWN),
                 intake.run(outtake ? -IntakeConstants.INTAKE_POWER : IntakeConstants.INTAKE_POWER)
         );
     }

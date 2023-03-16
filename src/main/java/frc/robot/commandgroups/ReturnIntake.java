@@ -11,7 +11,7 @@ public class ReturnIntake extends SequentialCommandGroup {
         Intake intake = Intake.getInstance();
 
         addCommands(
-                new Retract(true),
+                new Retract(Retract.Mode.UP),
                 new InstantCommand(() -> intake.setPower(0))
         );
     }

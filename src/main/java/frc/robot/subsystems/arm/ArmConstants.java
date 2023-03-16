@@ -43,8 +43,8 @@ public class ArmConstants {
     public static final double END_POSITION_LOWER_Y_LIMIT = 0; //[cm]
     public static final double END_POSITION_UPPER_X_LIMIT = 0; //[cm]
     public static final double END_POSITION_LOWER_X_LIMIT = 0; //[cm]
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.418350085458752 - SHOULDER_ZERO_POSITION / 360.0;
-    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.5701 - ELBOW_ZERO_POSITION / 360.0;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.42044958551124 - SHOULDER_ZERO_POSITION / 360.0;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.571803664295092 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
     public static final double shoulderP = 0.02;
@@ -60,12 +60,12 @@ public class ArmConstants {
 
     //arm positions
     public static final Translation2d STARTING_POSITION = new Translation2d(-0.4, 0.06);
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.2, 0.75);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.2, 0.72);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
     //    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
-    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.18, 0.92);
+    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.1, 0.92);
     //    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.6945, 0.475);
-    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.909, 0.64);
+    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.879, 0.64);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.28, 0.90);
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.195, 0.741);
     public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.8, 0.481);
@@ -85,5 +85,5 @@ public class ArmConstants {
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT1 = new ArmLinearProfile.Waypoint(0, 0, 0, 0.5);
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT2 = new ArmLinearProfile.Waypoint(0, 0, 0, 0);
 
-    public static final double FEEDER_DISTANCE = 23;
+    public static final double FEEDER_DISTANCE = 24;
 }

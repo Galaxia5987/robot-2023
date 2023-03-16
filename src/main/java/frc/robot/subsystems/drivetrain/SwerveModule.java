@@ -38,12 +38,6 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         driveMotor.configFactoryDefault();
         angleMotor.configFactoryDefault();
 
-        driveMotor.enableVoltageCompensation(true);
-        driveMotor.configVoltageCompSaturation(10);
-
-        angleMotor.enableVoltageCompensation(true);
-        angleMotor.configVoltageCompSaturation(10);
-
         driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
         driveMotor.setInverted(driveInverted);
         driveMotor.setNeutralMode(NeutralMode.Brake);

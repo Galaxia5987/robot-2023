@@ -16,9 +16,9 @@ public class SwerveConstants {
     public static final double WHEEL_DIAMETER = 0.1023679821;
 
     public static final StatorCurrentLimitConfiguration STATOR_CURRENT_LIMIT_CONFIG = new StatorCurrentLimitConfiguration(
-            true, 40, 2, 0.02);
+            true, 50, 2, 0.02);
     public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG = new SupplyCurrentLimitConfiguration(
-            true, 40, 2, 0.02);
+            true, 50, 2, 0.02);
     public static final double NEUTRAL_DEADBAND = 0.1;
 
     // kP, kI, kD, kF, sCurveStrength, cruiseVelocity, acceleration, allowableError,
@@ -86,4 +86,7 @@ public class SwerveConstants {
     public static double CHARGING_STATION_BALANCE_Ki = 0;
     public static double CHARGING_STATION_BALANCE_Kd = 1;
     public static double CHARGING_STATION_BALANCE_Kf = 0;
+
+    public static double FORWARD_BALANCE_TIME = 1.2;
+    public static double BACKWARD_BALANCE_TIME = 1.2;
 }

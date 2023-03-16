@@ -6,10 +6,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
+import frc.robot.commandgroups.bits.CheckSwerve;
 import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
@@ -18,10 +21,13 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.GridChooser;
 import frc.robot.utils.Utils;
+
+import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
@@ -107,7 +113,8 @@ public class RobotContainer {
         start.onTrue(new InstantCommand(leds::toggle));
 
 
-        rb.whileTrue(new ArmAxisControl(1, 0.02, 0));
+        rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
+                .until(()->gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerve::resetOdometry)));
@@ -116,7 +123,9 @@ public class RobotContainer {
 
 
         leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
-        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
+//        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
+        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02,0));
+        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02,0));
 
     }
 
@@ -127,6 +136,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new RunAllBits();
+        return new SafetyAuto();
     }
 }

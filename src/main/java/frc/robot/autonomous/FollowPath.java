@@ -313,7 +313,7 @@ public class FollowPath extends CommandBase {
                 new PIDController(SwerveConstants.AUTO_Y_Kp, SwerveConstants.AUTO_Y_Ki, SwerveConstants.AUTO_Y_Kd),
                 new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
                 swerveDrive::setStates,
-                true,
+                false,
                 swerveDrive
         );
     }

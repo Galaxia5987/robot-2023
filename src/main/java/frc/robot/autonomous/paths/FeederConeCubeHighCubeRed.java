@@ -3,6 +3,7 @@ package frc.robot.autonomous.paths;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
@@ -17,6 +18,8 @@ import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.PurpleLed;
 
+import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
+
 public class LeftConeCubeHighCubeRed extends SequentialCommandGroup {
     public LeftConeCubeHighCubeRed() {
         Gyroscope gyroscope = Gyroscope.getInstance();
@@ -26,29 +29,34 @@ public class LeftConeCubeHighCubeRed extends SequentialCommandGroup {
 
         addCommands(
                 new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
-                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
+                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
 
                 new InstantCommand(gripper::close, gripper).withTimeout(1),
 
-                new Retract(false).withTimeout(0.35)
+                new Retract(DOWN).withTimeout(0.35)
                         .andThen(new AutonUpperScoring(true)),
 
                 new InstantCommand(gripper::open, gripper),
 
+                new ReturnArm().withTimeout(1),
+
                 new PurpleLed(),
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh red 1").alongWith(
-                        new PickUpCube().withTimeout(3.7)),
+                FollowPath.loadTrajectory("LeftConeCubeHigh red 1")
+                        .alongWith(new PickUpCube().withTimeout(3.7)),
 
                 FollowPath.loadTrajectory("LeftConeCubeHigh red 2")
                         .alongWith(new ReturnIntake()
-                                .andThen(new InstantCommand(gripper::close, gripper))
+                                        .andThen(new InstantCommand(gripper::close, gripper))
                                 .andThen(new ReturnArm()
                                         .withTimeout(1))),
 
                 new AutonUpperScoring(false),
+
                 new InstantCommand(gripper::open, gripper),
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh red 3").alongWith(new PickUpCube().withTimeout(5)));
+                FollowPath.loadTrajectory("LeftConeCubeHigh red 3")
+                                        .alongWith(new PickUpCube().withTimeout(5))
+        );
     }
 }

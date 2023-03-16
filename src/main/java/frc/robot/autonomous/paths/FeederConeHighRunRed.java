@@ -3,8 +3,10 @@ package frc.robot.autonomous.paths;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.commandgroups.UpperScoring;
@@ -22,13 +24,12 @@ public class LeftConeHighRunRed extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftRun red1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
-                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
                 new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
+                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
 
-                new InstantCommand(gripper::close, gripper).withTimeout(1),
-                new YellowLed(),
-                new UpperScoring().withTimeout(4),
-                new InstantCommand(gripper::open, gripper).withTimeout(1),
+                new InstantCommand(gripper::close, gripper),
+                new AutonUpperScoring(true),
+                new InstantCommand(gripper::open, gripper),
                 new ReturnArm().withTimeout(3),
                 FollowPath.loadTrajectory("LeftRun red1")
         );

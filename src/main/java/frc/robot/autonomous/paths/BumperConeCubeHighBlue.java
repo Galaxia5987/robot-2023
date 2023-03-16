@@ -3,6 +3,7 @@ package frc.robot.autonomous.paths;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -37,11 +38,10 @@ public class RightConeCubeHighBlue extends SequentialCommandGroup {
 
 
         addCommands(
-                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
-                new InstantCommand(() -> swerveDrive.resetOdometry(
-                        AllianceFlipUtil.apply(DriverStation.getAlliance(), trajectory.getInitialPose()))),
+                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
+                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
 
-                new InstantCommand(gripper::close, gripper).withTimeout(1),
+                new InstantCommand(gripper::close, gripper),
 
                 new AutonUpperScoring(true),
 

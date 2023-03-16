@@ -9,12 +9,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.ReturnArm;
-import frc.robot.commandgroups.UpperScoring;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.subsystems.leds.YellowLed;
 
 /**
  * This class contains all the parts of the path LeftConeHighRun.
@@ -22,8 +20,8 @@ import frc.robot.subsystems.leds.YellowLed;
  * In this path the robot places a cone in the grid that is closest to the feeder
  * and goes to park in the opposite alliance's loading zone.
  */
-public class LeftConeHighRunBlue extends SequentialCommandGroup {
-    public LeftConeHighRunBlue() {
+public class FeederConeHighRunBlue extends SequentialCommandGroup {
+    public FeederConeHighRunBlue() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();

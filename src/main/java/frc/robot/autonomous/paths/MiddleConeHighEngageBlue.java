@@ -3,6 +3,7 @@ package frc.robot.autonomous.paths;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,6 +18,7 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.utils.AllianceFlipUtil;
 
 /**
@@ -34,27 +36,26 @@ public class MiddleConeHighEngageBlue extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage blue", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
-                new InstantCommand(() -> swerveDrive.resetOdometry(
-                        AllianceFlipUtil.apply(DriverStation.getAlliance(), trajectory.getInitialPose()))),
-                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialHolonomicPose().getRotation())),
                 new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
+                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
 
-                new AutonUpperScoring(true),
+                new Retract(Retract.Mode.DOWN).withTimeout(0.35).andThen(
+                        new AutonUpperScoring(true)),
 
                 new InstantCommand(gripper::open),
 
-                new DriveTillPitch(-10.5, 1)
-                        .alongWith(new ReturnArm()),
+                new DriveTillPitch(-10.5, 1.5)
+                        .alongWith(new ReturnArm().withTimeout(1)),
 
                 new RunCommand(() -> swerveDrive.drive(
                         new DriveSignal(
-                                1,
+                                1.5,
                                 0,
                                 0,
                                 new Translation2d(),
                                 true
                         )
-                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(1.65),
+                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(SwerveConstants.FORWARD_BALANCE_TIME),
 
                 new RunCommand(swerveDrive::lock)
         );

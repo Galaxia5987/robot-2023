@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
-import frc.robot.commandgroups.GetArmIntoRobot;
 import frc.robot.commandgroups.PickUpCube;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.commandgroups.ReturnIntake;
@@ -27,8 +26,8 @@ import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
  * In this path the robot places a cone in the grid that is closest to the feeder,
  * goes to take a cube (the one closest to the feeder) and returns to place it.
  */
-public class LeftConeCubeHighCubeBlue extends SequentialCommandGroup {
-    public LeftConeCubeHighCubeBlue() {
+public class FeederConeCubeHighCubeBlue extends SequentialCommandGroup {
+    public FeederConeCubeHighCubeBlue() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();

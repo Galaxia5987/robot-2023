@@ -20,8 +20,8 @@ import frc.robot.subsystems.leds.PurpleLed;
 
 import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
-public class LeftConeCubeHighCubeRed extends SequentialCommandGroup {
-    public LeftConeCubeHighCubeRed() {
+public class FeederConeCubeHighCubeRed extends SequentialCommandGroup {
+    public FeederConeCubeHighCubeRed() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
@@ -53,10 +53,10 @@ public class LeftConeCubeHighCubeRed extends SequentialCommandGroup {
 
                 new AutonUpperScoring(false),
 
-                new InstantCommand(gripper::open, gripper),
+                new InstantCommand(gripper::open, gripper)
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh red 3")
-                                        .alongWith(new PickUpCube().withTimeout(5))
+//                FollowPath.loadTrajectory("LeftConeCubeHigh red 3")
+//                                        .alongWith(new PickUpCube().withTimeout(5))
         );
     }
 }

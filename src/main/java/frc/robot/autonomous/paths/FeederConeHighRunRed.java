@@ -9,15 +9,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.commandgroups.ReturnArm;
-import frc.robot.commandgroups.UpperScoring;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.subsystems.leds.YellowLed;
 
-public class LeftConeHighRunRed extends SequentialCommandGroup {
-    public LeftConeHighRunRed() {
+public class FeederConeHighRunRed extends SequentialCommandGroup {
+    public FeederConeHighRunRed() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();

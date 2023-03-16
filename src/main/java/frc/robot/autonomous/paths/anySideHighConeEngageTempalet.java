@@ -3,6 +3,7 @@ package frc.robot.autonomous.paths;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
@@ -25,7 +26,7 @@ public class anySideHighConeEngageTempalet extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
         addCommands(
                 new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
-                new InstantCommand(() -> gyroscope.resetYaw(trajectory.getInitialPose().getRotation())),
+                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
                 new InstantCommand(gripper::close)
                         .andThen(new AutonUpperScoring(true)),
                 FollowPath.loadTrajectory("add path")

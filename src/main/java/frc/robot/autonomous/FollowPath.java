@@ -260,49 +260,6 @@ public class FollowPath extends CommandBase {
         FollowPath.logError = logError;
     }
 
-//    public static Command generatePathToAprilTag(SwerveDrive swerveDrive, Limelight limelight, Gyroscope gyroscope, GridChooser.Position position) {
-//        PathPlannerTrajectory trajectory;
-//        var aprilTag = limelight.getAprilTagTarget();
-//        var botPose = limelight.getBotPoseFieldOriented();
-//        var currVelocity = AllianceFlipUtil.apply(DriverStation.getAlliance(), swerveDrive.getSpeeds());
-//
-//        if (aprilTag.isPresent() && botPose.isPresent()) {
-//            log.relativePose = Utils.pose2dToArray(relativePose);
-//            log.aprilTag = Utils.pose2dToArray(aprilTag.get());
-//            log.botPose = Utils.pose2dToArray(botPose.get());
-
-//            var pStart = new PathPoint(
-//                    botPose.get().getTranslation(),
-//                    new Rotation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond),
-//                    botPose.get().getRotation(),
-//                    Math.hypot(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond));
-//            var pEnd = new PathPoint(
-//                    aprilTag.get().getTranslation(),
-//                    aprilTag.get().getRotation(),
-//                    aprilTag.get().getRotation(),
-//                    0);
-//
-//            trajectory = PathPlanner.generatePath(new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO), false,
-//                    pStart, pEnd);
-//            trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.getAlliance());
-//
-//            return new InstantCommand(() -> {
-//                swerveDrive.resetOdometry(botPose.get());
-//                gyroscope.resetYaw(botPose.get().getRotation());
-//            }).andThen(new FollowPath(
-//                    trajectory,
-//                    swerveDrive::getPose,
-//                    swerveDrive.getKinematics(),
-//                    new PIDController(SwerveConstants.AUTO_X_Kp, SwerveConstants.AUTO_X_Ki, SwerveConstants.AUTO_X_Kd),
-//                    new PIDController(SwerveConstants.AUTO_Y_Kp, SwerveConstants.AUTO_Y_Ki, SwerveConstants.AUTO_Y_Kd),
-//                    new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-//                    swerveDrive::setStates,
-//                    swerveDrive
-//            ));
-//        }
-//        return new RunCommand(() -> {});
-//    }
-
     public static FollowPath loadTrajectory(String path) {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         return new FollowPath(

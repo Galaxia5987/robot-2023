@@ -18,7 +18,6 @@ public class ArmAxisControl extends CommandBase {
         this.Xvalue = Xvalue;
         this.Yvalue = Yvalue;
         this.multiplier = multiplier;
-        System.out.println(position.getX() + " " + position.getY());
         addRequirements(arm);
     }
 
@@ -33,7 +32,7 @@ public class ArmAxisControl extends CommandBase {
 
         if (!passedMaximum) {
             position = position.plus(new Translation2d(Xvalue * multiplier, Yvalue * multiplier));
-            arm.setEndPosition(position, 0.0, -0.3);
+            arm.setEndPosition(position, 0.0, -0.6);
         }
     }
 

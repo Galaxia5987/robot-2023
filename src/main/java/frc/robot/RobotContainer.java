@@ -98,24 +98,23 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
-        b.whileTrue(new FeederPosition()
+        b.whileTrue(new FeederPosition());
         y.whileTrue(new UpperScoring());
-        y.whileTrue(new UpperScoring()
-        x.whileTrue(new MidScoring()
+        y.whileTrue(new UpperScoring());
+        x.whileTrue(new MidScoring());
 
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
 
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
-        xboxRightTrigger.whileTrue(new ReturnIntake()
-                        .andThen(new RunCommand(() -> intake.setAnglePower(0.08)))).onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
+        xboxRightTrigger.whileTrue(new ReturnIntake());
 
         start.onTrue(new InstantCommand(leds::toggle));
 
 
         rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
-                .until(()->gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
+                .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerve::resetOdometry)));
@@ -125,8 +124,8 @@ public class RobotContainer {
 
         leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
 //        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
-        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02,0));
-        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02,0));
+        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0));
+        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0));
 
     }
 

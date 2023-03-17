@@ -31,12 +31,8 @@ public class FeederConeCubeHighCubeBlue extends SequentialCommandGroup {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftConeCubeHigh blue 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
-                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
-                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
-
                 new InstantCommand(gripper::close, gripper).withTimeout(1),
 
                 new Retract(DOWN).withTimeout(0.35)
@@ -48,7 +44,8 @@ public class FeederConeCubeHighCubeBlue extends SequentialCommandGroup {
 
                 new PurpleLed(),
 
-                FollowPath.loadTrajectory("LeftConeCubeHigh blue 1").alongWith(
+                FollowPath.loadTrajectory("LeftConeCubeHigh blue 1",
+                        FollowPath.resetCommand(swerveDrive, gyroscope)).alongWith(
                         new PickUpCube().withTimeout(3.8)
                 ),
 

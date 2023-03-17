@@ -40,19 +40,18 @@ public class RobotContainer {
     private final Intake intake = Intake.getInstance();
     private final Gripper gripper = Gripper.getInstance();
     private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
-    private final XboxController operatorController = new XboxController(3);
-    private final XboxController driverController = new XboxController(0);
+    private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
-    private final JoystickButton a = new JoystickButton(operatorController, XboxController.Button.kA.value);
-    private final JoystickButton b = new JoystickButton(operatorController, XboxController.Button.kB.value);
-    private final JoystickButton y = new JoystickButton(operatorController, XboxController.Button.kY.value);
-    private final JoystickButton x = new JoystickButton(operatorController, XboxController.Button.kX.value);
-    private final JoystickButton kBack = new JoystickButton(operatorController, XboxController.Button.kBack.value);
-    private final JoystickButton rb = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
-    private final JoystickButton lb = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
-    private final Trigger xboxRightTrigger = new Trigger(() -> operatorController.getRightTriggerAxis() > 0.2);
-    private final Trigger xboxLeftTrigger = new Trigger(() -> operatorController.getLeftTriggerAxis() > 0.2);
+    private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
+    private final JoystickButton b = new JoystickButton(xboxController, XboxController.Button.kB.value);
+    private final JoystickButton y = new JoystickButton(xboxController, XboxController.Button.kY.value);
+    private final JoystickButton x = new JoystickButton(xboxController, XboxController.Button.kX.value);
+    private final JoystickButton kBack = new JoystickButton(xboxController, XboxController.Button.kBack.value);
+    private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
+    private final JoystickButton lb = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
+    private final Trigger xboxRightTrigger = new Trigger(() -> xboxController.getRightTriggerAxis() > 0.2);
+    private final Trigger xboxLeftTrigger = new Trigger(() -> xboxController.getLeftTriggerAxis() > 0.2);
     private final JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TRIGGER);
     private final JoystickButton leftJoystickTopBottom = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
     private final JoystickButton leftJoystickTopRight = new JoystickButton(leftJoystick, Ports.UI.JOYSTICK_TOP_RIGHT_BUTTON);
@@ -61,13 +60,13 @@ public class RobotContainer {
     private final JoystickButton rightJoystickTopBottom = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_BOTTOM_BUTTON);
     private final JoystickButton rightJoystickTopRight = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_RIGHT_BUTTON);
     private final JoystickButton rightJoystickTopLeft = new JoystickButton(rightJoystick, Ports.UI.JOYSTICK_TOP_LEFT_BUTTON);
-    private final Trigger leftPOV = new Trigger(() -> operatorController.getPOV() == 270);
-    private final Trigger rightPOV = new Trigger(() -> operatorController.getPOV() == 90);
-    private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(operatorController.getPOV(), 0));
-    private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(operatorController.getPOV(), 180));
-    private final JoystickButton start = new JoystickButton(operatorController, XboxController.Button.kStart.value);
+    private final Trigger leftPOV = new Trigger(() -> xboxController.getPOV() == 270);
+    private final Trigger rightPOV = new Trigger(() -> xboxController.getPOV() == 90);
+    private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0));
+    private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180));
+    private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
     public final GridChooser gridChooser = new GridChooser();
-    private final Trigger povUpdated = new Trigger(() -> operatorController.getPOV() >= 0);
+    private final Trigger povUpdated = new Trigger(() -> xboxController.getPOV() >= 0);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -89,17 +88,18 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(
-                new XboxDrive(swerve, driverController)
+                new JoystickDrive(leftJoystick, rightJoystick)
         );
-        arm.setDefaultCommand(new ArmXboxControl(operatorController));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
     }
 
     private void configureButtonBindings() {
-        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
-        b.whileTrue(new FeederPosition());
+        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        b.whileTrue(new FeederPosition()
         y.whileTrue(new UpperScoring());
-        x.whileTrue(new MidScoring());
+        y.whileTrue(new UpperScoring()
+        x.whileTrue(new MidScoring()
 
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
@@ -107,13 +107,13 @@ public class RobotContainer {
         xboxLeftTrigger.whileTrue(new PickUpCube())
                 .onFalse(new ReturnIntake());
         xboxRightTrigger.whileTrue(new ReturnIntake()
-                .andThen(new RunCommand(() -> intake.setAnglePower(0.08)))).onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
+                        .andThen(new RunCommand(() -> intake.setAnglePower(0.08)))).onFalse(new InstantCommand(() -> intake.setAnglePower(0)));
 
         start.onTrue(new InstantCommand(leds::toggle));
 
 
-//        rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
-//                .until(()->gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
+        rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
+                .until(()->gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
         leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
                 .getBotPoseFieldOriented()
                 .ifPresent(swerve::resetOdometry)));
@@ -122,9 +122,9 @@ public class RobotContainer {
 
 
         leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
-//        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(operatorController.getPOV())));
-        upPOV.whileTrue(new ArmAxisControl(0.7, 0.02, 0)
-                .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
+//        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
+        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02,0));
+        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02,0));
 
     }
 

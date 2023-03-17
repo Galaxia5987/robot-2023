@@ -12,9 +12,7 @@ public class ResetAuto extends SequentialCommandGroup {
         Gripper gripper = Gripper.getInstance();
 
         addCommands(
-                new Retract(Retract.Mode.UP),
-                new InstantCommand(gripper::close, gripper),
-                new WaitCommand(0.02)
+                new InstantCommand(gripper::close, gripper)
         );
     }
 }

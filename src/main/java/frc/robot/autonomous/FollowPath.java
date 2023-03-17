@@ -1,16 +1,13 @@
 package frc.robot.autonomous;
 
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -21,14 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.AdjustToTargetDumb;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.subsystems.vision.Limelight;
-import frc.robot.utils.AllianceFlipUtil;
-import frc.robot.utils.GridChooser;
 
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -42,14 +37,13 @@ public class FollowPath extends CommandBase {
     private static BiConsumer<Translation2d, Rotation2d> logError =
             FollowPath::defaultLogError;
     private final Timer timer = new Timer();
-    private final PathPlannerTrajectory trajectory;
+    private final Supplier<PathPlannerTrajectory> trajectory;
     private final Supplier<Pose2d> poseSupplier;
     private final SwerveDriveKinematics kinematics;
     private final PPHolonomicDriveController controller;
     private final Consumer<SwerveModuleState[]> outputModuleStates;
     private final Consumer<ChassisSpeeds> outputChassisSpeeds;
     private final boolean useKinematics;
-    private final boolean useAllianceColor;
     private PathPlannerTrajectory transformedTrajectory;
 
     /**
@@ -68,20 +62,16 @@ public class FollowPath extends CommandBase {
      * @param yController        The Trajectory Tracker PID controller for the robot's y position.
      * @param rotationController The Trajectory Tracker PID controller for angle for the robot.
      * @param outputModuleStates The raw output module states from the position controllers.
-     * @param useAllianceColor   Should the path states be automatically transformed based on alliance
-     *                           color? In order for this to work properly, you MUST create your path on the blue side of
-     *                           the field.
      * @param requirements       The subsystems to require.
      */
     public FollowPath(
-            PathPlannerTrajectory trajectory,
+            Supplier<PathPlannerTrajectory> trajectory,
             Supplier<Pose2d> poseSupplier,
             SwerveDriveKinematics kinematics,
             PIDController xController,
             PIDController yController,
             PIDController rotationController,
             Consumer<SwerveModuleState[]> outputModuleStates,
-            boolean useAllianceColor,
             Subsystem... requirements) {
         this.trajectory = trajectory;
         this.poseSupplier = poseSupplier;
@@ -91,17 +81,8 @@ public class FollowPath extends CommandBase {
         this.outputModuleStates = outputModuleStates;
         this.outputChassisSpeeds = null;
         this.useKinematics = true;
-        this.useAllianceColor = useAllianceColor;
 
         addRequirements(requirements);
-
-        if (useAllianceColor && trajectory.fromGUI && trajectory.getInitialPose().getX() > 8.27) {
-            DriverStation.reportWarning(
-                    "You have constructed a path following command that will automatically transform path states depending"
-                            + " on the alliance color, however, it appears this path was created on the red side of the field"
-                            + " instead of the blue side. This is likely an error.",
-                    false);
-        }
     }
 
     private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
@@ -135,30 +116,53 @@ public class FollowPath extends CommandBase {
         FollowPath.logError = logError;
     }
 
-    public static FollowPath loadTrajectory(String path) {
+    public static Command loadTrajectory(String path, Function<PathPlannerTrajectory, Command> resetCommand) {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
-        return new FollowPath(
+        final Supplier<PathPlannerTrajectory> pathSupplier = () -> PathPlannerTrajectory.transformTrajectoryForAlliance(
                 PathPlanner.loadPath(path, SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO),
+                DriverStation.getAlliance()
+        );
+        return new ProxyCommand(() -> resetCommand.apply(pathSupplier.get())).andThen(new FollowPath(
+                pathSupplier,
                 swerveDrive::getPose,
                 swerveDrive.getKinematics(),
                 new PIDController(SwerveConstants.AUTO_X_Kp, SwerveConstants.AUTO_X_Ki, SwerveConstants.AUTO_X_Kd),
                 new PIDController(SwerveConstants.AUTO_Y_Kp, SwerveConstants.AUTO_Y_Ki, SwerveConstants.AUTO_Y_Kd),
                 new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
                 swerveDrive::setStates,
-                false,
+                swerveDrive
+        ));
+    }
+
+    public static Command loadTrajectory(String path) {
+        SwerveDrive swerveDrive = SwerveDrive.getInstance();
+        final Supplier<PathPlannerTrajectory> pathSupplier = () -> PathPlannerTrajectory.transformTrajectoryForAlliance(
+                PathPlanner.loadPath(path, SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO),
+                DriverStation.getAlliance()
+        );
+        return new FollowPath(
+                pathSupplier,
+                swerveDrive::getPose,
+                swerveDrive.getKinematics(),
+                new PIDController(SwerveConstants.AUTO_X_Kp, SwerveConstants.AUTO_X_Ki, SwerveConstants.AUTO_X_Kd),
+                new PIDController(SwerveConstants.AUTO_Y_Kp, SwerveConstants.AUTO_Y_Ki, SwerveConstants.AUTO_Y_Kd),
+                new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
+                swerveDrive::setStates,
                 swerveDrive
         );
     }
 
+    public static Function<PathPlannerTrajectory, Command> resetCommand(SwerveDrive swerveDrive, Gyroscope gyroscope) {
+        return (p) ->
+                new InstantCommand(() -> {
+                    swerveDrive.resetOdometry(p.getInitialPose());
+                    gyroscope.resetYaw(p.getInitialHolonomicPose().getRotation());
+                });
+    }
+
     @Override
     public void initialize() {
-        if (useAllianceColor && trajectory.fromGUI) {
-            transformedTrajectory =
-                    PathPlannerTrajectory.transformTrajectoryForAlliance(
-                            trajectory, DriverStation.getAlliance());
-        } else {
-            transformedTrajectory = trajectory;
-        }
+        transformedTrajectory = trajectory.get();
 
         if (logActiveTrajectory != null) {
             logActiveTrajectory.accept(transformedTrajectory);
@@ -174,7 +178,6 @@ public class FollowPath extends CommandBase {
     public void execute() {
         double currentTime = this.timer.get();
         PathPlannerState desiredState = (PathPlannerState) transformedTrajectory.sample(currentTime);
-//        log.desiredState = Utils.pose2dToArray(desiredState.poseMeters);
 
         Pose2d currentPose = this.poseSupplier.get();
 
@@ -210,8 +213,6 @@ public class FollowPath extends CommandBase {
         if (logSetpoint != null) {
             logSetpoint.accept(targetChassisSpeeds);
         }
-
-//        Logger.getInstance().processInputs("FollowPath", log);
     }
 
     @Override

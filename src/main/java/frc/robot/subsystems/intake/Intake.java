@@ -99,8 +99,10 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         angleMotor.set(ControlMode.Position, unitModel.toTicks(angle));
     }
 
-    public void resetEncoder() {
-        angleMotor.setSelectedSensorPosition(0);
+    public void resetEncoder(double angle) {
+        angleMotor.setSelectedSensorPosition(
+                unitModel.toTicks(angle)
+        );
     }
 
     public double getCurrent() {

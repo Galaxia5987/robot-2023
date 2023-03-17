@@ -29,33 +29,7 @@ public class FeederConeCubeHighCube extends SequentialCommandGroup {
         Gripper gripper = Gripper.getInstance();
 
         addCommands(
-                new ResetAuto(),
-
-                new Retract(DOWN).withTimeout(0.35)
-                        .andThen(new AutonUpperScoring(true)),
-
-                new InstantCommand(gripper::open, gripper),
-
-                new ReturnArm().withTimeout(0.75),
-
-                new PurpleLed(),
-
-                FollowPath.loadTrajectory("FeederConeCubeHigh 1",
-                        FollowPath.resetCommand(swerveDrive, gyroscope)).alongWith(
-                        new PickUpCube().withTimeout(3.8)
-                ),
-
-                FollowPath.loadTrajectory("FeederConeCubeHigh 2")
-                        .alongWith(
-                                new ReturnIntake()
-                                        .andThen(new InstantCommand(gripper::close, gripper))
-                                        .andThen(new ReturnArm().withTimeout(0.65))
-                        ),
-
-                new AutonUpperScoring(false),
-                new InstantCommand(gripper::open, gripper),
-
-                new ReturnArm().withTimeout(0.65),
+                new FeederConeCubeHigh(),
 
                 FollowPath.loadTrajectory("FeederConeCubeHigh 3").alongWith(new PickUpCube().withTimeout(5))
         );

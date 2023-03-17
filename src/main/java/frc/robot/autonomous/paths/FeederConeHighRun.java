@@ -20,22 +20,20 @@ import frc.robot.subsystems.gyroscope.Gyroscope;
  * In this path the robot places a cone in the grid that is closest to the feeder
  * and goes to park in the opposite alliance's loading zone.
  */
-public class FeederConeHighRunBlue extends SequentialCommandGroup {
-    public FeederConeHighRunBlue() {
+public class FeederConeHighRun extends SequentialCommandGroup {
+    public FeederConeHighRun() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("LeftRun blue1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("FeederRun 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
-                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
-                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
-
                 new InstantCommand(gripper::close, gripper),
                 new AutonUpperScoring(true),
                 new InstantCommand(gripper::open, gripper),
                 new ReturnArm().withTimeout(3),
-                FollowPath.loadTrajectory("LeftRun blue1")
+                FollowPath.loadTrajectory("FeederRun 1",
+                        FollowPath.resetCommand(swerveDrive, gyroscope))
         );
     }
 }

@@ -17,20 +17,21 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.leds.PurpleLed;
 
-public class BumperConeCubeHighRed extends SequentialCommandGroup {
-    public BumperConeCubeHighRed() {
+/**
+ * This class contains all the parts to the path RightConeCubeHigh.
+ * <p>
+ * In this path the robot places a cone in the grid that is the furthest away from the feeder,
+ * goes to pick up a cube (the one furthest from the feeder)
+ * and returns to place it in the same grid.
+ */
+public class BumperConeCubeHigh extends SequentialCommandGroup {
+
+    public BumperConeCubeHigh() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("RightConeCubeHigh red 1",
-                new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO,
-                        SwerveConstants.MAX_ACCELERATION_AUTO));
-
 
         addCommands(
-                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
-                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
-
                 new InstantCommand(gripper::close, gripper),
 
                 new AutonUpperScoring(true),
@@ -41,11 +42,12 @@ public class BumperConeCubeHighRed extends SequentialCommandGroup {
 
                 new PurpleLed(),
 
-                FollowPath.loadTrajectory("RightConeCubeHigh red 1")
+                FollowPath.loadTrajectory("BumperConeCubeHigh 1",
+                                FollowPath.resetCommand(swerveDrive, gyroscope))
                         .alongWith(
                                 new PickUpCube().withTimeout(4.5)),
 
-                FollowPath.loadTrajectory("RightConeCubeHigh red 2")
+                FollowPath.loadTrajectory("BumperConeCubeHigh 2")
                         .alongWith(new ReturnIntake()
                                 .andThen(new InstantCommand(gripper::close, gripper))
                                 .andThen(new ReturnArm().withTimeout(1))),

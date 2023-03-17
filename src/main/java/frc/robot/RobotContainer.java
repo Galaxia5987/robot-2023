@@ -6,11 +6,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
-import frc.robot.commandgroups.bits.CheckSwerve;
-import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmAxisControl;
@@ -21,15 +18,11 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.commands.HoldIntakeInPlace;
-import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.GridChooser;
 import frc.robot.utils.Utils;
-
-import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
@@ -136,6 +129,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new FeederConeCubeHighCubeBlue();
+        return new FeederConeCubeHighCube();
     }
 }

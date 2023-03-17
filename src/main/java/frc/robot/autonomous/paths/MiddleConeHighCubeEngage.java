@@ -33,12 +33,11 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
-        PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighCubeEngage blue 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighCubeEngage 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
 
         addCommands(
-                new InstantCommand(() -> swerveDrive.resetOdometry(trajectory.getInitialPose())),
-                new InstantCommand(() -> gyroscope.resetYaw(new Rotation2d())),
+                FollowPath.resetCommand(swerveDrive, gyroscope).apply(trajectory),
 
                 new InstantCommand(gripper::close),
 

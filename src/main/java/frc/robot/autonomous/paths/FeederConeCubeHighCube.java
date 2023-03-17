@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
+import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.PickUpCube;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.commandgroups.ReturnIntake;
@@ -28,14 +29,14 @@ public class FeederConeCubeHighCube extends SequentialCommandGroup {
         Gripper gripper = Gripper.getInstance();
 
         addCommands(
-                new InstantCommand(gripper::close, gripper).withTimeout(1),
+                new ResetAuto(),
 
                 new Retract(DOWN).withTimeout(0.35)
                         .andThen(new AutonUpperScoring(true)),
 
                 new InstantCommand(gripper::open, gripper),
 
-                new ReturnArm().withTimeout(1),
+                new ReturnArm().withTimeout(0.75),
 
                 new PurpleLed(),
 
@@ -48,15 +49,15 @@ public class FeederConeCubeHighCube extends SequentialCommandGroup {
                         .alongWith(
                                 new ReturnIntake()
                                         .andThen(new InstantCommand(gripper::close, gripper))
-                                        .andThen(new ReturnArm().withTimeout(1))
+                                        .andThen(new ReturnArm().withTimeout(0.75))
                         ),
 
                 new AutonUpperScoring(false),
                 new InstantCommand(gripper::open, gripper),
 
-                new ReturnArm().withTimeout(1.5)
+                new ReturnArm().withTimeout(0.75),
 
-//                FollowPath.loadTrajectory("FeederConeCubeHigh 3").alongWith(new PickUpCube().withTimeout(5))
+                FollowPath.loadTrajectory("FeederConeCubeHigh 3").alongWith(new PickUpCube().withTimeout(5))
         );
     }
 }

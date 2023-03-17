@@ -91,16 +91,15 @@ public class RobotContainer {
                 new JoystickDrive(leftJoystick, rightJoystick)
         );
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
+        intake.setDefaultCommand(new HoldIntakeInPlace());
     }
 
     private void configureButtonBindings() {
         rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
         b.whileTrue(new FeederPosition()
-                .alongWith(new ReturnIntake()));
+        y.whileTrue(new UpperScoring());
         y.whileTrue(new UpperScoring()
-                .alongWith(new ReturnIntake()));
         x.whileTrue(new MidScoring()
-                .alongWith(new ReturnIntake()));
 
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));

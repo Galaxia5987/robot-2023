@@ -15,11 +15,7 @@ public class Retract extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        if (mode == Mode.UP) {
-            intake.setAnglePower(0.08);
-        } else {
-            intake.setAnglePower(0);
-        }
+        intake.setAnglePower(0);
     }
 
     @Override

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
+import frc.robot.subsystems.intake.commands.HoldIntakeInPlace;
 import frc.robot.utils.units.UnitModel;
 
 public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
@@ -19,8 +20,14 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
     private final TalonFX angleMotor = new TalonFX(Ports.Intake.ANGLE_MOTOR);
     private final UnitModel unitModel = new UnitModel(IntakeConstants.TICKS_PER_DEGREE);
 
+    private Command lastCommand = null;
+    private boolean switchedToDefaultCommand = false;
+
     private Intake() {
         super(new IntakeLoggedInputs());
+        angleMotor.configFactoryDefault();
+        motor.restoreFactoryDefaults();
+
         motor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         motor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         motor.setInverted(Ports.Intake.POWER_INVERTED);
@@ -33,6 +40,10 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         angleMotor.enableVoltageCompensation(true);
         angleMotor.configVoltageCompSaturation(Constants.NOMINAL_VOLTAGE);
         angleMotor.setInverted(Ports.Intake.ANGLE_INVERTED);
+        angleMotor.config_kP(0, IntakeConstants.kP);
+        angleMotor.config_kI(0, IntakeConstants.kI);
+        angleMotor.config_kD(0, IntakeConstants.kD);
+        angleMotor.config_kF(0, IntakeConstants.kF);
     }
 
     /**
@@ -98,6 +109,18 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
 
     public Command run(double power) {
         return new RunCommand(() -> this.setPower(power));
+    }
+
+    @Override
+    public void periodic() {
+        var currentCommand = getCurrentCommand();
+        switchedToDefaultCommand = (currentCommand instanceof HoldIntakeInPlace) &&
+                !(lastCommand instanceof HoldIntakeInPlace);
+        lastCommand = currentCommand;
+    }
+
+    public boolean switchedToDefaultCommand() {
+        return switchedToDefaultCommand;
     }
 
     /**

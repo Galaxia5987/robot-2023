@@ -85,5 +85,5 @@ public class ArmConstants {
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT1 = new ArmLinearProfile.Waypoint(0, 0, 0, 0.5);
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT2 = new ArmLinearProfile.Waypoint(0, 0, 0, 0);
 
-    public static final double FEEDER_DISTANCE = 24;
+    public static final double FEEDER_DISTANCE = 26.5;
 }

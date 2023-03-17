@@ -1,6 +1,9 @@
 package frc.robot.subsystems.gripper;
 
+import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.estimator.UnscentedKalmanFilter;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -11,7 +14,7 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     private static Gripper INSTANCE;
     private final AnalogInput distance = new AnalogInput(0);
     private final Solenoid gripperSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Ports.Gripper.SOLENOID);
-    private final LinearFilter distanceFilter = LinearFilter.movingAverage(5);
+    private final MedianFilter distanceFilter = new MedianFilter(3);
 
     private Gripper() {
         super(new GripperLoggedInputs());

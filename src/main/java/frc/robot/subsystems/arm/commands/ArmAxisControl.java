@@ -32,7 +32,7 @@ public class ArmAxisControl extends CommandBase {
 
         if (!passedMaximum) {
             position = position.plus(new Translation2d(Xvalue * multiplier, Yvalue * multiplier));
-            arm.setEndPosition(position, 0.0, -0.6);
+            arm.setEndPosition(position, 0.0, -1.5);
         }
     }
 

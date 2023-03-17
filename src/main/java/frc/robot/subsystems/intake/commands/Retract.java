@@ -14,14 +14,6 @@ public class Retract extends CommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        if (mode == Mode.UP) {
-            intake.resetEncoder();
-        }
-        intake.setAnglePower(0);
-    }
-
-    @Override
     public void execute() {
         if (mode == Mode.UP) {
             intake.setAnglePower(IntakeConstants.ANGLE_MOTOR_POWER);
@@ -33,6 +25,14 @@ public class Retract extends CommandBase {
     @Override
     public boolean isFinished() {
         return intake.getCurrent() >= IntakeConstants.MAX_CURRENT;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (mode == Mode.UP) {
+            intake.resetEncoder();
+        }
+        intake.setAnglePower(0);
     }
 
     public enum Mode {

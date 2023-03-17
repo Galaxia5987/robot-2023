@@ -30,7 +30,9 @@ public class Retract extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         if (mode == Mode.UP) {
-            intake.resetEncoder();
+            intake.resetEncoder(0);
+        } else if (mode == Mode.DOWN) {
+            intake.resetEncoder(-110.3);
         }
         intake.setAnglePower(0);
     }

@@ -49,13 +49,13 @@ public class FeederConeCubeHighCube extends SequentialCommandGroup {
                         .alongWith(
                                 new ReturnIntake()
                                         .andThen(new InstantCommand(gripper::close, gripper))
-                                        .andThen(new ReturnArm().withTimeout(0.75))
+                                        .andThen(new ReturnArm().withTimeout(0.65))
                         ),
 
                 new AutonUpperScoring(false),
                 new InstantCommand(gripper::open, gripper),
 
-                new ReturnArm().withTimeout(0.75),
+                new ReturnArm().withTimeout(0.65),
 
                 FollowPath.loadTrajectory("FeederConeCubeHigh 3").alongWith(new PickUpCube().withTimeout(5))
         );

@@ -52,92 +52,6 @@ public class FollowPath extends CommandBase {
     private final boolean useAllianceColor;
     private PathPlannerTrajectory transformedTrajectory;
 
-
-    /**
-     * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
-     * trajectory. This command will not return output voltages but ChassisSpeeds from the position
-     * controllers which need to be converted to module states and put into a velocity PID.
-     *
-     * <p>Note: The controllers will *not* set the output to zero upon completion of the path this is
-     * left to the user, since it is not appropriate for paths with nonstationary endstates.
-     *
-     * @param trajectory          The trajectory to follow.
-     * @param poseSupplier        A function that supplies the robot pose - use one of the odometry classes
-     *                            to provide this.
-     * @param xController         The Trajectory Tracker PID controller for the robot's x position.
-     * @param yController         The Trajectory Tracker PID controller for the robot's y position.
-     * @param rotationController  The Trajectory Tracker PID controller for angle for the robot.
-     * @param outputChassisSpeeds The field relative chassis speeds output consumer.
-     * @param useAllianceColor    Should the path states be automatically transformed based on alliance
-     *                            color? In order for this to work properly, you MUST create your path on the blue side of
-     *                            the field.
-     * @param requirements        The subsystems to require.
-     */
-    public FollowPath(
-            PathPlannerTrajectory trajectory,
-            Supplier<Pose2d> poseSupplier,
-            PIDController xController,
-            PIDController yController,
-            PIDController rotationController,
-            Consumer<ChassisSpeeds> outputChassisSpeeds,
-            boolean useAllianceColor,
-            Subsystem... requirements) {
-        this.trajectory = trajectory;
-        this.poseSupplier = poseSupplier;
-        this.controller = new PPHolonomicDriveController(xController, yController, rotationController);
-        this.outputChassisSpeeds = outputChassisSpeeds;
-        this.outputModuleStates = null;
-        this.kinematics = null;
-        this.useKinematics = false;
-        this.useAllianceColor = useAllianceColor;
-
-        addRequirements(requirements);
-
-        if (useAllianceColor && trajectory.fromGUI && trajectory.getInitialPose().getX() > 8.27) {
-            DriverStation.reportWarning(
-                    "You have constructed a path following command that will automatically transform path states depending"
-                            + " on the alliance color, however, it appears this path was created on the red side of the field"
-                            + " instead of the blue side. This is likely an error.",
-                    false);
-        }
-    }
-
-    /**
-     * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
-     * trajectory. This command will not return output voltages but ChassisSpeeds from the position
-     * controllers which need to be converted to module states and put into a velocity PID.
-     *
-     * <p>Note: The controllers will *not* set the output to zero upon completion of the path this is
-     * left to the user, since it is not appropriate for paths with nonstationary endstates.
-     *
-     * @param trajectory          The trajectory to follow.
-     * @param poseSupplier        A function that supplies the robot pose - use one of the odometry classes
-     *                            to provide this.
-     * @param xController         The Trajectory Tracker PID controller for the robot's x position.
-     * @param yController         The Trajectory Tracker PID controller for the robot's y position.
-     * @param rotationController  The Trajectory Tracker PID controller for angle for the robot.
-     * @param outputChassisSpeeds The field relative chassis speeds output consumer.
-     * @param requirements        The subsystems to require.
-     */
-    public FollowPath(
-            PathPlannerTrajectory trajectory,
-            Supplier<Pose2d> poseSupplier,
-            PIDController xController,
-            PIDController yController,
-            PIDController rotationController,
-            Consumer<ChassisSpeeds> outputChassisSpeeds,
-            Subsystem... requirements) {
-        this(
-                trajectory,
-                poseSupplier,
-                xController,
-                yController,
-                rotationController,
-                outputChassisSpeeds,
-                false,
-                requirements);
-    }
-
     /**
      * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
      * trajectory. This command will not return output voltages but rather raw module states from the
@@ -188,45 +102,6 @@ public class FollowPath extends CommandBase {
                             + " instead of the blue side. This is likely an error.",
                     false);
         }
-    }
-
-    /**
-     * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
-     * trajectory. This command will not return output voltages but rather raw module states from the
-     * position controllers which need to be put into a velocity PID.
-     *
-     * <p>Note: The controllers will *not* set the output to zero upon completion of the path- this is
-     * left to the user, since it is not appropriate for paths with nonstationary endstates.
-     *
-     * @param trajectory         The trajectory to follow.
-     * @param poseSupplier       A function that supplies the robot pose - use one of the odometry classes
-     *                           to provide this.
-     * @param kinematics         The kinematics for the robot drivetrain.
-     * @param xController        The Trajectory Tracker PID controller for the robot's x position.
-     * @param yController        The Trajectory Tracker PID controller for the robot's y position.
-     * @param rotationController The Trajectory Tracker PID controller for angle for the robot.
-     * @param outputModuleStates The raw output module states from the position controllers.
-     * @param requirements       The subsystems to require.
-     */
-    public FollowPath(
-            PathPlannerTrajectory trajectory,
-            Supplier<Pose2d> poseSupplier,
-            SwerveDriveKinematics kinematics,
-            PIDController xController,
-            PIDController yController,
-            PIDController rotationController,
-            Consumer<SwerveModuleState[]> outputModuleStates,
-            Subsystem... requirements) {
-        this(
-                trajectory,
-                poseSupplier,
-                kinematics,
-                xController,
-                yController,
-                rotationController,
-                outputModuleStates,
-                false,
-                requirements);
     }
 
     private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {

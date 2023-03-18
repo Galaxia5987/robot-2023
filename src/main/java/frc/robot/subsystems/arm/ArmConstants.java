@@ -65,7 +65,7 @@ public class ArmConstants {
     //    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
     public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.1, 0.92);
     //    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.6945, 0.475);
-    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.879, 0.64);
+    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.879, 0.59);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.28, 0.90);
     public static final Translation2d UPPER_CUBE_SCORING = new Translation2d(1.195, 0.741);
     public static final Translation2d MIDDLE_CUBE_SCORING = new Translation2d(0.8, 0.481);

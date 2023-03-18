@@ -19,7 +19,8 @@ public class FeederConeHighTakeCubeEngage extends SequentialCommandGroup {
     Gripper gripper = Gripper.getInstance();
     SwerveDrive swerveDrive = SwerveDrive.getInstance();
     Gyroscope gyroscope = Gyroscope.getInstance();
-    public FeederConeHighTakeCubeEngage(){
+
+    public FeederConeHighTakeCubeEngage() {
 
         addCommands(
                 new ResetAuto(),

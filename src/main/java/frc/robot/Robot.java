@@ -33,9 +33,9 @@ public class Robot extends LoggedRobot {
     private static boolean lastEnabled = false;
     private static boolean justEnabled = false;
     private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+    private final Timer timer = new Timer();
     private RobotContainer robotContainer;
     private Command autonomousCommand;
-    private final Timer timer = new Timer();
 
     public static boolean justEnabled() {
         return justEnabled;

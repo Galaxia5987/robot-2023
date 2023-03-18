@@ -1,9 +1,5 @@
 package frc.robot.autonomous.paths;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
@@ -12,7 +8,6 @@ import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.PickUpCube;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.commandgroups.ReturnIntake;
-import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;

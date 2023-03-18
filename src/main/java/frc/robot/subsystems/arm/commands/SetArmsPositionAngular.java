@@ -75,6 +75,6 @@ public class SetArmsPositionAngular extends CommandBase {
     @Override
     public boolean isFinished() {
         return arm.getEndPosition().minus(positionSupplier.get()).getNorm() < deadBand
-                || positionSupplier.get().getNorm() > (ArmConstants.SHOULDER_ARM_LENGTH+ArmConstants.SHOULDER_LENGTH);
+                || positionSupplier.get().getNorm() > (ArmConstants.SHOULDER_ARM_LENGTH + ArmConstants.SHOULDER_LENGTH);
     }
 }

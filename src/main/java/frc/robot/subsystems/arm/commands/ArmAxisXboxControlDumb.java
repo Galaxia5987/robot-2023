@@ -14,15 +14,12 @@ public class ArmAxisXboxControlDumb extends CommandBase {
     private final XboxController xboxController;
     private final Double multiplier;
     private final double value;
-
+    private final double lastPositionSign = 0;
     private double shoulderHoldAngle;
     private double elbowHoldAngle;
     private boolean lastJoysticksZero;
-
     private Translation2d position = new Translation2d(0, 0);
     private Translation2d initialPosition = new Translation2d(0, 0);
-    private final double lastPositionSign = 0;
-
     private boolean lastPassedMaximum = false;
 
     public ArmAxisXboxControlDumb(XboxController xboxController, double multiplier, double value) {

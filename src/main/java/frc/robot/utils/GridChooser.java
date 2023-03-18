@@ -3,8 +3,6 @@ package frc.robot.utils;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.util.Arrays;
-
 public class GridChooser {
     private final boolean[] grid = new boolean[9];
     private int index = 0;

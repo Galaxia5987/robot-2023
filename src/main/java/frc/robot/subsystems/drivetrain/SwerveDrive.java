@@ -1,21 +1,14 @@
 package frc.robot.subsystems.drivetrain;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
-import frc.robot.subsystems.vision.LimelightHelpers;
 import frc.robot.utils.Utils;
-
-import java.util.Arrays;
 
 import static frc.robot.Ports.SwerveDrive.*;
 import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
@@ -234,7 +227,7 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     }
 
     public SwerveModule[] getModules() {
-        return new SwerveModule[] {
+        return new SwerveModule[]{
                 mFrontLeft,
                 mFrontRight,
                 mRearLeft,

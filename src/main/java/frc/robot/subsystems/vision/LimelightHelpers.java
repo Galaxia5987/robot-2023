@@ -425,6 +425,16 @@ public class LimelightHelpers {
 
     public static class LimelightTarget_Retro {
 
+        @JsonProperty("t6c_ts")
+        private final double[] cameraPose_TargetSpace;
+        @JsonProperty("t6r_fs")
+        private final double[] robotPose_FieldSpace;
+        @JsonProperty("t6r_ts")
+        private final double[] robotPose_TargetSpace;
+        @JsonProperty("t6t_cs")
+        private final double[] targetPose_CameraSpace;
+        @JsonProperty("t6t_rs")
+        private final double[] targetPose_RobotSpace;
         @JsonProperty("ta")
         public double ta;
         @JsonProperty("tx")
@@ -437,16 +447,6 @@ public class LimelightHelpers {
         public double ty_pixels;
         @JsonProperty("ts")
         public double ts;
-        @JsonProperty("t6c_ts")
-        private final double[] cameraPose_TargetSpace;
-        @JsonProperty("t6r_fs")
-        private final double[] robotPose_FieldSpace;
-        @JsonProperty("t6r_ts")
-        private final double[] robotPose_TargetSpace;
-        @JsonProperty("t6t_cs")
-        private final double[] targetPose_CameraSpace;
-        @JsonProperty("t6t_rs")
-        private final double[] targetPose_RobotSpace;
 
         public LimelightTarget_Retro() {
             cameraPose_TargetSpace = new double[6];
@@ -500,9 +500,18 @@ public class LimelightHelpers {
 
     public static class LimelightTarget_Fiducial {
 
+        @JsonProperty("t6c_ts")
+        private final double[] cameraPose_TargetSpace;
+        @JsonProperty("t6r_fs")
+        private final double[] robotPose_FieldSpace;
+        @JsonProperty("t6r_ts")
+        private final double[] robotPose_TargetSpace;
+        @JsonProperty("t6t_cs")
+        private final double[] targetPose_CameraSpace;
+        @JsonProperty("t6t_rs")
+        private final double[] targetPose_RobotSpace;
         @JsonProperty("fID")
         public double fiducialID;
-
         @JsonProperty("fam")
         public String fiducialFamily;
         @JsonProperty("ta")
@@ -517,16 +526,6 @@ public class LimelightHelpers {
         public double ty_pixels;
         @JsonProperty("ts")
         public double ts;
-        @JsonProperty("t6c_ts")
-        private final double[] cameraPose_TargetSpace;
-        @JsonProperty("t6r_fs")
-        private final double[] robotPose_FieldSpace;
-        @JsonProperty("t6r_ts")
-        private final double[] robotPose_TargetSpace;
-        @JsonProperty("t6t_cs")
-        private final double[] targetPose_CameraSpace;
-        @JsonProperty("t6t_rs")
-        private final double[] targetPose_RobotSpace;
 
         public LimelightTarget_Fiducial() {
             cameraPose_TargetSpace = new double[6];

@@ -10,13 +10,11 @@ import frc.robot.Ports;
 
 public class Leds extends SubsystemBase {
     public static Leds INSTANCE;
+    private final Timer timer = new Timer();
     public AddressableLED leds = new AddressableLED(Ports.Leds.LED);
     public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LedConstants.LED_LENGTH);
-
     private Color color = Color.kPurple;
-
     private double blinkTime = 0;
-    private final Timer timer = new Timer();
     private boolean blink = false;
 
     private Mode mode = Mode.ON;

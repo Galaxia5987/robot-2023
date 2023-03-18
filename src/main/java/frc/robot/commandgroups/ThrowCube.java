@@ -6,7 +6,8 @@ import frc.robot.subsystems.gripper.Gripper;
 
 public class ThrowCube extends SequentialCommandGroup {
     Gripper gripper = Gripper.getInstance();
-    public ThrowCube(){
+
+    public ThrowCube() {
         addCommands(
                 new ReturnArm().withTimeout(0.65),
                 new UpperScoring().withTimeout(0.565),

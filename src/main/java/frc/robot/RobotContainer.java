@@ -1,20 +1,21 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.autonomous.paths.*;
+import frc.robot.autonomous.paths.FeederConeCubeHighCube;
 import frc.robot.commandgroups.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.*;
+import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
+import frc.robot.subsystems.drivetrain.commands.TurnDrivetrain;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
@@ -27,6 +28,7 @@ import frc.robot.utils.Utils;
 
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
+    public final GridChooser gridChooser = new GridChooser();
     //    private final Leds led = Leds.getInstance();
     private final Arm arm = Arm.getInstance();
     private final Leds leds = Leds.getInstance();
@@ -61,7 +63,6 @@ public class RobotContainer {
     private final Trigger upPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 0));
     private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180));
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
-    public final GridChooser gridChooser = new GridChooser();
     private final Trigger povUpdated = new Trigger(() -> xboxController.getPOV() >= 0);
 
     /**
@@ -106,17 +107,13 @@ public class RobotContainer {
 
         start.onTrue(new InstantCommand(leds::toggle));
 
-
         rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
                 .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
-
-
 
         leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
 //        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
         upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0));
         downPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0));
-
     }
 
 

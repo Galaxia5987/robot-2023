@@ -12,7 +12,7 @@ public class AutonUpperScoring extends SequentialCommandGroup {
                 isCone ? new YellowLed() :
                         new PurpleLed(),
                 isCone ? new UpperScoring().withTimeout(1.5) :
-                        new UpperScoring().withTimeout(1.0)
+                        new UpperScoring().withTimeout(1.2)
         );
     }
 }

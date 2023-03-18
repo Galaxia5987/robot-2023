@@ -16,7 +16,10 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.PurpleLed;
+
+import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
 /**
  * This class contains all the parts to the path RightConeCubeHigh.
@@ -34,6 +37,8 @@ public class BumperConeCubeHigh extends SequentialCommandGroup {
 
         addCommands(
                 new ResetAuto(),
+
+                new Retract(DOWN).withTimeout(0.35),
 
                 new AutonUpperScoring(true),
 

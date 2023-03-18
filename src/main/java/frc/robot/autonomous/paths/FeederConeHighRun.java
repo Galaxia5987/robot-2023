@@ -14,6 +14,9 @@ import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.subsystems.intake.commands.Retract;
+
+import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
 /**
  * This class contains all the parts of the path LeftConeHighRun.
@@ -30,6 +33,8 @@ public class FeederConeHighRun extends SequentialCommandGroup {
 
         addCommands(
                 new ResetAuto(),
+
+                new Retract(DOWN).withTimeout(0.35),
 
                 new InstantCommand(gripper::close, gripper),
 

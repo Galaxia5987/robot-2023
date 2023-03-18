@@ -26,7 +26,8 @@ public class BumperConeHighTakeCubeEngage extends SequentialCommandGroup {
         addCommands(
                 new ResetAuto(),
 
-                new AutonUpperScoring(true),
+                new Retract(DOWN).withTimeout(0.35).andThen(
+                        new AutonUpperScoring(true)),
 
                 new InstantCommand(gripper::open, gripper),
 

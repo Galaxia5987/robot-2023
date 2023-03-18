@@ -18,7 +18,7 @@ public class DriveTillPitchAccurate extends CommandBase {
 
     public DriveTillPitchAccurate(double desiredPitch, double xVelocity) {
         this.desiredPitch = desiredPitch;
-        this.xVelocity = xVelocity*Math.signum(desiredPitch-startingPitch);
+        this.xVelocity = xVelocity * Math.signum(desiredPitch - startingPitch);
         addRequirements(swerveDrive);
     }
 
@@ -42,6 +42,7 @@ public class DriveTillPitchAccurate extends CommandBase {
 
     @Override
     public boolean isFinished() {
-       return ((startingPitch - desiredPitch) > 0 && (startingPitch - currentPitch) < 0 )|| ((startingPitch - desiredPitch) < 0 && (startingPitch - currentPitch) > 0);
+        return ((startingPitch - desiredPitch) > 0 && (startingPitch - currentPitch) < 0) || ((startingPitch - desiredPitch) < 0 && (startingPitch - currentPitch) > 0);
 
-}}
+    }
+}

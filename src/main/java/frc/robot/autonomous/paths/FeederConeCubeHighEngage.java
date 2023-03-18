@@ -11,7 +11,7 @@ public class FeederConeCubeHighEngage extends SequentialCommandGroup {
         addCommands(
                 new FeederConeCubeHigh(),
 
-                FollowPath.loadTrajectory("FeederConeCubeHigh engage").withTimeout(1.5),
+                FollowPath.loadTrajectory("FeederConeCubeHigh engage").withTimeout(1.25),
 
                 new Engage(true, true)
         );

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
+import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
@@ -37,6 +38,8 @@ public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
+                new ResetAuto(),
+
                 FollowPath.resetCommand(swerveDrive, gyroscope).apply(trajectory),
 
                 new InstantCommand(gripper::close),
@@ -63,20 +66,7 @@ public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
                         .alongWith(new ReturnArm().withTimeout(1))
                         .withTimeout(1.5),
 
-                new DriveTillPitch(10.5, -1.5)
-                        .alongWith(new Retract(DOWN)),
-
-                new RunCommand(() -> swerveDrive.drive(
-                        new DriveSignal(
-                                -1.5,
-                                0,
-                                0,
-                                new Translation2d(),
-                                true
-                        )
-                ), swerveDrive).withTimeout(SwerveConstants.BACKWARD_BALANCE_TIME),
-
-                new RunCommand(swerveDrive::lock)
+                new Engage(false, true)
         );
     }
 }

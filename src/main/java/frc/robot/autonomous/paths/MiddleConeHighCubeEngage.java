@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
+import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.GetArmIntoRobot;
 import frc.robot.commandgroups.PickUpCube;
 import frc.robot.commandgroups.ReturnArm;
+import frc.robot.commandgroups.ReturnIntake;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
@@ -22,9 +24,6 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.PurpleLed;
-import frc.robot.utils.AllianceFlipUtil;
-
-import java.sql.Struct;
 
 import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
@@ -37,6 +36,8 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
 
 
         addCommands(
+                new ResetAuto(),
+
                 FollowPath.resetCommand(swerveDrive, gyroscope).apply(trajectory),
 
                 new InstantCommand(gripper::close),
@@ -63,20 +64,9 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
                         .alongWith(new PickUpCube())
                         .withTimeout(1.5),
 
-                new DriveTillPitch(10.5, -1.5)
-                        .alongWith(new Retract(DOWN)),
-
-                new RunCommand(() -> swerveDrive.drive(
-                        new DriveSignal(
-                                -1.5,
-                                0,
-                                0,
-                                new Translation2d(),
-                                true
-                        )
-                ), swerveDrive).withTimeout(SwerveConstants.BACKWARD_BALANCE_TIME),
-
-                new RunCommand(swerveDrive::lock)
+                new Engage(false, false)
+                        .alongWith(new ReturnIntake()
+                                .andThen(new InstantCommand(gripper::close)))
         );
     }
 }

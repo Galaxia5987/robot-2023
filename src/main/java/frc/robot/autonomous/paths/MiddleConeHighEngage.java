@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
+import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.GetArmIntoRobot;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.subsystems.drivetrain.DriveSignal;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
+import pabeles.concurrency.ConcurrencyOps;
 
 /**
  * This class contains all the parts for the path MiddleConeHighEngage.
@@ -35,6 +37,8 @@ public class MiddleConeHighEngage extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighEngage", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
+                new ResetAuto(),
+
                 FollowPath.resetCommand(swerveDrive, gyroscope).apply(trajectory),
 
                 new Retract(Retract.Mode.DOWN).withTimeout(0.35).andThen(
@@ -42,20 +46,7 @@ public class MiddleConeHighEngage extends SequentialCommandGroup {
 
                 new InstantCommand(gripper::open),
 
-                new DriveTillPitch(-10.5, 1.5)
-                        .alongWith(new ReturnArm().withTimeout(1)),
-
-                new RunCommand(() -> swerveDrive.drive(
-                        new DriveSignal(
-                                1.5,
-                                0,
-                                0,
-                                new Translation2d(),
-                                true
-                        )
-                ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(SwerveConstants.FORWARD_BALANCE_TIME),
-
-                new RunCommand(swerveDrive::lock)
+                new Engage(true, true)
         );
     }
 }

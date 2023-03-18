@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
+import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
@@ -28,10 +29,16 @@ public class FeederConeHighRun extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("FeederRun 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
 
         addCommands(
+                new ResetAuto(),
+
                 new InstantCommand(gripper::close, gripper),
+
                 new AutonUpperScoring(true),
+
                 new InstantCommand(gripper::open, gripper),
+
                 new ReturnArm().withTimeout(3),
+
                 FollowPath.loadTrajectory("FeederRun 1",
                         FollowPath.resetCommand(swerveDrive, gyroscope))
         );

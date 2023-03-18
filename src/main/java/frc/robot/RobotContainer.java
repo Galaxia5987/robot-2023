@@ -109,9 +109,6 @@ public class RobotContainer {
 
         rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
                 .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
-        leftJoystickTopRight.onTrue(new InstantCommand(() -> limelight
-                .getBotPoseFieldOriented()
-                .ifPresent(swerve::resetOdometry)));
         rightJoystickTopBottom.whileTrue(new ProxyCommand(() ->
                 new AdjustToTargetSmart(gridChooser.getPosition())));
 

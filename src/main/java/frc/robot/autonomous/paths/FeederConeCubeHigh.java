@@ -29,13 +29,13 @@ public class FeederConeCubeHigh extends SequentialCommandGroup {
 
                 new InstantCommand(gripper::open, gripper),
 
-                new ReturnArm().withTimeout(0.75),
+                new ReturnArm().withTimeout(0.65),
 
                 new PurpleLed(),
 
                 FollowPath.loadTrajectory("FeederConeCubeHigh 1",
                         FollowPath.resetCommand(swerveDrive, gyroscope)).alongWith(
-                        new PickUpCube().withTimeout(3.8)
+                        new PickUpCube().withTimeout(3.3)
                 ),
 
                 FollowPath.loadTrajectory("FeederConeCubeHigh 2")

@@ -88,5 +88,5 @@ public class SwerveConstants {
     public static double CHARGING_STATION_BALANCE_Kf = 1;
 
     public static double FORWARD_BALANCE_TIME = 1.2;
-    public static double BACKWARD_BALANCE_TIME = 1.1;
+    public static double BACKWARD_BALANCE_TIME = 1.2;
 }

@@ -109,8 +109,7 @@ public class RobotContainer {
 
         upPOV.whileTrue(new ArmAxisControl(1, 0.02, 0)
                 .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
-        rightJoystickTopBottom.whileTrue(new ProxyCommand(() ->
-                new AdjustToTargetSmart(gridChooser.getPosition())));
+
 
 
         leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
@@ -127,6 +126,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new BumperConeCubeHigh();
+        return new FeederConeCubeHighEngage();
     }
 }

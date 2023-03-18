@@ -53,12 +53,12 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
     private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
             swerveModulePositions);
 
-    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-            mKinematics,
-            new Rotation2d(),
-            Arrays.copyOf(swerveModulePositions, swerveModulePositions.length),
-            new Pose2d()
-    );
+//    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+//            mKinematics,
+//            new Rotation2d(),
+//            Arrays.copyOf(swerveModulePositions, swerveModulePositions.length),
+//            new Pose2d()
+//    );
 
     private SwerveDrive() {
         super(new SwerveDriveLogInputs());
@@ -125,7 +125,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
      */
     public void resetOdometry(Pose2d pose) {
         mOdometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
-        poseEstimator.resetPosition(pose.getRotation(), swerveModulePositions, pose);
     }
 
     /**
@@ -137,10 +136,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         return mOdometry.getPoseMeters();
     }
 
-    public Pose2d getEstimatedPose() {
-        return poseEstimator.getEstimatedPosition();
-//        return new Pose2d();
-    }
 
     /**
      * This is the main drive function. Any drive signal given here will be carried out in the periodic.
@@ -212,7 +207,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearLeft.getState(),
                 mRearRight.getState()
         ));
-        loggerInputs.estimatedPose = Utils.pose2dToArray(poseEstimator.getEstimatedPosition());
     }
 
     @Override
@@ -265,13 +259,6 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
                 mRearLeft.getEncoderTicks() + ", " +
                 mRearRight.getEncoderTicks() + "}");
 
-        limelight.getBotPoseFieldOriented().ifPresentOrElse(pose2d -> {
-            poseEstimator.addVisionMeasurement(pose2d, Timer.getFPGATimestamp() -
-                    LimelightHelpers.getLatency_Pipeline("") / 1000.0 -
-                    LimelightHelpers.getLatency_Capture("") / 1000.0);
-        }, () -> Leds.getInstance().setBlink(false));
-        poseEstimator.updateWithTime(Timer.getFPGATimestamp(), gyroscope.getYaw(),
-                Arrays.copyOf(swerveModulePositions, swerveModulePositions.length));
     }
 
     public enum Module {

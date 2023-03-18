@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.autonomous.AutonUpperScoring;
+import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.GetArmIntoRobot;
 import frc.robot.commandgroups.ReturnArm;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
@@ -21,7 +22,7 @@ public class SafetyAuto extends SequentialCommandGroup {
         Gyroscope gyroscope = Gyroscope.getInstance();
 
         addCommands(
-                new InstantCommand(gripper::close),
+                new ResetAuto(),
 
                 new Retract(DOWN).withTimeout(0.35),
 

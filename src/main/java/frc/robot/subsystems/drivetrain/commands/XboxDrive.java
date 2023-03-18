@@ -27,6 +27,8 @@ public class XboxDrive extends CommandBase {
         double magnitude = Math.hypot(vx, vy);
         double angle = Math.atan2(vy, vx);
         magnitude = MathUtil.applyDeadband(magnitude, 0.2);
+        magnitude = Math.copySign(magnitude * magnitude, magnitude);
+
         vx = Math.cos(angle) * magnitude;
         vy = Math.sin(angle) * magnitude;
         omega = MathUtil.applyDeadband(omega, 0.2);

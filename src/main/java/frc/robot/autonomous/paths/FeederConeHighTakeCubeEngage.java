@@ -15,11 +15,11 @@ import frc.robot.subsystems.leds.PurpleLed;
 
 import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
-public class FeederConeHighCubeEngage extends SequentialCommandGroup {
+public class FeederConeHighTakeCubeEngage extends SequentialCommandGroup {
     Gripper gripper = Gripper.getInstance();
     SwerveDrive swerveDrive = SwerveDrive.getInstance();
     Gyroscope gyroscope = Gyroscope.getInstance();
-    public FeederConeHighCubeEngage(){
+    public FeederConeHighTakeCubeEngage(){
 
         addCommands(
                 new ResetAuto(),
@@ -37,7 +37,7 @@ public class FeederConeHighCubeEngage extends SequentialCommandGroup {
                         FollowPath.resetCommand(swerveDrive, gyroscope)).alongWith(
                         new PickUpCube().withTimeout(3.3)
                 ),
-                FollowPath.loadTrajectory("FeederConeHighCubeEngage"),
+                FollowPath.loadTrajectory("FeederConeHighTakeCube engage"),
                 new Engage(false, false)
         );
     }

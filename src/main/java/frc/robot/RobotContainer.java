@@ -95,7 +95,8 @@ public class RobotContainer {
         b.whileTrue(new FeederPosition());
         y.whileTrue(new UpperScoring());
         y.whileTrue(new UpperScoring());
-        x.whileTrue(new MidScoring());
+        //x.whileTrue(new MidScoring());
+        x.onTrue(new ThrowCube());
 
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
@@ -126,6 +127,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new FeederConeHighCubeEngage();
+        return new MiddleConeHighCubeEngage();
     }
+
 }

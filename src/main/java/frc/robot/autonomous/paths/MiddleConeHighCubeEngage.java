@@ -47,7 +47,7 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
 
                 new InstantCommand(gripper::open),
 
-                new DriveTillPitch(10.5, 1.5)
+                new DriveTillPitch(8.5, 1.5)
                         .alongWith(new ReturnArm().withTimeout(1)),
 
                 new PurpleLed(),
@@ -62,7 +62,7 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
                         )
                 ), swerveDrive)
                         .alongWith(new PickUpCube())
-                        .withTimeout(1.5),
+                        .withTimeout(2.2),
 
                 new Engage(false, false)
                         .alongWith(new ReturnIntake()

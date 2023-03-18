@@ -6,7 +6,7 @@ import frc.robot.autonomous.DrivetrainFeedforwardConstants;
 
 public class SwerveConstants {
     public static final double TICKS_PER_ROTATION = 2048;
-    public static final int[] OFFSETS = {12250, 6239, 15002, 10710};
+    public static final int[] OFFSETS = {12170, 6260, 15076, 10747};
 
     public static final double DRIVETRAIN_TRACK_WIDTH_METERS = 0.51594;
     public static final double DRIVETRAIN_WHEELBASE_METERS = 0.66594;
@@ -82,11 +82,11 @@ public class SwerveConstants {
             AUTO_ROTATION_VELOCITY_FEEDFORWARD, AUTO_ROTATION_ACCELERATION_FEEDFORWARD, AUTO_ROTATION_STATIC_FEEDFORWARD
     );
 
-    public static double CHARGING_STATION_BALANCE_Kp = 50;
+    public static double CHARGING_STATION_BALANCE_Kp = 0;
     public static double CHARGING_STATION_BALANCE_Ki = 0;
-    public static double CHARGING_STATION_BALANCE_Kd = 1;
-    public static double CHARGING_STATION_BALANCE_Kf = 0;
+    public static double CHARGING_STATION_BALANCE_Kd = 0;
+    public static double CHARGING_STATION_BALANCE_Kf = 1;
 
     public static double FORWARD_BALANCE_TIME = 1.2;
-    public static double BACKWARD_BALANCE_TIME = 1.2;
+    public static double BACKWARD_BALANCE_TIME = 1.1;
 }

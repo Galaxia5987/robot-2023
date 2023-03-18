@@ -84,19 +84,18 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(
-                new XboxDrive(swerve, xboxController)
+                new JoystickDrive(leftJoystick, rightJoystick)
         );
-//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
     }
 
     private void configureButtonBindings() {
-        rb.onTrue(new InstantCommand(gyroscope::resetYaw));
+        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
         b.whileTrue(new FeederPosition());
         y.whileTrue(new UpperScoring());
         y.whileTrue(new UpperScoring());
-        //x.whileTrue(new MidScoring());
-        x.onTrue(new ThrowCube());
+        x.whileTrue(new MidScoring());
 
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
@@ -108,15 +107,15 @@ public class RobotContainer {
         start.onTrue(new InstantCommand(leds::toggle));
 
 
-        upPOV.whileTrue(new ArmAxisControl(1, 0.02, 0)
+        rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
                 .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
 
 
 
         leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
 //        povUpdated.onTrue(new InstantCommand(() -> gridChooser.update(xboxController.getPOV())));
-//        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0));
-//        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0));
+        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0));
+        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0));
 
     }
 
@@ -127,7 +126,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new MiddleConeHighCubeEngage();
+        return new FeederConeCubeHighCube();
     }
 
 }

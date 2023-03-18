@@ -24,7 +24,8 @@ public class Balance extends SequentialCommandGroup {
         this.startingPitch = startingPitch;
         addCommands(
                 new DriveTillPitch(startingPitch, xVelocity),
-                new DriveTillPitchAccurate(0, xVelocity).until(() -> Math.abs(gyroscope.getPitch().getDegrees()) < pitchTolerance)
+                new DriveTillPitchAccurate(0, xVelocity).until(() ->
+                        Utils.epsilonEquals(gyroscope.getPitch().getDegrees(), 0, pitchTolerance))
         );
     }
 

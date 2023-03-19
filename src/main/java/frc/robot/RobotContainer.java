@@ -3,11 +3,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.autonomous.ResetAuto;
+import frc.robot.autonomous.paths.BumperConeHighTakeCubeEngage;
 import frc.robot.autonomous.paths.FeederConeCubeHighCube;
+import frc.robot.autonomous.paths.FeederConeCubeHighEngage;
+import frc.robot.autonomous.paths.MiddleConeHighCubeEngage;
 import frc.robot.commandgroups.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -64,11 +70,25 @@ public class RobotContainer {
     private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180));
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
     private final Trigger povUpdated = new Trigger(() -> xboxController.getPOV() >= 0);
+    SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+
+
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     private RobotContainer() {
+
+        //autonomous selecting object
+        autoChooser.setDefaultOption("ResetAuto is running as default autonomousCommand", new ResetAuto());
+        autoChooser.addOption("BumperConeHighTakeCubeEngage", new BumperConeHighTakeCubeEngage());
+        autoChooser.addOption("BumperConeHighTakeCubeEngage", new BumperConeHighTakeCubeEngage());
+        autoChooser.addOption("FeederConeCubeHighEngage", new FeederConeCubeHighEngage());
+        autoChooser.addOption("MiddleConeHighCubeEngage", new MiddleConeHighCubeEngage());
+        //publish chosen auto to dashboard
+        SmartDashboard.putData(autoChooser);
+
         // Configure the button bindings and default commands
         DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -123,7 +143,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new FeederConeCubeHighCube();
+        return autoChooser.getSelected();
     }
 
 }

@@ -1,11 +1,13 @@
 package frc.robot.subsystems.drivetrain.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
+import frc.robot.utils.controllers.DieterController;
 
 public class DriveTillPitch extends CommandBase {
     private final SwerveDrive swerveDrive = SwerveDrive.getInstance();
@@ -13,6 +15,8 @@ public class DriveTillPitch extends CommandBase {
 
     private final double desiredPitch;
     private final double xVelocity;
+
+    private final DieterController yawController = new DieterController(3, 0, 0, 0);
 
     public DriveTillPitch(double desiredPitch, double xVelocity) {
         this.desiredPitch = desiredPitch;
@@ -25,7 +29,7 @@ public class DriveTillPitch extends CommandBase {
         var signal = new DriveSignal(
                 xVelocity,
                 0,
-                0,
+                yawController.calculate(gyroscope.getYaw().getRadians(), 0),
                 new Translation2d(),
                 true
         );

@@ -8,11 +8,13 @@ import frc.robot.subsystems.gripper.Gripper;
 
 public class ArmAxisControl extends CommandBase {
     private final Arm arm = Arm.getInstance();
-    private final Gripper gripper = Gripper.getInstance();
     private final double Xvalue;
     private final double Yvalue;
     private final double multiplier;
     private Translation2d position = new Translation2d(0, 0);
+
+    private double shoulderFFMultiplier = 0.0;
+    private double elbowFFMultiplier = -1.5;
 
     public ArmAxisControl(double multiplier, double Xvalue, double Yvalue) {
         this.Xvalue = Xvalue;
@@ -21,18 +23,25 @@ public class ArmAxisControl extends CommandBase {
         addRequirements(arm);
     }
 
+    public ArmAxisControl(double multiplier, double Xvalue, double Yvalue,
+                          double elbowFFMultiplier, double shoulderFFMultiplier) {
+        this(multiplier, Xvalue, Yvalue);
+        this.elbowFFMultiplier = elbowFFMultiplier;
+        this.shoulderFFMultiplier = shoulderFFMultiplier;
+    }
+
     @Override
     public void initialize() {
-        position = arm.getEndPosition();
+        position = new Translation2d(this.Xvalue, this.Yvalue);
     }
 
     @Override
     public void execute() {
-        boolean passedMaximum = position.getNorm() > ArmConstants.SHOULDER_ARM_LENGTH + ArmConstants.ELBOW_ARM_LENGTH - 0.1;
+        boolean passedMaximum = position.getNorm() >= ArmConstants.SHOULDER_ARM_LENGTH + ArmConstants.ELBOW_ARM_LENGTH - 0.1;
 
         if (!passedMaximum) {
             position = position.plus(new Translation2d(Xvalue * multiplier, Yvalue * multiplier));
-            arm.setEndPosition(position, 0.0, -1.5);
+            arm.setEndPosition(position, shoulderFFMultiplier, elbowFFMultiplier);
         }
     }
 

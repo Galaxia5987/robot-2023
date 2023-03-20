@@ -49,7 +49,7 @@ public class SwerveConstants {
     public static double AUTO_ROTATION_Kp = 10;
     public static double AUTO_ROTATION_Ki = 0.0;
     public static double AUTO_ROTATION_Kd = 0.0;
-    public static double AUTO_ROTATION_Kf = 0.8;
+    public static double AUTO_ROTATION_Kf = 0.0;
 
     public static double TARGET_Y_Kp = 2.5;
     public static double TARGET_Y_Ki = 0.0;

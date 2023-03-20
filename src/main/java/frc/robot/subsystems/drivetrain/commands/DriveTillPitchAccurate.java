@@ -12,24 +12,33 @@ public class DriveTillPitchAccurate extends CommandBase {
 
     private final double desiredPitch;
     private final double xVelocity;
-    double currentPitch = gyroscope.getPitch().getDegrees();
-    double startingPitch;
+    private double currentPitch;
+    private double startingPitch;
+
+    private int counter = 0;
 
     public DriveTillPitchAccurate(double desiredPitch, double xVelocity) {
         this.desiredPitch = desiredPitch;
-        this.xVelocity = xVelocity * Math.signum(desiredPitch - startingPitch);
+        this.xVelocity = xVelocity;
         addRequirements(swerveDrive);
     }
 
     @Override
     public void initialize() {
-        startingPitch = currentPitch;
+        startingPitch = gyroscope.getPitch().getDegrees();
     }
 
     @Override
     public void execute() {
+        if (((startingPitch - desiredPitch) > 0 && (currentPitch-desiredPitch) < 0) || ((startingPitch - desiredPitch) < 0 && (currentPitch - desiredPitch) > 0)) {
+            counter++;
+            startingPitch = gyroscope.getPitch().getDegrees();
+        }
+
+        currentPitch = gyroscope.getPitch().getDegrees();
+        double vx = xVelocity * Math.signum(desiredPitch - currentPitch);
         var signal = new DriveSignal(
-                xVelocity,
+                vx,
                 0,
                 0,
                 new Translation2d(),
@@ -37,11 +46,12 @@ public class DriveTillPitchAccurate extends CommandBase {
         );
 
         swerveDrive.drive(signal);
+
+        System.out.println("Hey there sexy");
     }
 
     @Override
     public boolean isFinished() {
-        return ((startingPitch - desiredPitch) > 0 && (startingPitch - currentPitch) < 0) || ((startingPitch - desiredPitch) < 0 && (startingPitch - currentPitch) > 0);
-
+        return counter > 3;
     }
 }

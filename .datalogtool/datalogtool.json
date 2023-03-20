@@ -1,6 +1,9 @@
 {
   "download": {
-    "localDir": "C:\\Users\\eitan\\Galaxia\\robot-2023\\.datalogtool",
+    "localDir": "C:\\Users\\galax\\Documents\\robot-2023\\.datalogtool",
     "serverTeam": "5987"
+  },
+  "output": {
+    "outputFolder": "C:\\Users\\galax\\Documents\\robot-2023\\.datalogtool"
   }
 }

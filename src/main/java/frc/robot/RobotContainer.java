@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.ResetAuto;
-import frc.robot.autonomous.paths.BumperConeHighTakeCubeEngage;
-import frc.robot.autonomous.paths.FeederConeCubeHighCube;
-import frc.robot.autonomous.paths.FeederConeCubeHighEngage;
-import frc.robot.autonomous.paths.MiddleConeHighCubeEngage;
+import frc.robot.autonomous.paths.*;
 import frc.robot.commandgroups.*;
 import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
@@ -36,7 +33,6 @@ import frc.robot.utils.Utils;
 public class RobotContainer {
     private static RobotContainer INSTANCE = null;
     public final GridChooser gridChooser = new GridChooser();
-    //    private final Leds led = Leds.getInstance();
     private final Arm arm = Arm.getInstance();
     private final Leds leds = Leds.getInstance();
     private final Gyroscope gyroscope = Gyroscope.getInstance();
@@ -71,27 +67,21 @@ public class RobotContainer {
     private final Trigger downPOV = new Trigger(() -> Utils.epsilonEquals(xboxController.getPOV(), 180));
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
     private final Trigger povUpdated = new Trigger(() -> xboxController.getPOV() >= 0);
-    SendableChooser<Command> autoChooser = new SendableChooser<>();
-
-
-
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     private RobotContainer() {
-
-        //autonomous selecting object
-        autoChooser.setDefaultOption("ResetAuto is running as default autonomousCommand", new ResetAuto());
+        autoChooser.setDefaultOption("FeederConeCubeHighCube", new FeederConeCubeHighCube());
+        autoChooser.addOption("FeederConeHighTakeCubeEngage", new FeederConeHighTakeCubeEngage());
+        autoChooser.addOption("BumperConeCubeHighCube", new BumperConeCubeHighCube());
         autoChooser.addOption("BumperConeHighTakeCubeEngage", new BumperConeHighTakeCubeEngage());
-        autoChooser.addOption("BumperConeHighTakeCubeEngage", new BumperConeHighTakeCubeEngage());
-        autoChooser.addOption("FeederConeCubeHighEngage", new FeederConeCubeHighEngage());
         autoChooser.addOption("MiddleConeHighCubeEngage", new MiddleConeHighCubeEngage());
         autoChooser.addOption("BITs", new RunAllBits());
-        //publish chosen auto to dashboard
+
         SmartDashboard.putData(autoChooser);
 
-        // Configure the button bindings and default commands
         DriverStation.silenceJoystickConnectionWarning(true);
 
         configureDefaultCommands();

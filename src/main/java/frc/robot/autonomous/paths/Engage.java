@@ -10,21 +10,25 @@ import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
+import frc.robot.subsystems.gyroscope.Gyroscope;
+import frc.robot.utils.controllers.DieterController;
 
 public class Engage extends SequentialCommandGroup {
+    private final DieterController yawController = new DieterController(3, 0, 0, 0);
 
     public Engage(boolean forwards, boolean returnArm) {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
+        Gyroscope gyroscope = Gyroscope.getInstance();
 
         addCommands(
                 new DriveTillPitch(-10.5 * direction(forwards), 1.5 * direction(forwards))
-                        .alongWith(returnArm ? new ReturnArm().withTimeout(1) : new InstantCommand()),
+                        .alongWith(returnArm ? new ReturnArm().withTimeout(0.65) : new InstantCommand()),
 
                 new RunCommand(() -> swerveDrive.drive(
                         new DriveSignal(
                                 1.5 * direction(forwards),
                                 0,
-                                0,
+                                yawController.calculate(gyroscope.getYaw().getRadians(), 0),
                                 new Translation2d(),
                                 true
                         )
@@ -32,6 +36,9 @@ public class Engage extends SequentialCommandGroup {
                         forwards ?
                                 SwerveConstants.FORWARD_BALANCE_TIME :
                                 SwerveConstants.BACKWARD_BALANCE_TIME),
+//
+//                new Balance(1.5 * direction(forwards), 0.75 * direction(forwards), -10.5 * direction(forwards))
+//                        .alongWith(new GetArmIntoRobot()), TODO: Check engage
 
                 new RunCommand(swerveDrive::lock)
         );

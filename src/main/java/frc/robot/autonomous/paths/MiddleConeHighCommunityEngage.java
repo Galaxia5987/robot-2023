@@ -19,6 +19,7 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.PurpleLed;
+import frc.robot.utils.controllers.DieterController;
 
 import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
@@ -29,6 +30,7 @@ import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
  * in the part that is closer to the feeder and goes to the charge station.
  */
 public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
+    private final DieterController yawController = new DieterController(3, 0, 0, 0);
 
     public MiddleConeHighCommunityEngage() {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
@@ -57,7 +59,7 @@ public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
                         new DriveSignal(
                                 1.5,
                                 0,
-                                0,
+                                yawController.calculate(gyroscope.getYaw().getRadians(), 0),
                                 new Translation2d(),
                                 true
                         )

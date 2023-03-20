@@ -21,16 +21,18 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
 import frc.robot.subsystems.leds.PurpleLed;
+import frc.robot.utils.controllers.DieterController;
 
 import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 
 public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
+    private final DieterController yawController = new DieterController(3, 0, 0, 0);
+
     public MiddleConeHighCubeEngage() {
         Gyroscope gyroscope = Gyroscope.getInstance();
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         Gripper gripper = Gripper.getInstance();
         PathPlannerTrajectory trajectory = PathPlanner.loadPath("MiddleConeHighCubeEngage 1", new PathConstraints(SwerveConstants.MAX_VELOCITY_AUTO, SwerveConstants.MAX_ACCELERATION_AUTO));
-
 
         addCommands(
                 new ResetAuto(),
@@ -53,7 +55,7 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
                         new DriveSignal(
                                 1.5,
                                 0,
-                                0,
+                                yawController.calculate(gyroscope.getYaw().getRadians(), 0),
                                 new Translation2d(),
                                 true
                         )

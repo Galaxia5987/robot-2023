@@ -13,6 +13,7 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
+import frc.robot.utils.controllers.DieterController;
 
 /**
  * This class contains all the parts for the path MiddleConeHighEngage.
@@ -21,6 +22,7 @@ import frc.robot.subsystems.intake.commands.Retract;
  * in the part that is closer to the feeder and goes to the charge station.
  */
 public class MiddleConeHighEngage extends SequentialCommandGroup {
+    private final DieterController yawController = new DieterController(3, 0, 0, 0);
 
     public MiddleConeHighEngage() {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();

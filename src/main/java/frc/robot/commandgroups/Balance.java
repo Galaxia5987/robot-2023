@@ -11,18 +11,10 @@ public class Balance extends SequentialCommandGroup {
     Gyroscope gyroscope = Gyroscope.getInstance();
     SwerveDrive swerveDrive = SwerveDrive.getInstance();
 
-    double xVelocity;
-    double startingPitch;
-    double pitchTolerance;
-
-    public Balance(double xVelocity, double startingPitch, double pitchTolerance) {
-        this.pitchTolerance = pitchTolerance;
-        this.xVelocity = xVelocity;
-        this.startingPitch = startingPitch;
+    public Balance(double xVelocityStart, double xVelocityEngage, double startingPitch) {
         addCommands(
-                new DriveTillPitch(startingPitch, xVelocity),
-                new DriveTillPitchAccurate(0, xVelocity).until(() ->
-                        Utils.epsilonEquals(gyroscope.getPitch().getDegrees(), 0, pitchTolerance))
+                new DriveTillPitch(startingPitch, xVelocityStart),
+                new DriveTillPitchAccurate(-4, xVelocityEngage)
         );
     }
 

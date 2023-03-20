@@ -15,6 +15,7 @@ import frc.robot.autonomous.paths.FeederConeCubeHighCube;
 import frc.robot.autonomous.paths.FeederConeCubeHighEngage;
 import frc.robot.autonomous.paths.MiddleConeHighCubeEngage;
 import frc.robot.commandgroups.*;
+import frc.robot.commandgroups.bits.RunAllBits;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmAxisControl;
@@ -86,6 +87,7 @@ public class RobotContainer {
         autoChooser.addOption("BumperConeHighTakeCubeEngage", new BumperConeHighTakeCubeEngage());
         autoChooser.addOption("FeederConeCubeHighEngage", new FeederConeCubeHighEngage());
         autoChooser.addOption("MiddleConeHighCubeEngage", new MiddleConeHighCubeEngage());
+        autoChooser.addOption("BITs", new RunAllBits());
         //publish chosen auto to dashboard
         SmartDashboard.putData(autoChooser);
 

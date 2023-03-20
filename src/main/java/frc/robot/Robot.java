@@ -74,7 +74,7 @@ public class Robot extends LoggedRobot {
         SmartDashboard.putNumber("Rotation_Kd", SwerveConstants.AUTO_ROTATION_Kd);
         SmartDashboard.putNumber("Rotation_Kf", SwerveConstants.AUTO_ROTATION_Kf);
 
-        Leds.getInstance().setPurple();
+        Leds.getInstance().setYellow();
         Limelight.getInstance().setAprilTagsPipeline();
 
         for (int i = 1; i <= 9; i++) {

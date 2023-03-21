@@ -10,8 +10,8 @@ public class VisionConstants {
     public static final double FIELD_LENGTH = 16.54;
     public static final double FIELD_WIDTH = 8.02;
     public static final Pose2d CENTER_POSE = new Pose2d(FIELD_LENGTH / 2, FIELD_WIDTH / 2, Rotation2d.fromDegrees(0));
-    public static final Translation2d TARGET_ADJUST_OFFSET = new Translation2d(1.0, 0);
     public static final Translation2d DOUBLE_SUBSTATION_ADJUST_OFFSET = new Translation2d(1.0, 0);
+    public static final Translation2d TARGET_ADJUST_OFFSET = new Translation2d(1.0, 0);
     public static final Translation2d CUBE_ID1_POSE = CENTER_POSE.getTranslation().plus(new Translation2d(7.24310, -2.93659)).minus(TARGET_ADJUST_OFFSET);
     public static final Translation2d CUBE_ID2_POSE = CENTER_POSE.getTranslation().plus(new Translation2d(7.24310, -1.26019)).minus(TARGET_ADJUST_OFFSET);
     public static final Translation2d CUBE_ID3_POSE = CENTER_POSE.getTranslation().plus(new Translation2d(7.24310, 0.41621)).minus(TARGET_ADJUST_OFFSET);

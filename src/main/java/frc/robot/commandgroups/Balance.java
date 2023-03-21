@@ -5,7 +5,6 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitchAccurate;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.utils.Utils;
 
 public class Balance extends SequentialCommandGroup {
     Gyroscope gyroscope = Gyroscope.getInstance();

@@ -30,7 +30,7 @@ public class DriveTillPitchAccurate extends CommandBase {
 
     @Override
     public void execute() {
-        if (((startingPitch - desiredPitch) > 0 && (currentPitch-desiredPitch) < 0) || ((startingPitch - desiredPitch) < 0 && (currentPitch - desiredPitch) > 0)) {
+        if (((startingPitch - desiredPitch) > 0 && (currentPitch - desiredPitch) < 0) || ((startingPitch - desiredPitch) < 0 && (currentPitch - desiredPitch) > 0)) {
             counter++;
             startingPitch = gyroscope.getPitch().getDegrees();
         }

@@ -73,11 +73,11 @@ public class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     private RobotContainer() {
-        autoChooser.setDefaultOption("FeederConeCubeHighCube", new FeederConeCubeHighCube());
-        autoChooser.addOption("FeederConeHighTakeCubeEngage", new FeederConeHighTakeCubeEngage());
-        autoChooser.addOption("BumperConeCubeHighCube", new BumperConeCubeHighCube());
-        autoChooser.addOption("BumperConeHighTakeCubeEngage", new BumperConeHighTakeCubeEngage());
-        autoChooser.addOption("MiddleConeHighCubeEngage", new MiddleConeHighCubeEngage());
+        autoChooser.setDefaultOption("Feeder 2.5", new FeederConeCubeHighCube());
+        autoChooser.addOption("Feeder 1.5 Engage", new FeederConeHighTakeCubeEngage());
+        autoChooser.addOption("Bumper 2.5", new BumperConeCubeHighCube());
+        autoChooser.addOption("Bumper 1.5 Engage", new BumperConeHighTakeCubeEngage());
+        autoChooser.addOption("Middle 1.5 Engage", new MiddleConeHighCubeEngage());
         autoChooser.addOption("BITs", new RunAllBits());
 
         SmartDashboard.putData(autoChooser);

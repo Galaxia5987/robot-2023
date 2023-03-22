@@ -18,6 +18,7 @@ public class Gyroscope extends LoggedSubsystem<GyroscopeLogInputs> {
         super(new GyroscopeLogInputs());
         navx = new AHRS(SPI.Port.kMXP);
         loggerInputs.zeroYaw = new Rotation2d();
+        navx.reset();
     }
 
     public static Gyroscope getInstance() {

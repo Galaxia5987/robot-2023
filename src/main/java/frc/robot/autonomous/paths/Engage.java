@@ -40,7 +40,7 @@ public class Engage extends SequentialCommandGroup {
 //                new Balance(1.5 * direction(forwards), 0.75 * direction(forwards), -10.5 * direction(forwards))
 //                        .alongWith(new GetArmIntoRobot()), TODO: Check engage
 
-                new RunCommand(swerveDrive::lock)
+                new InstantCommand(swerveDrive::lock)
         );
     }
 

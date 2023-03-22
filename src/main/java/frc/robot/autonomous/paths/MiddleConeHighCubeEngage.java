@@ -61,7 +61,7 @@ public class MiddleConeHighCubeEngage extends SequentialCommandGroup {
                         )
                 ), swerveDrive)
                         .alongWith(new PickUpCube())
-                        .withTimeout(2.2),
+                        .withTimeout(1.9),
 
                 new Engage(false, false)
                         .alongWith(new ReturnIntake()

@@ -68,6 +68,10 @@ public class Gripper extends LoggedSubsystem<GripperLoggedInputs> {
     @Override
     public void updateInputs() {
         loggerInputs.isOpen = isOpen();
-        loggerInputs.distance = distanceFilter.calculate(4800 / (200 * distance.getVoltage() - 20.0));
+        double calculatedDistance = distanceFilter.calculate(4800 / (200 * distance.getVoltage() - 20.0));
+        if (calculatedDistance < 0) {
+            calculatedDistance = 80;
+        }
+        loggerInputs.distance = calculatedDistance;
     }
 }

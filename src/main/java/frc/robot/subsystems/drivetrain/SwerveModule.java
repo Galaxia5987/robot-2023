@@ -48,7 +48,8 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         driveMotor.configGetSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
         driveMotor.configGetStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
         driveMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
-        driveMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
+        driveMotor.setStatusFramePeriod(1, 50);
+        driveMotor.setStatusFramePeriod(3, 500);
 
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TALON_TIMEOUT);
         angleMotor.configFeedbackNotContinuous(false, TALON_TIMEOUT);
@@ -57,7 +58,14 @@ public class SwerveModule extends LoggedSubsystem<SwerveModuleLogInputs> {
         angleMotor.configStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
         angleMotor.configGetSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_CONFIG);
         angleMotor.configGetStatorCurrentLimit(STATOR_CURRENT_LIMIT_CONFIG);
-        angleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10);
+        angleMotor.setStatusFramePeriod(1, 50);
+        angleMotor.setStatusFramePeriod(3, 500);
+
+        for (int i = 5; i <= 17; i++) {
+            driveMotor.setStatusFramePeriod(i, 500);
+            angleMotor.setStatusFramePeriod(i, 500);
+        }
+
         configMotionMagic(motionMagicConfigs);
 
         angleMotor.setNeutralMode(NeutralMode.Brake);

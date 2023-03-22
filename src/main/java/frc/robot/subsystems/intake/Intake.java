@@ -32,7 +32,7 @@ public class Intake extends LoggedSubsystem<IntakeLoggedInputs> {
         motor.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         motor.setInverted(Ports.Intake.POWER_INVERTED);
         for (int i = 1; i <= 6; i++) {
-            motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.fromId(i), 500);
+            motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.fromId(i), 50000);
         }
         motor.burnFlash();
 

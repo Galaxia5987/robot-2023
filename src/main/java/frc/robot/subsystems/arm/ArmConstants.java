@@ -43,8 +43,8 @@ public class ArmConstants {
     public static final double END_POSITION_LOWER_Y_LIMIT = 0; //[cm]
     public static final double END_POSITION_UPPER_X_LIMIT = 0; //[cm]
     public static final double END_POSITION_LOWER_X_LIMIT = 0; //[cm]
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.42044958551124 - SHOULDER_ZERO_POSITION / 360.0;
-    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.571803664295092 - ELBOW_ZERO_POSITION / 360.0;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.40773 - SHOULDER_ZERO_POSITION / 360.0;
+    public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.57057 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
     public static final double shoulderP = 0.02;
@@ -60,10 +60,10 @@ public class ArmConstants {
 
     //arm positions
     public static final Translation2d STARTING_POSITION = new Translation2d(-0.4, 0.06);
-    public static final Translation2d FEEDER_POSITION = new Translation2d(0.2, 0.72);
+    public static final Translation2d FEEDER_POSITION = new Translation2d(0.2, 0.775);
     public static final Translation2d RETRACTED_POSITION = new Translation2d();
     //    public static final Translation2d UPPER_CONE_SCORING1 = new Translation2d(1.055, 0.914);
-    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.1, 0.92);
+    public static final Translation2d UPPER_CONE_SCORING = new Translation2d(1.13, 0.92);
     //    public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.6945, 0.475);
     public static final Translation2d MIDDLE_CONE_SCORING2 = new Translation2d(0.879, 0.59);
     public static final Translation2d MIDDLE_CONE_SCORING1 = new Translation2d(0.28, 0.90);

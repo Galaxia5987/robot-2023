@@ -31,7 +31,7 @@ public class ArmAxisControl extends CommandBase {
 
     @Override
     public void initialize() {
-        position = new Translation2d(this.Xvalue, this.Yvalue);
+        position = arm.getEndPosition();
     }
 
     @Override

@@ -18,7 +18,6 @@ import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
-import frc.robot.subsystems.drivetrain.commands.TurnDrivetrain;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.BeamBreaker;
@@ -67,6 +66,8 @@ public class RobotContainer {
     private final JoystickButton start = new JoystickButton(xboxController, XboxController.Button.kStart.value);
     private final Trigger povUpdated = new Trigger(() -> xboxController.getPOV() >= 0);
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private final Trigger leftBottom = new Trigger(() -> leftJoystick.getPOV() == 0);
+    private final Trigger leftTop = new Trigger(() -> leftJoystick.getPOV() == 180);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -75,8 +76,10 @@ public class RobotContainer {
         autoChooser.setDefaultOption("Feeder 2.5", new FeederConeCubeHighCube());
         autoChooser.addOption("Feeder 1.5 Engage", new FeederConeHighTakeCubeEngage());
         autoChooser.addOption("Bumper 2.5", new BumperConeCubeHighCube());
+        autoChooser.addOption("Bumper 2", new BumperConeCubeHigh());
         autoChooser.addOption("Bumper 1.5 Engage", new BumperConeHighTakeCubeEngage());
         autoChooser.addOption("Middle 1.5 Engage", new MiddleConeHighCubeEngage());
+        autoChooser.addOption("Middle 1 Engage", new MiddleConeHighEngage());
         autoChooser.addOption("BITs", new RunAllBits());
 
         SmartDashboard.putData(autoChooser);
@@ -112,7 +115,7 @@ public class RobotContainer {
         a.whileTrue(new ReturnArm());
         lb.onTrue(new InstantCommand(gripper::toggle));
 
-        xboxLeftTrigger.whileTrue(new PickUpCube())
+        xboxLeftTrigger.whileTrue(new PickUpCubeTeleop())
                 .onFalse(new ReturnIntake());
         xboxRightTrigger.whileTrue(new ReturnIntake());
 
@@ -121,9 +124,12 @@ public class RobotContainer {
         rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
                 .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
 
-        leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
-        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0));
-        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0));
+//        leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
+        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0, 0, 0));
+        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0, 0, 0));
+
+//        leftBottom.onTrue(new Engage(true, true));
+//        leftTop.onTrue(new Engage(false, true));
     }
 
 

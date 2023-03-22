@@ -8,6 +8,7 @@ public class SwerveDriveLogInputs implements LoggableInputs {
     public double[] setpoint = new double[]{0, 0, 0};
     public double[] pose = new double[]{0, 0, 0};
     public double[] estimatedPose = new double[]{0, 0, 0};
+    public String swerveActivate = "";
 
     public SwerveDriveLogInputs() {
     }
@@ -18,6 +19,7 @@ public class SwerveDriveLogInputs implements LoggableInputs {
         table.put("Setpoint", setpoint);
         table.put("Pose", pose);
         table.put("estimatedPose", estimatedPose);
+        table.put("swerveActivate", swerveActivate);
     }
 
     @Override
@@ -26,5 +28,6 @@ public class SwerveDriveLogInputs implements LoggableInputs {
         setpoint = table.getDoubleArray("Setpoint", setpoint);
         pose = table.getDoubleArray("Pose", pose);
         estimatedPose = table.getDoubleArray("estimatedPose", estimatedPose);
+        swerveActivate = table.getString("swerveActivate",swerveActivate);
     }
 }

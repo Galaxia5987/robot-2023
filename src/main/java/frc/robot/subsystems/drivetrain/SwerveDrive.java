@@ -193,6 +193,10 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
 
     @Override
     public void updateInputs() {
+        var currentCommand = getCurrentCommand();
+        if (currentCommand != null) {
+            loggerInputs.swerveActivate = currentCommand.getName();
+        }
         loggerInputs.pose = Utils.pose2dToArray(getPose());
         loggerInputs.speeds = Utils.chassisSpeedsToArray(mKinematics.toChassisSpeeds(
                 mFrontLeft.getState(),

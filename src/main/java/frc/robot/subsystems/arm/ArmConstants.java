@@ -43,7 +43,7 @@ public class ArmConstants {
     public static final double END_POSITION_LOWER_Y_LIMIT = 0; //[cm]
     public static final double END_POSITION_UPPER_X_LIMIT = 0; //[cm]
     public static final double END_POSITION_LOWER_X_LIMIT = 0; //[cm]
-    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.40773 - SHOULDER_ZERO_POSITION / 360.0;
+    public static final double SHOULDER_ABSOLUTE_ENCODER_OFFSET = 0.40603 - SHOULDER_ZERO_POSITION / 360.0;
     public static final double ELBOW_ABSOLUTE_ENCODER_OFFSET = 0.57057 - ELBOW_ZERO_POSITION / 360.0;
 
     //PID
@@ -85,5 +85,5 @@ public class ArmConstants {
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT1 = new ArmLinearProfile.Waypoint(0, 0, 0, 0.5);
     public static final ArmLinearProfile.Waypoint ARM_OUT_OF_ROBOT_POINT2 = new ArmLinearProfile.Waypoint(0, 0, 0, 0);
 
-    public static final double FEEDER_DISTANCE = 29;
+    public static final double FEEDER_DISTANCE = 30;
 }

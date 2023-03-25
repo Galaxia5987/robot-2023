@@ -13,7 +13,7 @@ public class IntakeConstants {
     public static final double TICKS_PER_DEGREE = FALCON_TICKS_PER_ROTATION / 360 * GEAR_RATIO;
 
     public static final double ANGLE_UP = -3.5; //[deg]
-    public static final double ANGLE_DOWN = -102; //[deg]
+    public static final double ANGLE_DOWN = -99; //[deg]
 
     public static final double INTAKE_POWER = 0.8; //[%]
     public static final double INTAKE_ANGLE_VELOCITY = Units.rpmToRps(1100) * FALCON_TICKS_PER_ROTATION * 10; //[RPM]

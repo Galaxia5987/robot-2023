@@ -5,17 +5,17 @@ import frc.robot.Ports;
 import frc.robot.subsystems.LoggedSubsystem;
 
 
-public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
-    private static BeamBreaker INSTANCE;
+public class ProximitySensor extends LoggedSubsystem<ProximitySensorLoggedInputs> {
+    private static ProximitySensor INSTANCE;
     private final DigitalInput beam = new DigitalInput(Ports.Intake.BEAM_BREAKER_SENSOR);
 
-    private BeamBreaker() {
-        super(new BeamBreakerLoggedInputs());
+    private ProximitySensor() {
+        super(new ProximitySensorLoggedInputs());
     }
 
-    public static BeamBreaker getInstance() {
+    public static ProximitySensor getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new BeamBreaker();
+            INSTANCE = new ProximitySensor();
         }
         return INSTANCE;
     }
@@ -33,11 +33,11 @@ public class BeamBreaker extends LoggedSubsystem<BeamBreakerLoggedInputs> {
      */
     @Override
     public void updateInputs() {
-        loggerInputs.beamBreakerState = isBeamBlocked();
+        loggerInputs.ProximitySensorState = isBeamBlocked();
     }
 
     @Override
     public String getSubsystemName() {
-        return "BeamBreaker";
+        return "ProximitySensor";
     }
 }

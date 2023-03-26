@@ -20,9 +20,9 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.subsystems.intake.BeamBreaker;
+import frc.robot.subsystems.intake.ProximitySensor;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.commands.BeamBreakerLedBlink;
+import frc.robot.subsystems.intake.commands.ProximitySensorLedBlink;
 import frc.robot.subsystems.intake.commands.HoldIntakeInPlace;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
@@ -39,7 +39,7 @@ public class RobotContainer {
     private final Limelight limelight = Limelight.getInstance();
     private final Intake intake = Intake.getInstance();
     private final Gripper gripper = Gripper.getInstance();
-    private final BeamBreaker beamBreaker = BeamBreaker.getInstance();
+    private final ProximitySensor proximitySensor = ProximitySensor.getInstance();
     private final XboxController xboxController = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
@@ -104,7 +104,7 @@ public class RobotContainer {
         );
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
-        beamBreaker.setDefaultCommand(new BeamBreakerLedBlink());
+        proximitySensor.setDefaultCommand(new ProximitySensorLedBlink());
     }
 
     private void configureButtonBindings() {

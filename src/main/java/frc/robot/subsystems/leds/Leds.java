@@ -14,7 +14,7 @@ public class Leds extends SubsystemBase {
     public AddressableLED leds = new AddressableLED(Ports.Leds.LED);
     public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LedConstants.LED_LENGTH);
     private Color color = Color.kPurple;
-    private double blinkTime = 0;
+    private double blinkTime = 0.5;
     private boolean blink = false;
 
     private Mode mode = Mode.ON;

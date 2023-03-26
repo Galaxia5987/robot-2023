@@ -24,6 +24,7 @@ public class ProximitySensorLedBlink extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        leds.setBlinkTime(0.2);
         leds.setBlink(false);
     }
 

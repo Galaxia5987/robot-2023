@@ -14,7 +14,7 @@ public class Leds extends SubsystemBase {
     public AddressableLED leds = new AddressableLED(Ports.Leds.LED);
     public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LedConstants.LED_LENGTH);
     private Color color = Color.kPurple;
-    private double blinkTime = 0.25;
+    private double blinkTime = 0;
     private boolean blink = false;
 
     private Mode mode = Mode.ON;
@@ -85,7 +85,7 @@ public class Leds extends SubsystemBase {
             leds.setData(ledBuffer);
         } else {
             for (int i = 0; i < ledBuffer.getLength(); i++) {
-                ledBuffer.setLED(i, Color.kBlack);
+                ledBuffer.setLED(i, new Color(0, 156, 189));
             }
             leds.setData(ledBuffer);
         }

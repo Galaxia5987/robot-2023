@@ -19,12 +19,16 @@ public class ProximitySensorLedBlink extends CommandBase {
 
     @Override
     public void execute() {
-        Color color = leds.ledBuffer.getLED(0);
-        while (ProximitySensorState){
-            for (int i=0; i<leds.ledBuffer.getLength(); i++)
-                leds.ledBuffer.setLED(i, new Color(0, 0, 0));
-            for (int i=0; i<leds.ledBuffer.getLength(); i++)
-                leds.ledBuffer.setLED(i, color);
-        }
+        leds.setBlink(true);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        leds.setBlink(false);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return !proximitySensor.isBeamBlocked();
     }
 }

@@ -24,6 +24,7 @@ import frc.robot.subsystems.intake.ProximitySensor;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.commands.ProximitySensorLedBlink;
 import frc.robot.subsystems.intake.commands.HoldIntakeInPlace;
+import frc.robot.subsystems.leds.LedConstants;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.GridChooser;
@@ -123,8 +124,7 @@ public class RobotContainer {
 
         start.onTrue(new InstantCommand(leds::toggle));
 
-        rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
-                .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
+        rb.whileTrue(new TakeCone());
 
 //        leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
         upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0, 0, 0));

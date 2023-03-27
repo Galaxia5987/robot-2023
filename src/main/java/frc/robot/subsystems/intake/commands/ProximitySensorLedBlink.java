@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake.commands;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.intake.ProximitySensor;
+import frc.robot.subsystems.leds.LedConstants;
 import frc.robot.subsystems.leds.Leds;
 
 
@@ -24,8 +25,8 @@ public class ProximitySensorLedBlink extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        leds.setBlinkTime(0.2);
-        leds.setBlink(false);
+        leds.setBlinkTime(LedConstants.FAST_BLINK_TIME);
+        leds.setBlink(false, LedConstants.kGalaxiaBlue);
     }
 
     @Override

@@ -127,8 +127,10 @@ public class RobotContainer {
         rb.whileTrue(new TakeCone());
 
 //        leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
-        upPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0, 0, 0));
-        downPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0, 0, 0));
+        leftPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0, 0, 0));
+        rightPOV.whileTrue(new ArmAxisControl(0.33, -0.02, 0, 0, 0));
+        upPOV.whileTrue(new ArmAxisControl(0.33, 0, 0.02, 0, 0));
+        downPOV.whileTrue(new ArmAxisControl(0.33, 0, -0.02, 0, 0));
 
 //        leftBottom.onTrue(new Engage(true, true));
 //        leftTop.onTrue(new Engage(false, true));

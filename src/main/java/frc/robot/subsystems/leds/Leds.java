@@ -14,6 +14,7 @@ public class Leds extends SubsystemBase {
     public AddressableLED leds = new AddressableLED(Ports.Leds.LED);
     public AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LedConstants.LED_LENGTH);
     private Color color = Color.kPurple;
+    private Color secondaryColor = new Color(0, 0, 0);
     private double blinkTime = 0;
     private boolean blink = false;
 
@@ -43,12 +44,21 @@ public class Leds extends SubsystemBase {
         color = Color.kPurple;
     }
 
+    public void setColor (Color color) {
+        this.color = color;
+    }
+
     public void setBlinkTime(double blinkTime) {
         this.blinkTime = blinkTime;
     }
 
     public void setBlink(boolean blink) {
         this.blink = blink;
+    }
+
+    public void setBlink(boolean blink, Color secondaryColor) {
+        this.blink = blink;
+        this.secondaryColor = secondaryColor;
     }
 
     public void toggle() {
@@ -85,7 +95,7 @@ public class Leds extends SubsystemBase {
             leds.setData(ledBuffer);
         } else {
             for (int i = 0; i < ledBuffer.getLength(); i++) {
-                ledBuffer.setLED(i, new Color(0, 156, 189));
+                ledBuffer.setLED(i, secondaryColor);
             }
             leds.setData(ledBuffer);
         }

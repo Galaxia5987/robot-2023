@@ -18,7 +18,7 @@ import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
-import frc.robot.subsystems.leds.PurpleLed;
+import frc.robot.subsystems.leds.command.PurpleLed;
 import frc.robot.utils.controllers.DieterController;
 
 import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;

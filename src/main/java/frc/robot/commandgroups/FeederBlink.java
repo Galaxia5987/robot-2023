@@ -13,7 +13,7 @@ public class FeederBlink extends SequentialCommandGroup {
     public FeederBlink(){
         Gripper gripper = Gripper.getInstance();
         Leds leds = Leds.getInstance();
-        addRequirements(gripper, leds);
+        addRequirements(leds);
         addCommands(
                 new ConditionalCommand(
                         new InstantCommand(() ->leds.setBlink(true, LedConstants.kGalaxiaBlue, LedConstants.FAST_BLINK_TIME)),

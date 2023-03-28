@@ -48,7 +48,7 @@ public class RobotContainer {
     private final JoystickButton b = new JoystickButton(xboxController, XboxController.Button.kB.value);
     private final JoystickButton y = new JoystickButton(xboxController, XboxController.Button.kY.value);
     private final JoystickButton x = new JoystickButton(xboxController, XboxController.Button.kX.value);
-    private final JoystickButton kBack = new JoystickButton(xboxController, XboxController.Button.kBack.value);
+    private final JoystickButton back = new JoystickButton(xboxController, XboxController.Button.kBack.value);
     private final JoystickButton rb = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
     private final JoystickButton lb = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
     private final Trigger xboxRightTrigger = new Trigger(() -> xboxController.getRightTriggerAxis() > 0.2);
@@ -106,6 +106,7 @@ public class RobotContainer {
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
         proximitySensor.setDefaultCommand(new ProximitySensorLedBlink());
+        leds.setDefaultCommand(new FeederBlink());
     }
 
     private void configureButtonBindings() {
@@ -124,7 +125,10 @@ public class RobotContainer {
 
         start.onTrue(new InstantCommand(leds::toggle));
 
-        rb.whileTrue(new TakeCone());
+        rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
+                .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
+
+        back.onTrue(new InstantCommand(leds::toggleRainbow));
 
 //        leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
         leftPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0, 0, 0));

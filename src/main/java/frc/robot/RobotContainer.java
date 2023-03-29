@@ -22,9 +22,8 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.ProximitySensor;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.commands.ProximitySensorLedBlink;
+import frc.robot.subsystems.intake.commands.ProximitySensorDefualtCommand;
 import frc.robot.subsystems.intake.commands.HoldIntakeInPlace;
-import frc.robot.subsystems.leds.LedConstants;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import frc.robot.utils.GridChooser;
@@ -105,8 +104,8 @@ public class RobotContainer {
         );
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
-        proximitySensor.setDefaultCommand(new ProximitySensorLedBlink());
-        leds.setDefaultCommand(new FeederBlink());
+//        proximitySensor.setDefaultCommand(new ProximitySensorDefualtCommand());
+        leds.setDefaultCommand(new ProximitySensorDefualtCommand());
     }
 
     private void configureButtonBindings() {
@@ -128,7 +127,7 @@ public class RobotContainer {
         rb.whileTrue(new ArmAxisControl(1, 0.02, 0)
                 .until(() -> gripper.getDistance() < ArmConstants.FEEDER_DISTANCE));
 
-        back.onTrue(new InstantCommand(leds::toggleRainbow));
+        leftJoystickTopBottom.onTrue(new InstantCommand(leds::toggleRainbow));
 
 //        leftJoystickTrigger.whileTrue(new TurnDrivetrain(leftJoystick));
         leftPOV.whileTrue(new ArmAxisControl(0.33, 0.02, 0, 0, 0));

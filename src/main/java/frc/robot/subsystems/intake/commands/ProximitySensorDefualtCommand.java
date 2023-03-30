@@ -22,7 +22,7 @@ public class ProximitySensorDefualtCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if (proximitySensor.isBeamBlocked() || (gripper.getDistance() < ArmConstants.FEEDER_DISTANCE && gripper.isOpen()))
+        if (proximitySensor.isBeamBlocked() || (gripper.getDistance() < ArmConstants.FEEDER_DISTANCE && gripper.isOpen() && gripper.getDistance() > ArmConstants.FEEDER_MINIMUM_DISTANCE))
             leds.setBlink(true, LedConstants.kGalaxiaBlue, LedConstants.FAST_BLINK_TIME);
         else leds.setBlink(false);
     }

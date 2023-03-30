@@ -3,15 +3,15 @@ package frc.robot.subsystems.intake;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public class BeamBreakerLoggedInputs implements LoggableInputs {
-    public boolean beamBreakerState = true;
+public class ProximitySensorLoggedInputs implements LoggableInputs {
+    public boolean ProximitySensorState = true;
 
     /**
      * Implement the variables into the logger.
      */
     @Override
     public void toLog(LogTable table) {
-        table.put("beamBreakerState", beamBreakerState);
+        table.put("ProximitySensorState", ProximitySensorState);
     }
 
     /**
@@ -19,6 +19,6 @@ public class BeamBreakerLoggedInputs implements LoggableInputs {
      */
     @Override
     public void fromLog(LogTable table) {
-        beamBreakerState = table.getBoolean("beamBreakerState", beamBreakerState);
+        ProximitySensorState = table.getBoolean("ProximitySensorState", ProximitySensorState);
     }
 }

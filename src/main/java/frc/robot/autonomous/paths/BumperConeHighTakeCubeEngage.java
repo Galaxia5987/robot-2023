@@ -11,7 +11,7 @@ import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.commands.Retract;
-import frc.robot.subsystems.leds.PurpleLed;
+import frc.robot.subsystems.leds.command.PurpleLed;
 
 import static frc.robot.subsystems.intake.commands.Retract.Mode.DOWN;
 

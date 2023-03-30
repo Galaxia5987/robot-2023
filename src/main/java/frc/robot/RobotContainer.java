@@ -104,7 +104,6 @@ public class RobotContainer {
         );
         arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
-//        proximitySensor.setDefaultCommand(new ProximitySensorDefualtCommand());
         leds.setDefaultCommand(new ProximitySensorDefualtCommand());
     }
 

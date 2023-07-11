@@ -8,22 +8,22 @@ public final class Ports {
         public static final int ELBOW_MAIN_MOTOR = 12;
         public static final int ELBOW_AUX_MOTOR = 10;
         public static final int SHOULDER_ENCODER = 4;
-        public static final int ELBOW_ENCODER = 2;
+        public static final int ELBOW_ENCODER = 1;
     }
 
     public static final class SwerveDrive {
-        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR_ID = 5;
-        public static final int FRONT_LEFT_MODULE_STEER_MOTOR_ID = 2;
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR_ID = 1;
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR_ID = 6;
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR_ID = 3;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR_ID = 4;
         public static final int REAR_LEFT_MODULE_DRIVE_MOTOR_ID = 7;
         public static final int REAR_LEFT_MODULE_STEER_MOTOR_ID = 8;
-        public static final int REAR_RIGHT_MODULE_DRIVE_MOTOR_ID = 1;
-        public static final int REAR_RIGHT_MODULE_STEER_MOTOR_ID = 6;
+        public static final int REAR_RIGHT_MODULE_DRIVE_MOTOR_ID = 5;
+        public static final int REAR_RIGHT_MODULE_STEER_MOTOR_ID = 2;
 
-        public static final int FRONT_LEFT_ENCODER_ID = 6;
+        public static final int FRONT_LEFT_ENCODER_ID = 5;
         public static final int FRONT_RIGHT_ENCODER_ID = 8;
-        public static final int REAR_LEFT_ENCODER_ID = 5;
+        public static final int REAR_LEFT_ENCODER_ID = 2;
         public static final int REAR_RIGHT_ENCODER_ID = 7;
 
         public static boolean FRONT_LEFT_DRIVE_INVERTED = true;

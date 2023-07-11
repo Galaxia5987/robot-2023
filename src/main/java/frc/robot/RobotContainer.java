@@ -18,6 +18,7 @@ import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.JoystickDrive;
+import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.ProximitySensor;
@@ -41,6 +42,7 @@ public class RobotContainer {
     private final Gripper gripper = Gripper.getInstance();
     private final ProximitySensor proximitySensor = ProximitySensor.getInstance();
     private final XboxController xboxController = new XboxController(0);
+    private final XboxController xboxController2 = new XboxController(1);
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
@@ -100,9 +102,9 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(
-                new JoystickDrive(leftJoystick, rightJoystick)
+                new XboxDrive(swerve, xboxController2)
         );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
         leds.setDefaultCommand(new ProximitySensorDefualtCommand());
     }

@@ -72,6 +72,8 @@ public class RobotContainer {
     private final Trigger leftBottom = new Trigger(() -> leftJoystick.getPOV() == 0);
     private final Trigger leftTop = new Trigger(() -> leftJoystick.getPOV() == 180);
 
+    private final JoystickButton lb2 = new JoystickButton(xboxController2, XboxController.Button.kLeftBumper.value);
+
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
@@ -110,7 +112,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        rightJoystickTrigger.onTrue(new InstantCommand(gyroscope::resetYaw));
+        lb2.onTrue(new InstantCommand(gyroscope::resetYaw));
         b.whileTrue(new FeederPosition());
         y.whileTrue(new UpperScoring());
         y.whileTrue(new UpperScoring());

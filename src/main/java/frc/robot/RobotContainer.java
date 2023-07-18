@@ -106,7 +106,7 @@ public class RobotContainer {
         swerve.setDefaultCommand(
                 new XboxDrive(swerve, xboxController2)
         );
-//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
         leds.setDefaultCommand(new ProximitySensorDefualtCommand());
     }

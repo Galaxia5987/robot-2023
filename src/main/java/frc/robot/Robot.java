@@ -109,9 +109,7 @@ public class Robot extends LoggedRobot {
 
         if (timer.hasElapsed(1)) {
             timer.reset();
-            for (SwerveModule module : SwerveDrive.getInstance().getModules()) {
-                module.initializeOffset();
-            }
+            SwerveDrive.getInstance().updateOffsets(SwerveConstants.OFFSETS);
         }
     }
 

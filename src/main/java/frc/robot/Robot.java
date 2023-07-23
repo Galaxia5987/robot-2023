@@ -84,9 +84,9 @@ public class Robot extends LoggedRobot {
             SmartDashboard.putBoolean("Grid #" + (i + 1), false);
         }
 
-        for (SwerveModule module : SwerveDrive.getInstance().getModules()) {
-            module.initializeOffset();
-        }
+        while (!SwerveDrive.getInstance().encodersConnected());
+        SwerveDrive.getInstance().updateOffsets(SwerveConstants.OFFSETS);
+
         timer.start();
         timer.reset();
     }

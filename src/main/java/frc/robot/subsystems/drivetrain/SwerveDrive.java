@@ -1,97 +1,68 @@
 package frc.robot.subsystems.drivetrain;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.LoggedSubsystem;
-import frc.robot.subsystems.gyroscope.Gyroscope;
-import frc.robot.subsystems.vision.Limelight;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Ports;
+import frc.robot.Robot;
 import frc.robot.utils.Utils;
+import org.littletonrobotics.junction.Logger;
 
-import static frc.robot.Ports.SwerveDrive.*;
-import static frc.robot.subsystems.drivetrain.SwerveConstants.*;
+public class SwerveDrive extends SubsystemBase {
+    private static SwerveDrive INSTANCE = null;
+    private SwerveDriveInputsAutoLogged loggerInputs = new SwerveDriveInputsAutoLogged();
 
-public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
-    private static SwerveDrive INSTANCE;
-    private final Limelight limelight = Limelight.getInstance();
-    private final Gyroscope gyroscope = Gyroscope.getInstance();
-    private final SwerveDriveKinematics mKinematics = new SwerveDriveKinematics(
-            // Front left
-            new Translation2d(DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
-            // Front right
-            new Translation2d(DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0),
-            // Rear left
-            new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),
-            // Rear right
-            new Translation2d(-DRIVETRAIN_TRACK_WIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
-    private final SwerveModule mFrontLeft;
-    private final SwerveModule mFrontRight;
-    private final SwerveModule mRearLeft;
-    private final SwerveModule mRearRight;
-    private SwerveModuleState[] swerveModuleStates = new SwerveModuleState[]{
-            new SwerveModuleState(),
-            new SwerveModuleState(),
-            new SwerveModuleState(),
-            new SwerveModuleState()
-    };
-    private SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{
-            new SwerveModulePosition(),
-            new SwerveModulePosition(),
-            new SwerveModulePosition(),
-            new SwerveModulePosition()
-    };
+    private final GyroIO gyro;
+    private final frc.robot.subsystems.drivetrain.SwerveModule[] modules = new frc.robot.subsystems.drivetrain.SwerveModule[4]; //FL, FR, RL, RR
+    private SwerveModuleState[] currentModuleStates = new SwerveModuleState[4];
+    private SwerveModuleState[] desiredModuleStates = new SwerveModuleState[4];
 
-    private final SwerveDriveOdometry mOdometry = new SwerveDriveOdometry(mKinematics, new Rotation2d(),
-            swerveModulePositions);
+    private final PIDController pidController = new PIDController(frc.robot.subsystems.drivetrain.SwerveConstants.OMEGA_kP, frc.robot.subsystems.drivetrain.SwerveConstants.OMEGA_kI, frc.robot.subsystems.drivetrain.SwerveConstants.OMEGA_kD);
+    private boolean shouldKeepAngle = false;
 
-//    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-//            mKinematics,
-//            new Rotation2d(),
-//            Arrays.copyOf(swerveModulePositions, swerveModulePositions.length),
-//            new Pose2d()
-//    );
+    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+            frc.robot.subsystems.drivetrain.SwerveConstants.wheelPositions[0],
+            frc.robot.subsystems.drivetrain.SwerveConstants.wheelPositions[1],
+            frc.robot.subsystems.drivetrain.SwerveConstants.wheelPositions[2],
+            frc.robot.subsystems.drivetrain.SwerveConstants.wheelPositions[3]
+    );
+
+    private SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+
+    private final SwerveDriveOdometry odometry;
 
     private SwerveDrive() {
-        super(new SwerveDriveLogInputs());
+        if (Robot.isReal()) {
+            for (int i = 0; i < modules.length; i++) {
+                ModuleIO io = new ModuleIOReal(
+                        Ports.SwerveDrive.DRIVE_IDS[i],
+                        Ports.SwerveDrive.ANGLE_IDS[i],
+                        Ports.SwerveDrive.ENCODER_IDS[i],
+                        frc.robot.subsystems.drivetrain.SwerveConstants.motionMagicConfigs[i],
+                        i + 1);
 
-        mFrontLeft = new SwerveModule(
-                Module.FL,
-                FRONT_LEFT_MODULE_DRIVE_MOTOR_ID,
-                FRONT_LEFT_MODULE_STEER_MOTOR_ID,
-                FRONT_LEFT_ENCODER_ID,
-                OFFSETS[Module.FL.number],
-                FRONT_LEFT_DRIVE_INVERTED,
-                FRONT_LEFT_ANGLE_INVERTED,
-                FRONT_LEFT_MOTION_MAGIC_CONFIGS);
-        mFrontRight = new SwerveModule(
-                Module.FR,
-                FRONT_RIGHT_MODULE_DRIVE_MOTOR_ID,
-                FRONT_RIGHT_MODULE_STEER_MOTOR_ID,
-                FRONT_RIGHT_ENCODER_ID,
-                OFFSETS[Module.FR.number],
-                FRONT_RIGHT_DRIVE_INVERTED,
-                FRONT_RIGHT_ANGLE_INVERTED,
-                FRONT_RIGHT_MOTION_MAGIC_CONFIGS);
-        mRearLeft = new SwerveModule(
-                Module.RL,
-                REAR_LEFT_MODULE_DRIVE_MOTOR_ID,
-                REAR_LEFT_MODULE_STEER_MOTOR_ID,
-                REAR_LEFT_ENCODER_ID,
-                OFFSETS[Module.RL.number],
-                REAR_LEFT_DRIVE_INVERTED,
-                REAR_LEFT_ANGLE_INVERTED,
-                REAR_LEFT_MOTION_MAGIC_CONFIGS);
-        mRearRight = new SwerveModule(
-                Module.RR,
-                REAR_RIGHT_MODULE_DRIVE_MOTOR_ID,
-                REAR_RIGHT_MODULE_STEER_MOTOR_ID,
-                REAR_RIGHT_ENCODER_ID,
-                OFFSETS[Module.RR.number],
-                REAR_RIGHT_DRIVE_INVERTED,
-                REAR_RIGHT_ANGLE_INVERTED,
-                REAR_RIGHT_MOTION_MAGIC_CONFIGS);
+                modules[i] = new frc.robot.subsystems.drivetrain.SwerveModule(io, i + 1);
+            }
+
+            gyro = new GyroIOReal();
+        } else {
+            for (int i = 0; i < modules.length; i++) {
+                ModuleIO io = new ModuleIOSim();
+                modules[i] = new frc.robot.subsystems.drivetrain.SwerveModule(io, i + 1);
+            }
+
+            gyro = new GyroIOSim();
+        }
+        pidController.enableContinuousInput(0, Math.PI * 2);
+        pidController.setTolerance(Math.toRadians(3));
+
+        updateModulePositions();
+        odometry = new SwerveDriveOdometry(
+                kinematics, new Rotation2d(getYaw()),
+                modulePositions
+        );
     }
 
     public static SwerveDrive getInstance() {
@@ -101,173 +72,198 @@ public class SwerveDrive extends LoggedSubsystem<SwerveDriveLogInputs> {
         return INSTANCE;
     }
 
-    /**
-     * Gets the kinematics of the swerve.
-     *
-     * @return the kinematics of the swerve.
-     */
-    public SwerveDriveKinematics getKinematics() {
-        return mKinematics;
+    public SwerveDriveKinematics getKinematics(){
+        return kinematics;
     }
 
     /**
-     * Resets the odometry of the robot to a specified pose. This is usually used
-     * in the autonomous period.
+     * Updates the offset for the gyro.
      *
-     * @param pose the pose to reset the odometry to.
+     * @param angle The desired angle. [rad]
      */
-    public void resetOdometry(Pose2d pose) {
-        mOdometry.resetPosition(pose.getRotation(), swerveModulePositions, pose);
+    public void resetGyro(double angle) {
+        gyro.resetGyro(angle);
+    }
+
+    public void resetGyro() {
+        resetGyro(0);
     }
 
     /**
-     * Gets the current pose of the robot.
+     * Gets the raw yaw reading from the gyro.
      *
-     * @return the current pose of the robot.
+     * @return Yaw angle reading from gyro. [rad]
      */
-    public Pose2d getPose() {
-        return mOdometry.getPoseMeters();
+    public double getRawYaw() {
+        return gyro.getRawYaw();
     }
 
+    /**
+     * Gets the yaw reading from the gyro with the calculated offset.
+     *
+     * @return Yaw angle with offset. [rad]
+     */
+    public double getYaw() {
+        return gyro.getYaw();
+    }
 
     /**
-     * This is the main drive function. Any drive signal given here will be carried out in the periodic.
+     * Sets the module states to the desired module states.
      *
-     * @param driveSignal the drive signal to process.
+     * @param desiredModuleStates The desired module states to set the modules to.
      */
-    public void drive(DriveSignal driveSignal) {
-        if (Utils.speedsEpsilonEquals(driveSignal.speeds())) {
-            stop();
-            return;
+    public void setModuleStates(SwerveModuleState[] desiredModuleStates) {
+        Logger.getInstance().recordOutput("SwerveDrive/desiredModuleStates", desiredModuleStates);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredModuleStates, frc.robot.subsystems.drivetrain.SwerveConstants.MAX_X_Y_VELOCITY);
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setModuleState(desiredModuleStates[i]);
         }
-
-        var speeds = driveSignal.fieldOriented ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                driveSignal.vx,
-                driveSignal.vy,
-                driveSignal.omega,
-                Gyroscope.getInstance().getYaw()) : driveSignal.speeds();
-        loggerInputs.setpoint = Utils.chassisSpeedsToArray(speeds);
-        swerveModuleStates = mKinematics.toSwerveModuleStates(speeds, driveSignal.centerOfRotation);
-
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_VELOCITY_AUTO);
-
-        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.FL.number].angle);
-        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.FR.number].angle);
-        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.RL.number].angle);
-        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.RR.number].angle);
     }
 
     /**
-     * Sets the states of the modules directly.
+     * Updates each module position with an offset and an absolute encoder.
      *
-     * @param states are the states to set.
+     * @param offsets Offsets for each of the modules. [sensor ticks]
      */
-    public void setStates(SwerveModuleState[] states) {
-        swerveModuleStates = states;
-
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_AUTO);
-
-        mFrontLeft.set(swerveModuleStates[Module.FL.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.FL.number].angle);
-        mFrontRight.set(swerveModuleStates[Module.FR.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.FR.number].angle);
-        mRearLeft.set(swerveModuleStates[Module.RL.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.RL.number].angle);
-        mRearRight.set(swerveModuleStates[Module.RR.number].speedMetersPerSecond / MAX_VELOCITY_AUTO,
-                swerveModuleStates[Module.RR.number].angle);
+    public void updateOffsets(double[] offsets) {
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].updateOffset(offsets[i]);
+        }
     }
 
-    /**
-     * Locks the swerve so that it will be difficult to move.
-     */
+    public void updateModulePositions() {
+        for (int i = 0; i < modulePositions.length; i++) {
+            modulePositions[i] = modules[i].getModulePosition();
+        }
+    }
+
+    public Pose2d getBotPose() {
+        return odometry.getPoseMeters();
+    }
+
+    public void resetPose() {
+        odometry.resetPosition(new Rotation2d(getYaw()), modulePositions, new Pose2d());
+    }
+
+    public void resetPose(Pose2d pose){
+        odometry.resetPosition(new Rotation2d(getYaw()), modulePositions, pose);
+    }
+
+    public boolean encodersConnected() {
+        boolean connected = true;
+        for (int i = 0; i < 4; i++) {
+            connected &= modules[i].encoderConnected();
+        }
+        return connected;
+    }
+
     public void lock() {
-        mFrontLeft.set(0, Rotation2d.fromDegrees(45));
-        mFrontRight.set(0, Rotation2d.fromDegrees(135));
-        mRearLeft.set(0, Rotation2d.fromDegrees(315));
-        mRearRight.set(0, Rotation2d.fromDegrees(225));
+        modules[0].setModuleState(0, Rotation2d.fromDegrees(45));
+        modules[1].setModuleState(0, Rotation2d.fromDegrees(135));
+        modules[2].setModuleState(0, Rotation2d.fromDegrees(315));
+        modules[3].setModuleState(0, Rotation2d.fromDegrees(225));
     }
 
-    @Override
-    public void updateInputs() {
-        var currentCommand = getCurrentCommand();
-        if (currentCommand != null) {
-            loggerInputs.swerveActivate = currentCommand.getName();
+    public void checkSwerve(){
+        for (int i = 0; i < 4; i++) {
+            modules[i].checkModule();
         }
-        loggerInputs.pose = Utils.pose2dToArray(getPose());
-        loggerInputs.speeds = Utils.chassisSpeedsToArray(mKinematics.toChassisSpeeds(
-                mFrontLeft.getState(),
-                mFrontRight.getState(),
-                mRearLeft.getState(),
-                mRearRight.getState()
-        ));
     }
 
-    @Override
-    public String getSubsystemName() {
-        return "SwerveDrive";
+    /**
+     * Sets the correct module states from desired chassis speeds.
+     *
+     * @param chassisSpeeds Desired chassis speeds.
+     * @param fieldOriented Should the drive be field oriented.
+     */
+    public void drive(ChassisSpeeds chassisSpeeds, boolean fieldOriented) {
+        loggerInputs.desiredSpeeds = Utils.chassisSpeedsToArray(chassisSpeeds);
+
+//        if (fieldOriented){
+        chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                chassisSpeeds.vxMetersPerSecond,
+                chassisSpeeds.vyMetersPerSecond,
+                chassisSpeeds.omegaRadiansPerSecond,
+                new Rotation2d(getYaw())
+        );
+//        }
+
+        if (chassisSpeeds.equals(new ChassisSpeeds(0, 0, 0))) {
+            for (SwerveModule module : modules) {
+                module.neutralOutput();
+            }
+        }
+
+        setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
     }
 
-    public ChassisSpeeds getSpeeds() {
-        return Utils.arrayToChassisSpeeds(loggerInputs.speeds);
+    /**
+     * Sets the desired percentage of x, y and omega speeds for the swerve
+     *
+     * @param xOutput     percentage of the x speed
+     * @param yOutput     percentage of the y speed
+     * @param omegaOutput percentage of the omega speed
+     */
+    public void drive(double xOutput, double yOutput, double omegaOutput, boolean fieldOriented) {
+        double angleFF = 0;
+        if (Utils.epsilonEquals(omegaOutput, 0)) {
+            double angle = getRawYaw();
+            if (!shouldKeepAngle && Utils.epsilonEquals(loggerInputs.currentSpeeds[2], 0, 0.1)) {
+                pidController.setSetpoint(angle);
+                shouldKeepAngle = true;
+            } else {
+                angleFF = pidController.calculate(angle);
+            }
+        } else {
+            shouldKeepAngle = false;
+        }
+
+        loggerInputs.angleFF = angleFF;
+        loggerInputs.pidSetpoint = pidController.getSetpoint();
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
+                frc.robot.subsystems.drivetrain.SwerveConstants.MAX_X_Y_VELOCITY * xOutput,
+                frc.robot.subsystems.drivetrain.SwerveConstants.MAX_X_Y_VELOCITY * yOutput,
+                SwerveConstants.MAX_OMEGA_VELOCITY * omegaOutput + angleFF);
+
+        drive(chassisSpeeds, fieldOriented);
     }
 
-    public void stop() {
-        swerveModuleStates = mKinematics.toSwerveModuleStates(new ChassisSpeeds());
-        mFrontLeft.stop();
-        mFrontRight.stop();
-        mRearLeft.stop();
-        mRearRight.stop();
-    }
-
-    public void vroom() {
-        mFrontLeft.vroom();
-        mFrontRight.vroom();
-        mRearLeft.vroom();
-        mRearRight.vroom();
-    }
-
-    public SwerveModule[] getModules() {
-        return new SwerveModule[]{
-                mFrontLeft,
-                mFrontRight,
-                mRearLeft,
-                mRearRight
-        };
-    }
-
-    @Override
     public void periodic() {
-        swerveModulePositions = new SwerveModulePosition[]{
-                mFrontLeft.getPosition(),
-                mFrontRight.getPosition(),
-                mRearLeft.getPosition(),
-                mRearRight.getPosition()
-        };
+        updateModulePositions();
+        odometry.update(new Rotation2d(getYaw()), modulePositions);
 
-        mOdometry.update(Gyroscope.getInstance().getYaw(), swerveModulePositions);
+        loggerInputs.botPose[0] = getBotPose().getX();
+        loggerInputs.botPose[1] = getBotPose().getY();
+        loggerInputs.botPose[2] = getBotPose().getRotation().getRadians();
 
-        SmartDashboard.putString("Encoder Positions", "{" +
-                mFrontLeft.getEncoderTicks() + ", " +
-                mFrontRight.getEncoderTicks() + ", " +
-                mRearLeft.getEncoderTicks() + ", " +
-                mRearRight.getEncoderTicks() + "}");
-
-    }
-
-    public enum Module {
-        FL(0),
-        FR(1),
-        RL(2),
-        RR(3);
-
-        public final int number;
-
-        Module(int number) {
-            this.number = number;
+        for (int i = 0; i < modules.length; i++) {
+            currentModuleStates[i] = modules[i].getModuleState();
+            loggerInputs.absolutePositions[i] = modules[i].getPosition();
         }
+
+        Logger.getInstance().recordOutput("SwerveDrive/currentModuleSates", currentModuleStates);
+
+        for (int i = 0; i < 3; i++) {
+            loggerInputs.currentSpeeds[i] =
+                    Utils.chassisSpeedsToArray(
+                            kinematics.toChassisSpeeds(
+                                    currentModuleStates[0],
+                                    currentModuleStates[1],
+                                    currentModuleStates[2],
+                                    currentModuleStates[3]
+                            ))[i];
+        }
+
+        loggerInputs.supplyCurrent =
+                modules[0].getSupplyCurrent() + modules[1].getSupplyCurrent() + modules[2].getSupplyCurrent() + modules[3].getStatorCurrent();
+
+        loggerInputs.statorCurrent =
+                modules[0].getStatorCurrent() + modules[1].getStatorCurrent() + modules[2].getStatorCurrent() + modules[3].getStatorCurrent();
+
+        loggerInputs.rawYaw = getRawYaw();
+        loggerInputs.yaw = getYaw();
+        gyro.updateInputs(loggerInputs);
+
+        Logger.getInstance().processInputs("SwerveDrive", loggerInputs);
     }
 }

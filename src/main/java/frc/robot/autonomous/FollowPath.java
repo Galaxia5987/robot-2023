@@ -123,12 +123,12 @@ public class FollowPath extends CommandBase {
         );
         return new ProxyCommand(() -> resetCommand.apply(pathSupplier.get())).andThen(new FollowPath(
                 pathSupplier,
-                swerveDrive::getPose,
+                swerveDrive::getBotPose,
                 swerveDrive.getKinematics(),
                 new PIDController(SwerveConstants.AUTO_X_Kp, SwerveConstants.AUTO_X_Ki, SwerveConstants.AUTO_X_Kd),
                 new PIDController(SwerveConstants.AUTO_Y_Kp, SwerveConstants.AUTO_Y_Ki, SwerveConstants.AUTO_Y_Kd),
                 new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-                swerveDrive::setStates,
+                swerveDrive::setModuleStates,
                 swerveDrive
         ));
     }
@@ -141,12 +141,12 @@ public class FollowPath extends CommandBase {
         );
         return new FollowPath(
                 pathSupplier,
-                swerveDrive::getPose,
+                swerveDrive::getBotPose,
                 swerveDrive.getKinematics(),
                 new PIDController(SwerveConstants.AUTO_X_Kp, SwerveConstants.AUTO_X_Ki, SwerveConstants.AUTO_X_Kd),
                 new PIDController(SwerveConstants.AUTO_Y_Kp, SwerveConstants.AUTO_Y_Ki, SwerveConstants.AUTO_Y_Kd),
                 new PIDController(SwerveConstants.AUTO_ROTATION_Kp, SwerveConstants.AUTO_ROTATION_Ki, SwerveConstants.AUTO_ROTATION_Kd),
-                swerveDrive::setStates,
+                swerveDrive::setModuleStates,
                 swerveDrive
         );
     }
@@ -154,7 +154,7 @@ public class FollowPath extends CommandBase {
     public static Function<PathPlannerTrajectory, Command> resetCommand(SwerveDrive swerveDrive, Gyroscope gyroscope) {
         return (p) ->
                 new InstantCommand(() -> {
-                    swerveDrive.resetOdometry(p.getInitialPose());
+                    swerveDrive.resetPose(p.getInitialPose());
                     gyroscope.resetYaw(p.getInitialHolonomicPose().getRotation());
                 });
     }

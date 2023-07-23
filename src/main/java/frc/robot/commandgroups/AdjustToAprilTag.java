@@ -3,7 +3,6 @@ package frc.robot.commandgroups;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
@@ -44,14 +43,11 @@ public class AdjustToAprilTag extends CommandBase {
         }
 
         swerveDrive.drive(
-                new DriveSignal(
                         MathUtil.applyDeadband(xSupplier.getAsDouble(), 0.1)
-                                * SwerveConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                                * SwerveConstants.MAX_X_Y_VELOCITY,
                         yVelocity,
                         omegaVelocity,
-                        new Translation2d(),
                         true
-                )
         );
 
         lastVy = yVelocity;

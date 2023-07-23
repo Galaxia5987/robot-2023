@@ -26,14 +26,14 @@ public class ZeroPositionSwerve extends CommandBase {
 
     @Override
     public void execute() {
-        swerve.setStates(zeroStates);
+        swerve.setModuleStates(zeroStates);
     }
 
 
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        swerve.stop();
+        swerve.setModuleStates(new SwerveModuleState[4]);
     }
 }
 

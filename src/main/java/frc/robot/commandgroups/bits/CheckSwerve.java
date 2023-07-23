@@ -8,7 +8,7 @@ public class CheckSwerve extends SequentialCommandGroup {
     public CheckSwerve() {
         SwerveDrive swerveDrive = SwerveDrive.getInstance();
         addCommands(
-                new RunCommand(swerveDrive::vroom, swerveDrive).withTimeout(5),
+                new RunCommand(swerveDrive::checkSwerve, swerveDrive).withTimeout(5),
                 new ZeroPositionSwerve().withTimeout(2)
         );
     }

@@ -3,7 +3,6 @@ package frc.robot.autonomous.paths;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -11,7 +10,6 @@ import frc.robot.autonomous.AutonUpperScoring;
 import frc.robot.autonomous.FollowPath;
 import frc.robot.autonomous.ResetAuto;
 import frc.robot.commandgroups.ReturnArm;
-import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.commands.DriveTillPitch;
@@ -56,13 +54,10 @@ public class MiddleConeHighCommunityEngage extends SequentialCommandGroup {
                 new PurpleLed(),
 
                 new RunCommand(() -> swerveDrive.drive(
-                        new DriveSignal(
                                 1.5,
                                 0,
                                 yawController.calculate(gyroscope.getYaw().getRadians(), 0),
-                                new Translation2d(),
                                 true
-                        )
                 ), swerveDrive)
                         .alongWith(new ReturnArm().withTimeout(1))
                         .withTimeout(1.5),

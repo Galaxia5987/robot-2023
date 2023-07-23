@@ -1,8 +1,6 @@
 package frc.robot.subsystems.drivetrain.commands;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.drivetrain.DriveSignal;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.utils.Utils;
@@ -25,15 +23,12 @@ public class DriveTillPitch extends CommandBase {
 
     @Override
     public void execute() {
-        var signal = new DriveSignal(
+        swerveDrive.drive(
                 xVelocity,
                 0,
                 yawController.calculate(gyroscope.getYaw().getRadians(), 0),
-                new Translation2d(),
                 true
         );
-
-        swerveDrive.drive(signal);
     }
 
     @Override

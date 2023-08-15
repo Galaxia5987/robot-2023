@@ -40,8 +40,8 @@ public class RobotContainer {
     private final Intake intake = Intake.getInstance();
     private final Gripper gripper = Gripper.getInstance();
     private final ProximitySensor proximitySensor = ProximitySensor.getInstance();
-    private final XboxController xboxController = new XboxController(0);
-    private final XboxController xboxController2 = new XboxController(1);
+    private final XboxController xboxController = new XboxController(1);
+    private final XboxController xboxController2 = new XboxController(0);
     private final Joystick leftJoystick = new Joystick(1);
     private final Joystick rightJoystick = new Joystick(2);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
@@ -105,7 +105,7 @@ public class RobotContainer {
         swerve.setDefaultCommand(
                 new XboxDrive(swerve, xboxController2)
         );
-        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
         leds.setDefaultCommand(new ProximitySensorDefualtCommand());
     }

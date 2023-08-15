@@ -148,7 +148,8 @@ public class ModuleIOReal implements ModuleIO {
     @Override
     public void updateOffset(double offset) {
         angleMotor.setSelectedSensorPosition(
-                ((encoder.getAbsolutePosition() - offset) * 2048) / SwerveConstants.ANGLE_REDUCTION);
+                ((encoder.getAbsolutePosition() - offset) * 2048) / SwerveConstants.ANGLE_REDUCTION
+                );
     }
 
     @Override

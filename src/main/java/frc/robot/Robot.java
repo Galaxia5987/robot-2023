@@ -77,6 +77,9 @@ public class Robot extends LoggedRobot {
         Leds.getInstance().setYellow();
         Limelight.getInstance().setAprilTagsPipeline();
 
+        timer.start();
+        timer.reset();
+
         for (int i = 1; i <= 9; i++) {
             SmartDashboard.putBoolean("Grid Color #" + i, i % 3 == 2);
         }
@@ -86,9 +89,6 @@ public class Robot extends LoggedRobot {
 
         while (!SwerveDrive.getInstance().encodersConnected());
         SwerveDrive.getInstance().updateOffsets(SwerveConstants.OFFSETS);
-
-        timer.start();
-        timer.reset();
     }
 
     /**

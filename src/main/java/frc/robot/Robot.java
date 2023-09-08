@@ -13,6 +13,7 @@ import frc.robot.subsystems.LoggedSubsystem;
 import frc.robot.subsystems.drivetrain.SwerveConstants;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
 import frc.robot.subsystems.drivetrain.SwerveModule;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.leds.Leds;
 import frc.robot.subsystems.vision.Limelight;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -36,6 +37,7 @@ public class Robot extends LoggedRobot {
     private final Timer timer = new Timer();
     private RobotContainer robotContainer;
     private Command autonomousCommand;
+    public Alliance alliance;
 
     public static boolean justEnabled() {
         return justEnabled;
@@ -125,7 +127,9 @@ public class Robot extends LoggedRobot {
      */
     @Override
     public void autonomousInit() {
+        alliance = Alliance.Blue;
         autonomousCommand = robotContainer.getAutonomousCommand();
+
 
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {

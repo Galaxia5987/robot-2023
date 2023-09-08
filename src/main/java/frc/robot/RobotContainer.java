@@ -78,12 +78,12 @@ public class RobotContainer {
      */
     private RobotContainer() {
         autoChooser.setDefaultOption("Feeder 2.5", new FeederConeCubeHighCube());
-        autoChooser.addOption("Feeder 1.5 Engage", new FeederConeHighTakeCubeEngage());
+//        autoChooser.addOption("Feeder 1.5 Engage", new FeederConeHighTakeCubeEngage());
         autoChooser.addOption("Bumper 2.5", new BumperConeCubeHighCube());
-        autoChooser.addOption("Bumper 2", new BumperConeCubeHigh());
+//        autoChooser.addOption("Bumper 2", new BumperConeCubeHigh());
         autoChooser.addOption("Bumper 1.5 Engage", new BumperConeHighTakeCubeEngage());
         autoChooser.addOption("Middle 1.5 Engage", new MiddleConeHighCubeEngage());
-        autoChooser.addOption("Middle 1 Engage", new MiddleConeHighEngage());
+//        autoChooser.addOption("Middle 1 Engage", new MiddleConeHighEngage());
         autoChooser.addOption("BITs", new RunAllBits());
 
         SmartDashboard.putData(autoChooser);

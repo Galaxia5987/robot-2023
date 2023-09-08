@@ -159,6 +159,10 @@ public class FollowPath extends CommandBase {
                 });
     }
 
+    public static void setAllianceColor(DriverStation.Alliance allianceColor){
+//        this.
+    }
+
     @Override
     public void initialize() {
         transformedTrajectory = trajectory.get();

@@ -1,4 +1,4 @@
-package frc.robot.autonomous.paths;
+package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -23,10 +23,10 @@ public class Engage extends SequentialCommandGroup {
                         .alongWith(returnArm ? new ReturnArm().withTimeout(0.65) : new InstantCommand()),
 
                 new RunCommand(() -> swerveDrive.drive(
-                                1.5 * direction(forwards),
-                                0,
-                                yawController.calculate(gyroscope.getYaw().getRadians(), 0),
-                                true
+                        1.5 * direction(forwards),
+                        0,
+                        yawController.calculate(gyroscope.getYaw().getRadians(), 0),
+                        true
 
                 ), swerveDrive).alongWith(new GetArmIntoRobot()).withTimeout(
                         forwards ?

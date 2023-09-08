@@ -42,8 +42,8 @@ public class RobotContainer {
     private final ProximitySensor proximitySensor = ProximitySensor.getInstance();
     private final XboxController xboxController = new XboxController(1);
     private final XboxController xboxController2 = new XboxController(0);
-    private final Joystick leftJoystick = new Joystick(1);
-    private final Joystick rightJoystick = new Joystick(2);
+    private final Joystick leftJoystick = new Joystick(2);
+    private final Joystick rightJoystick = new Joystick(3);
     private final JoystickButton a = new JoystickButton(xboxController, XboxController.Button.kA.value);
     private final JoystickButton b = new JoystickButton(xboxController, XboxController.Button.kB.value);
     private final JoystickButton y = new JoystickButton(xboxController, XboxController.Button.kY.value);
@@ -102,10 +102,10 @@ public class RobotContainer {
     }
 
     private void configureDefaultCommands() {
-        swerve.setDefaultCommand(
-                new XboxDrive(swerve, xboxController2)
-        );
-//        arm.setDefaultCommand(new ArmXboxControl(xboxController));
+//        swerve.setDefaultCommand(
+//                new XboxDrive(swerve, xboxController2)
+//        );
+        arm.setDefaultCommand(new ArmXboxControl(xboxController));
         intake.setDefaultCommand(new HoldIntakeInPlace());
         leds.setDefaultCommand(new ProximitySensorDefualtCommand());
     }

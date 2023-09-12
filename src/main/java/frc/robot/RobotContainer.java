@@ -17,7 +17,6 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.commands.ArmAxisControl;
 import frc.robot.subsystems.arm.commands.ArmXboxControl;
 import frc.robot.subsystems.drivetrain.SwerveDrive;
-import frc.robot.subsystems.drivetrain.commands.XboxDrive;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.gyroscope.Gyroscope;
 import frc.robot.subsystems.intake.ProximitySensor;
@@ -81,7 +80,7 @@ public class RobotContainer {
 //        autoChooser.addOption("Feeder 1.5 Engage", new FeederConeHighTakeCubeEngage());
         autoChooser.addOption("Bumper 2.5", new BumperConeCubeHighCube());
 //        autoChooser.addOption("Bumper 2", new BumperConeCubeHigh());
-        autoChooser.addOption("Bumper 1.5 Engage", new BumperConeHighTakeCubeEngage());
+        autoChooser.addOption("Bumper 1.5 Engage", new BumperConeHighCubeEngage());
         autoChooser.addOption("Middle 1.5 Engage", new MiddleConeHighCubeEngage());
 //        autoChooser.addOption("Middle 1 Engage", new MiddleConeHighEngage());
         autoChooser.addOption("BITs", new RunAllBits());
